@@ -1,4 +1,5 @@
-from dataclasses import asdict, dataclass
+import uuid
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 
@@ -6,11 +7,11 @@ from typing import Any
 class Note:
     """Model for taking note on a location."""
 
-    code: str
     creator: str
     url: str
     lat: float
     long: float
+    code: str = field(default_factory=uuid.uuid4)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Note":
