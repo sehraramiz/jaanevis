@@ -2,7 +2,7 @@ from geonotes.domain import note as n
 
 
 class MemRepo:
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: list[dict]) -> None:
         self.data = data
 
     def list(self, filters: dict = None) -> list[n.Note]:

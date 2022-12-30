@@ -1,6 +1,7 @@
 import logging
 import sys
 import uuid
+from typing import Optional
 
 sys.path = ["", ".."] + sys.path[1:]
 
@@ -49,7 +50,7 @@ note_4 = {
 note_dicts = [note_1, note_2, note_3, note_4]
 
 
-def get_notes_list(filters: dict = None) -> ResponseObject:
+def get_notes_list(filters: Optional[dict]) -> ResponseObject:
     qrystr_params = {"filters": filters or {}}
 
     request_obj = NoteListRequest.from_dict(qrystr_params)
@@ -70,8 +71,9 @@ def add_note(note: Note) -> ResponseObject:
 
 
 if __name__ == "__main__":
-    notes = get_notes_list()
+    notes = get_notes_list(filters={})
     print(notes.value)
+
     new_note = Note(
         creator="default",
         url="https://example.com/1",

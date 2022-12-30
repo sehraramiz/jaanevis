@@ -1,5 +1,7 @@
 from typing import Any
 
+from geonotes.requests import InvalidRequestObject
+
 
 class ResponseSuccess:
     """Response class for output of usecases"""
@@ -39,7 +41,7 @@ class ResponseFailure:
 
     @classmethod
     def build_from_invalid_request_object(
-        cls, invalid_request_obj
+        cls, invalid_request_obj: InvalidRequestObject
     ) -> "ResponseFailure":
         message = "\n".join(
             "{}: {}".format(err["parameter"], err["message"])
@@ -48,15 +50,15 @@ class ResponseFailure:
         return cls(cls.PARAMETERS_ERROR, message)
 
     @classmethod
-    def build_resource_error(cls, message: str = None) -> "ResponseFailure":
+    def build_resource_error(cls, message: str) -> "ResponseFailure":
         return cls(cls.RESOURCE_ERROR, message=message)
 
     @classmethod
-    def build_system_error(cls, message: str = None) -> "ResponseFailure":
+    def build_system_error(cls, message: str) -> "ResponseFailure":
         return cls(cls.SYSTEM_ERROR, message=message)
 
     @classmethod
-    def build_parameters_error(cls, message: str = None) -> "ResponseFailure":
+    def build_parameters_error(cls, message: str) -> "ResponseFailure":
         return cls(cls.PARAMETERS_ERROR, message=message)
 
 

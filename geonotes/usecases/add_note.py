@@ -1,11 +1,12 @@
 from typing import Protocol
 
+from geonotes.domain import note as n
 from geonotes.requests.add_note_request import AddNoteRequest
 from geonotes.responses import ResponseFailure, ResponseObject, ResponseSuccess
 
 
 class Repository(Protocol):
-    def add() -> None:
+    def add(self, note: n.Note) -> None:
         ...
 
 

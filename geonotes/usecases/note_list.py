@@ -1,12 +1,13 @@
-from typing import Protocol
+from typing import Optional, Protocol
 
+from geonotes.domain import note as n
 from geonotes.requests.note_list_request import NoteListRequest
 from geonotes.responses.response import ResponseFailure, ResponseObject, ResponseSuccess
 
 
 class Repository(Protocol):
-    def list(self) -> list:
-        pass
+    def list(self, filters: Optional[dict] = None) -> list[n.Note]:
+        ...
 
 
 class NoteListUseCase:
