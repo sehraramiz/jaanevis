@@ -28,3 +28,6 @@ class ValidRequestObject:
 
     def __bool__(self) -> bool:
         return True
+
+
+RequestObject = ValidRequestObject | InvalidRequestObject

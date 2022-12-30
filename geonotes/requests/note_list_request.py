@@ -1,6 +1,6 @@
 from typing import Any, Mapping, Optional
 
-from geonotes.requests import InvalidRequestObject, ValidRequestObject
+from geonotes.requests import InvalidRequestObject, RequestObject, ValidRequestObject
 
 
 class NoteListRequest(ValidRequestObject):
@@ -12,9 +12,7 @@ class NoteListRequest(ValidRequestObject):
         self.filters = filters
 
     @classmethod
-    def from_dict(
-        cls, data: dict
-    ) -> ValidRequestObject | InvalidRequestObject:
+    def from_dict(cls, data: dict) -> RequestObject:
         invalid_req = InvalidRequestObject()
 
         if "filters" in data:

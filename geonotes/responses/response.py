@@ -58,3 +58,6 @@ class ResponseFailure:
     @classmethod
     def build_parameters_error(cls, message: str = None) -> "ResponseFailure":
         return cls(cls.PARAMETERS_ERROR, message=message)
+
+
+ResponseObject = ResponseSuccess | ResponseFailure
