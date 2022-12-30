@@ -68,3 +68,15 @@ def test_repository_list_with_long_equal_filter(note_dicts) -> None:
 
     assert len(repo_notes) == 1
     assert repo_notes[0].long == 2
+
+
+def test_repository_adds_new_note() -> None:
+    repo = memrepo.MemRepo([])
+    new_note = n.Note(
+        creator="default", url="https://example.com", lat=1, long=1
+    )
+    repo.add(new_note)
+
+    repo_notes = repo.list()
+
+    assert len(repo_notes) == 1

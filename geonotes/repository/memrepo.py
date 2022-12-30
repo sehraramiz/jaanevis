@@ -24,3 +24,6 @@ class MemRepo:
             result = [r for r in result if r.long == filters["long__eq"]]
 
         return result
+
+    def add(self, note: n.Note) -> None:
+        self.data.append(note.to_dict())
