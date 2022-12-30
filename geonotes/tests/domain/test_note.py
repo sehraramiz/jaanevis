@@ -1,5 +1,3 @@
-import uuid
-
 from geonotes.domain import note as n
 
 

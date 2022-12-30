@@ -1,9 +1,11 @@
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, field
 from typing import Any
 
+from pydantic import UUID4, dataclasses
 
-@dataclass
+
+@dataclasses.dataclass
 class Note:
     """Model for taking note on a location."""
 
@@ -11,7 +13,7 @@ class Note:
     url: str
     lat: float
     long: float
-    code: str = field(default_factory=uuid.uuid4)
+    code: UUID4 = field(default_factory=uuid.uuid4)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Note":
