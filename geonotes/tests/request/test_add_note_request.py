@@ -11,7 +11,7 @@ def test_build_note_add_request() -> None:
 
 
 def test_build_note_add_from_wrong_type_note() -> None:
-    request = req.AddNoteRequest(None)
+    request = req.AddNoteRequest.build(None)
 
     assert bool(request) is False
     assert request.has_errors()

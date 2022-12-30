@@ -49,7 +49,7 @@ def test_add_note_handles_bad_request() -> None:
     repo = mock.Mock()
 
     add_note_usecase = uc.AddNoteUseCase(repo)
-    request_obj = req.AddNoteRequest(None)
+    request_obj = req.AddNoteRequest.build(None)
 
     response_obj = add_note_usecase.execute(request_obj)
 

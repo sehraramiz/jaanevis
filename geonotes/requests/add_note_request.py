@@ -1,14 +1,20 @@
 from geonotes.domain.note import Note
-from geonotes.requests import InvalidRequestObject, RequestObject
+from geonotes.requests import InvalidRequestObject, RequestObject, ValidRequestObject
 
 
-class AddNoteRequest:
-    def __new__(self, note: Note) -> RequestObject:
+class AddNoteRequest(ValidRequestObject):
+    """Request object for adding a new note"""
+
+    def __init__(self, note: Note) -> None:
+        self.note = note
+
+    @classmethod
+    def build(cls, note: Note) -> RequestObject:
+
         invalid_req = InvalidRequestObject()
 
         if not isinstance(note, Note):
             invalid_req.add_error("body", "Invalid note type")
             return invalid_req
 
-        self.note = note
-        return self
+        return cls(note=note)
