@@ -20,5 +20,6 @@ class Note:
         return cls(**data)
 
     def to_dict(self) -> dict[str, Any]:
-        self.code = str(self.code)
-        return asdict(self)
+        data = asdict(self)
+        data["code"] = str(self.code)
+        return data

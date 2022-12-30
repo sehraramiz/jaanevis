@@ -32,7 +32,7 @@ def test_note_model_to_dict() -> None:
     note = n.Note(creator="default", url="http://example.com", lat=1, long=1)
 
     assert note.to_dict() == {
-        "code": note.code,
+        "code": str(note.code),
         "creator": "default",
         "url": "http://example.com",
         "lat": 1,
