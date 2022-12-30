@@ -1,11 +1,18 @@
+import logging
 import sys
 import uuid
 
 sys.path = ["", ".."] + sys.path[1:]
 
+from geonotes.domain.note import Note
 from geonotes.repository import memrepo as mr
-from geonotes.requests import note_list_request as req
-from geonotes.usecases import note_list as uc
+from geonotes.requests.add_note_request import AddNoteRequest
+from geonotes.requests.note_list_request import NoteListRequest
+from geonotes.responses import ResponseObject
+from geonotes.usecases.add_note import AddNoteUseCase
+from geonotes.usecases.note_list import NoteListUseCase
+
+logger = logging.getLogger(__name__)
 
 note_1 = {
     "code": uuid.uuid4(),
@@ -39,12 +46,37 @@ note_4 = {
     "long": 4,
 }
 
-if __name__ == "__main__":
-    qrystr_params = {"filters": {}}
+note_dicts = [note_1, note_2, note_3, note_4]
 
-    request_obj = req.NoteListRequest.from_dict(qrystr_params)
 
-    repo = mr.MemRepo([note_1, note_2, note_3, note_4])
-    usecase = uc.NoteListUseCase(repo)
+def get_notes_list(filters: dict = None) -> ResponseObject:
+    qrystr_params = {"filters": filters or {}}
+
+    request_obj = NoteListRequest.from_dict(qrystr_params)
+
+    repo = mr.MemRepo(note_dicts)
+    usecase = NoteListUseCase(repo)
     response = usecase.execute(request_obj)
-    print(response.value)
+    return response
+
+
+def add_note(note: Note) -> ResponseObject:
+    request_obj = AddNoteRequest(note)
+
+    repo = mr.MemRepo(note_dicts)
+    usecase = AddNoteUseCase(repo)
+    response = usecase.execute(request_obj)
+    return response
+
+
+if __name__ == "__main__":
+    notes = get_notes_list()
+    print(notes.value)
+    new_note = Note(
+        creator="default",
+        url="https://example.com/1",
+        lat=1,
+        long=1,
+    )
+    note_add_res = add_note(new_note)
+    print(note_add_res.value)
