@@ -3,12 +3,11 @@ from unittest import mock
 from fastapi.testclient import TestClient
 
 from geonotes.api.fastapi.main import app
-from geonotes.domain.note import Note
+from geonotes.domain.note import NoteCreateApi
 from geonotes.responses import response as res
 
 client = TestClient(app)
-note = Note(
-    creator="default",
+note = NoteCreateApi(
     url="http://example.com",
     lat=1,
     long=1,
@@ -24,12 +23,12 @@ def test_read_notes(mock_usecase) -> None:
 
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
-    assert response.json() == [note.to_dict()]
+    assert response.json() == [note.dict()]
 
 
 @mock.patch("geonotes.usecases.add_note.AddNoteUseCase")
 def test_create_note(mock_usecase) -> None:
-    new_note = note.to_dict()
+    new_note = note.dict()
     new_note.pop("code", None)
     mock_usecase().execute.return_value = res.ResponseSuccess(new_note)
 

@@ -2,7 +2,7 @@ import uuid
 from dataclasses import asdict, field
 from typing import Any
 
-from pydantic import UUID4, dataclasses
+from pydantic import UUID4, BaseModel, dataclasses
 
 
 @dataclasses.dataclass
@@ -23,3 +23,11 @@ class Note:
         data = asdict(self)
         data["code"] = str(self.code)
         return data
+
+
+class NoteCreateApi(BaseModel):
+    """schema for creating a note via api"""
+
+    url: str
+    lat: float
+    long: float
