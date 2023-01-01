@@ -12,7 +12,7 @@ DEFAULT_CREATOR = "default"
 
 @pytest.fixture
 def new_note() -> n.Note:
-    return n.Note(creator="default", url="", lat=1, long=1)
+    return n.Note(creator="default", url="http://example.com", lat=1, long=1)
 
 
 def test_add_note(new_note: n.Note) -> None:

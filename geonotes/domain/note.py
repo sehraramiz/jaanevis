@@ -2,7 +2,7 @@ import uuid
 from dataclasses import asdict, field
 from typing import Any
 
-from pydantic import UUID4, BaseModel, dataclasses
+from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses
 
 
 @dataclasses.dataclass
@@ -10,7 +10,7 @@ class Note:
     """Model for taking note on a location."""
 
     creator: str
-    url: str
+    url: AnyHttpUrl
     lat: float
     long: float
     code: UUID4 = field(default_factory=uuid.uuid4)
@@ -28,6 +28,6 @@ class Note:
 class NoteCreateApi(BaseModel):
     """schema for creating a note via api"""
 
-    url: str
+    url: AnyHttpUrl
     lat: float
     long: float
