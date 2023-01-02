@@ -4,6 +4,8 @@ from typing import Any
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses
 
+from geonotes.domain.geojson import GeoJsonFeature
+
 
 @dataclasses.dataclass
 class Note:
@@ -22,6 +24,7 @@ class Note:
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         data["code"] = str(self.code)
+        data["url"] = str(self.url)
         return data
 
 
@@ -31,3 +34,13 @@ class NoteCreateApi(BaseModel):
     url: AnyHttpUrl
     lat: float
     long: float
+
+
+class NoteGeoJsonProperties(BaseModel):
+    url: AnyHttpUrl
+    creator: str
+    code: UUID4
+
+
+class NoteGeoJsonFeature(GeoJsonFeature):
+    properties: NoteGeoJsonProperties

@@ -1,3 +1,5 @@
+import uuid
+
 from geonotes.domain import note as n
 
 
@@ -38,3 +40,14 @@ def test_note_model_to_dict() -> None:
         "lat": 1,
         "long": 1,
     }
+
+
+def test_note_geojson_properties_init() -> None:
+    code = uuid.uuid4()
+    note_properties = n.NoteGeoJsonProperties(
+        code=code, creator="default", url="http://exp.com"
+    )
+
+    assert note_properties.code == code
+    assert note_properties.creator == "default"
+    assert note_properties.url == "http://exp.com"
