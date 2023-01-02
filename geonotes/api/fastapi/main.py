@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from geonotes.domain import note as n
 from geonotes.repository import memrepo as mr
@@ -10,6 +11,14 @@ from geonotes.usecases import add_note, note_list
 from .sample_data import note_dicts
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/note", response_model=list[n.Note])
