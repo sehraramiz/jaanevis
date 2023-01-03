@@ -1,1 +1,38 @@
-#map { height: 200px; }
+body {
+  font-size: medium;
+}
+
+#main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#map {
+  height: 300px;
+  flex: 70%;
+}
+
+#panel {
+  flex: 30%;
+}
+
+#create-note {
+  margin: 0 10px 0 10px;
+}
+
+#create-note input {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing:border-box
+}
+
+#create-note button {
+  width: 100%;
+  padding: 12px 20px;
+}
+
+@media (max-width: 800px) {
+  #map, #panel {
+    flex: 100%;
+  }
+}

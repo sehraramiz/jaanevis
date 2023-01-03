@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Jaanevis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
@@ -15,18 +17,19 @@
 <body>
 
     <div id="app">
-        <h1>{{ title }} v{{ version }}<h1>
-        <div id="map"></div>
-        <div id="panel">
-            <div id="create-note">
-                <h3>Create new note</h3>
-                <label for="url">Url:</label>
-                <input type="text" id="url" name="url" v-model="url">
-                <label for="lat">Lat:</label>
-                <input type="text" id="lat" name="lat" v-model="lat">
-                <label for="long">Long:</label>
-                <input type="text" id="long" name="long" v-model="long">
-                <button @click="createNewNote">Create</button>
+        <div id="main">
+            <div id="map"></div>
+            <div id="panel">
+                <div id="create-note">
+                    <p>Create new note</p>
+                    <label for="url">Url:</label>
+                    <input type="text" id="url" name="url" v-model="url">
+                    <label for="lat">Latitude:</label>
+                    <input type="text" id="lat" name="lat" v-model="lat">
+                    <label for="long">Longitude:</label>
+                    <input type="text" id="long" name="long" v-model="long">
+                    <button @click="createNewNote">Create</button>
+                </div>
             </div>
         </div>
     </div>
