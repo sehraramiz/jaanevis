@@ -7,8 +7,6 @@ from geonotes.requests.add_note_request import AddNoteRequest
 from geonotes.requests.note_list_request import NoteListRequest
 from geonotes.usecases import add_note, note_list
 
-from .sample_data import note_dicts
-
 app = FastAPI()
 
 app.add_middleware(
@@ -24,7 +22,7 @@ app.add_middleware(
 def read_notes() -> list[n.Note]:
     """read notes"""
 
-    repo = mr.MemRepo(note_dicts)
+    repo = mr.MemRepo()
 
     note_list_usecase = note_list.NoteListUseCase(repo)
     request_obj = NoteListRequest(filters={})
@@ -37,7 +35,7 @@ def read_notes() -> list[n.Note]:
 def read_notes_geojson() -> list[n.NoteGeoJsonFeature]:
     """read notes as geojson feature objects"""
 
-    repo = mr.MemRepo(note_dicts)
+    repo = mr.MemRepo()
 
     note_list_usecase = note_list.GeoJsonNoteListUseCase(repo)
     request_obj = NoteListRequest(filters={})
@@ -51,7 +49,7 @@ def create_note(note_in: n.NoteCreateApi) -> n.Note:
     """add new note"""
 
     note = n.Note(**note_in.dict(), creator="default")
-    repo = mr.MemRepo(note_dicts)
+    repo = mr.MemRepo()
 
     add_note_usecase = add_note.AddNoteUseCase(repo)
     request_obj = AddNoteRequest(note)
