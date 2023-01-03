@@ -14,8 +14,22 @@
 </head>
 <body>
 
-    <div id="app"><h1>{{ title }} v{{ version }}<h1></div>
-    <div id="map"></div>
+    <div id="app">
+        <h1>{{ title }} v{{ version }}<h1>
+        <div id="map"></div>
+        <div id="panel">
+            <div id="create-note">
+                <h3>Create new note</h3>
+                <label for="url">Url:</label>
+                <input type="text" id="url" name="url" v-model="url">
+                <label for="lat">Lat:</label>
+                <input type="text" id="lat" name="lat" v-model="lat">
+                <label for="long">Long:</label>
+                <input type="text" id="long" name="long" v-model="long">
+                <button @click="createNewNote">Create</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js" type="module"></script>
 

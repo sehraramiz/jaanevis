@@ -45,7 +45,25 @@ createApp({
           },
           onEachFeature: this.onEachFeature
       }).addTo(this.map);
-    }
+    },
+    createNewNote: async function () {
+      var note = {
+        url: this.url,
+        lat: this.lat,
+        long: this.long
+      };
+      const response = await fetch(this.baseUrl + "/note", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(note)
+      });
+      const content = await response.json();
+      this.showNotesOnMap();
+      alert("Note created!");
+    },
   },
   mounted() {
     this.initMap();
