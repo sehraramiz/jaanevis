@@ -5,7 +5,8 @@ from jaanevis.domain import note as n
 from jaanevis.repository import memrepo as mr
 from jaanevis.requests.add_note_request import AddNoteRequest
 from jaanevis.requests.note_list_request import NoteListRequest
-from jaanevis.usecases import add_note, note_list
+from jaanevis.requests.read_note_request import ReadNoteRequest
+from jaanevis.usecases import add_note, note_list, read_note
 
 app = FastAPI()
 
@@ -40,6 +41,19 @@ def read_notes_geojson() -> list[n.NoteGeoJsonFeature]:
     note_list_usecase = note_list.GeoJsonNoteListUseCase(repo)
     request_obj = NoteListRequest(filters={})
     response = note_list_usecase.execute(request_obj)
+
+    return response.value
+
+
+@app.get("/note/{code}", response_model=n.Note)
+def read_note_by_code(code: str) -> n.Note:
+    """read note by code"""
+
+    repo = mr.MemRepo()
+
+    read_note_usecase = read_note.ReadNoteUseCase(repo)
+    request_obj = ReadNoteRequest(code=code)
+    response = read_note_usecase.execute(request_obj)
 
     return response.value
 

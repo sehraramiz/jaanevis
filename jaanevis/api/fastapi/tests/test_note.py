@@ -35,6 +35,17 @@ def test_read_notes(mock_usecase) -> None:
     assert response.json() == [note_complete.to_dict()]
 
 
+@mock.patch("jaanevis.usecases.read_note.ReadNoteUseCase")
+def test_read_note_by_code(mock_usecase) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
+
+    response = client.get(f"/note/{note_complete.code}")
+
+    assert response.status_code == 200
+    assert response.json() == note_complete.to_dict()
+    mock_usecase().execute.assert_called()
+
+
 @mock.patch("jaanevis.usecases.add_note.AddNoteUseCase")
 def test_create_note(mock_usecase) -> None:
     new_note = note.dict()

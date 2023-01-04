@@ -47,3 +47,9 @@ class MemRepo:
     def add(self, note: n.Note) -> None:
         self.data.append(note.to_dict())
         self._write_data_to_file()
+
+    def get_by_code(self, code: str) -> Optional[n.Note]:
+        for note in self.data:
+            if note["code"] == code:
+                return n.Note.from_dict(note)
+        return None

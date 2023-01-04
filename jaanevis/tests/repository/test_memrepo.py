@@ -90,6 +90,22 @@ def test_repository_adds_new_note() -> None:
         assert len(repo_notes) == 1
 
 
+def test_repository_get_note_by_code(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    notes = [n.Note.from_dict(data) for data in note_dicts]
+
+    assert repo.get_by_code(code=notes[0].code) == notes[0]
+
+
+def test_repository_get_note_by_code_handle_nonexistent_code(
+    note_dicts,
+) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    assert repo.get_by_code(code="nocode") is None
+
+
 @mock.patch("pathlib.Path")
 def test_read_notes_from_file_with_no_init_data(path, note_dicts) -> None:
     notes = [n.Note.from_dict(data) for data in note_dicts]

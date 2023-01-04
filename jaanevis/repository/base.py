@@ -11,3 +11,6 @@ class Repository(Protocol):
 
     def add(self, note: n.Note) -> None:
         ...
+
+    def get_by_code(self, code: str) -> n.Note:
+        ...
