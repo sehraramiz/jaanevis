@@ -1,6 +1,7 @@
 from typing import Optional, Protocol
 
 from jaanevis.domain import note as n
+from jaanevis.repository import memrepo as mr
 
 
 class Repository(Protocol):
@@ -14,3 +15,6 @@ class Repository(Protocol):
 
     def get_by_code(self, code: str) -> n.Note:
         ...
+
+
+repository: Repository = mr.MemRepo
