@@ -1,13 +1,6 @@
-from typing import Protocol
-
-from jaanevis.domain import note as n
+from jaanevis.repository.base import Repository
 from jaanevis.requests.add_note_request import AddNoteRequest
 from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
-
-
-class Repository(Protocol):
-    def add(self, note: n.Note) -> None:
-        ...
 
 
 class AddNoteUseCase:
