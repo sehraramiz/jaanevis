@@ -43,10 +43,10 @@ def test_read_note_by_code() -> None:
     repo = mock.Mock()
     repo.get_by_code.return_value = notes[0]
 
-    note_list_usecase = uc.ReadNoteUseCase(repo)
+    note_read_usecase = uc.ReadNoteUseCase(repo)
     request = req.ReadNoteRequest.build(code=notes[0].code)
 
-    response = note_list_usecase.execute(request)
+    response = note_read_usecase.execute(request)
 
     assert bool(response) is True
     repo.get_by_code.assert_called_with(code=notes[0].code)
@@ -57,10 +57,10 @@ def test_read_note_by_code_handles_nonexistent_code() -> None:
     repo = mock.Mock()
     repo.get_by_code.return_value = None
 
-    note_list_usecase = uc.ReadNoteUseCase(repo)
+    note_read_usecase = uc.ReadNoteUseCase(repo)
     request = req.ReadNoteRequest.build(code="nocode")
 
-    response = note_list_usecase.execute(request)
+    response = note_read_usecase.execute(request)
 
     assert bool(response) is False
     assert response.value == {
