@@ -1,3 +1,3 @@
 #!/bin/bash
 
-uvicorn geonotes.api.fastapi.main:app --reload --port 8000
+uvicorn jaanevis.api.fastapi.main:app --reload --port 8000

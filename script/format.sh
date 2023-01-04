@@ -1,6 +1,6 @@
 #!/bin/sh -e
 set -x
 
-ruff geonotes --fix
-black geonotes
-isort geonotes
+ruff jaanevis --fix
+black jaanevis
+isort jaanevis
