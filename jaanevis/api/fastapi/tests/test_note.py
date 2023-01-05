@@ -4,7 +4,7 @@ from unittest import mock
 from fastapi.testclient import TestClient
 
 from jaanevis.api.fastapi.main import app
-from jaanevis.domain.note import Note, NoteCreateApi
+from jaanevis.domain.note import Note, NoteCreateApi, NoteUpdateApi
 from jaanevis.responses import response as res
 
 client = TestClient(app)
@@ -67,6 +67,26 @@ def test_create_note(mock_usecase) -> None:
     response = client.post("/note", json=new_note)
     result = response.json()
     result.pop("code", None)
+
+    assert result == new_note
+    assert response.status_code == 200
+    mock_usecase().execute.assert_called()
+
+
+@mock.patch("jaanevis.usecases.update_note.UpdateNoteUseCase")
+def test_update_note(mock_usecase) -> None:
+    new_note = note_complete.to_dict()
+    note_update = NoteUpdateApi(
+        url="https://newurl.com",
+        lat=note_complete.lat,
+        long=note_complete.long,
+    )
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
+
+    response = client.put(
+        f"/note/{note_complete.code}", json=note_update.dict()
+    )
+    result = response.json()
 
     assert result == new_note
     assert response.status_code == 200

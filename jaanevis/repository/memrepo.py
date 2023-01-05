@@ -62,3 +62,14 @@ class MemRepo:
                 break
         self._write_data_to_file()
         return note
+
+    def update(self, obj: n.Note, data: str) -> n.Note:
+        updated_note = obj
+        for _index, note in enumerate(self.data):
+            if note["code"] == str(obj.code):
+                for field in data:
+                    note[field] = data[field]
+                updated_note = n.Note.from_dict(note)
+                break
+        self._write_data_to_file()
+        return updated_note

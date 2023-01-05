@@ -115,6 +115,30 @@ def test_repository_delete_by_code(note_dicts) -> None:
     assert not any(n["code"] == notes[0].code for n in repo.data)
 
 
+def test_repository_update(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    notes = [n.Note.from_dict(data) for data in note_dicts]
+    newurl = "https://newurl.com"
+    update_data = {
+        "url": newurl,
+        "lat": notes[0].lat,
+        "long": notes[0].long,
+    }
+    new_note = n.Note(
+        code=notes[0].code, creator=notes[0].creator, **update_data
+    )
+
+    updated_note = repo.update(obj=notes[0], data=update_data)
+    note_in_db = None
+    for note in repo.data:
+        if note["code"] == str(notes[0].code):
+            note_in_db = n.Note.from_dict(note)
+
+    assert updated_note == new_note
+    assert note_in_db == new_note
+
+
 @mock.patch("pathlib.Path")
 def test_read_notes_from_file_with_no_init_data(path, note_dicts) -> None:
     notes = [n.Note.from_dict(data) for data in note_dicts]
@@ -155,5 +179,23 @@ def test_remove_deleted_note_from_file_db(path, note_dicts) -> None:
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
         repo.delete_by_code(code=str(notes[0].code))
+
+    mock_open.assert_called_with("db.json", "w")
+
+
+@mock.patch("pathlib.Path")
+def test_write_db_to_file_after_note_update(path, note_dicts) -> None:
+    notes = [n.Note.from_dict(data) for data in note_dicts]
+    read_data = json.dumps(notes, cls=ser.NoteJsonEncoder)
+    mock_open = mock.mock_open(read_data=read_data)
+    update_data = {
+        "url": "https://newurl.com",
+        "lat": notes[0].lat,
+        "long": notes[0].long,
+    }
+
+    with mock.patch("jaanevis.repository.memrepo.open", mock_open):
+        repo = memrepo.MemRepo()
+        repo.update(obj=notes[0], data=update_data)
 
     mock_open.assert_called_with("db.json", "w")

@@ -7,7 +7,8 @@ from jaanevis.requests.add_note_request import AddNoteRequest
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.note_list_request import NoteListRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
-from jaanevis.usecases import add_note, delete_note, note_list, read_note
+from jaanevis.requests.update_note_request import UpdateNoteRequest
+from jaanevis.usecases import add_note, delete_note, note_list, read_note, update_note
 
 app = FastAPI()
 
@@ -82,5 +83,18 @@ def create_note(note_in: n.NoteCreateApi) -> n.Note:
     add_note_usecase = add_note.AddNoteUseCase(repo)
     request_obj = AddNoteRequest(note)
     response = add_note_usecase.execute(request_obj)
+
+    return response.value
+
+
+@app.put("/note/{code}", response_model=n.Note)
+def update_note_by_code(code: str, note_in: n.NoteUpdateApi) -> n.Note:
+    """update note"""
+
+    repo = repository()
+
+    update_note_usecase = update_note.UpdateNoteUseCase(repo)
+    request_obj = UpdateNoteRequest(code=code, note=note_in)
+    response = update_note_usecase.execute(request_obj)
 
     return response.value

@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import asdict, field
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses
 
@@ -34,6 +34,14 @@ class NoteCreateApi(BaseModel):
     url: AnyHttpUrl
     lat: float
     long: float
+
+
+class NoteUpdateApi(BaseModel):
+    """schema for updatig a note via api"""
+
+    url: Optional[AnyHttpUrl] = None
+    lat: Optional[float] = None
+    long: Optional[float] = None
 
 
 class NoteGeoJsonProperties(BaseModel):

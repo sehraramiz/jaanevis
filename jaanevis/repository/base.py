@@ -19,5 +19,8 @@ class Repository(Protocol):
     def delete_by_code(self, code: str) -> n.Note:
         ...
 
+    def update(self, obj: n.Note, data: dict) -> n.Note:
+        ...
+
 
 repository: Repository = mr.MemRepo
