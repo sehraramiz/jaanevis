@@ -31,7 +31,7 @@ class MemRepo:
             return result
 
         if "code__eq" in filters:
-            result = [r for r in result if r.code == filters["code__eq"]]
+            result = [r for r in result if str(r.code) == filters["code__eq"]]
 
         if "url__eq" in filters:
             result = [r for r in result if r.url == filters["url__eq"]]
@@ -53,3 +53,12 @@ class MemRepo:
             if note["code"] == code:
                 return n.Note.from_dict(note)
         return None
+
+    def delete_by_code(self, code: str) -> Optional[n.Note]:
+        note = None
+        for index, note in enumerate(self.data):
+            if note["code"] == code:
+                note = n.Note.from_dict(self.data.pop(index))
+                break
+        self._write_data_to_file()
+        return note

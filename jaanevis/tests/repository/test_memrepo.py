@@ -13,14 +13,14 @@ from jaanevis.serializers import note_json_serializer as ser
 def note_dicts() -> list[dict]:
     return [
         {
-            "code": uuid.uuid4(),
+            "code": str(uuid.uuid4()),
             "creator": "default",
             "url": "http://example.com/1",
             "lat": 1,
             "long": 1,
         },
         {
-            "code": uuid.uuid4(),
+            "code": str(uuid.uuid4()),
             "creator": "default",
             "url": "http://example.com/2",
             "lat": 2,
@@ -43,7 +43,7 @@ def test_repository_list_with_code_equal_filter(note_dicts) -> None:
     repo_notes = repo.list(filters={"code__eq": note_dicts[0]["code"]})
 
     assert len(repo_notes) == 1
-    assert repo_notes[0].code == note_dicts[0]["code"]
+    assert str(repo_notes[0].code) == note_dicts[0]["code"]
 
 
 def test_repository_list_with_url_equal_filter(note_dicts) -> None:
@@ -95,7 +95,7 @@ def test_repository_get_note_by_code(note_dicts) -> None:
 
     notes = [n.Note.from_dict(data) for data in note_dicts]
 
-    assert repo.get_by_code(code=notes[0].code) == notes[0]
+    assert repo.get_by_code(code=str(notes[0].code)) == notes[0]
 
 
 def test_repository_get_note_by_code_handle_nonexistent_code(
@@ -104,6 +104,15 @@ def test_repository_get_note_by_code_handle_nonexistent_code(
     repo = memrepo.MemRepo(note_dicts)
 
     assert repo.get_by_code(code="nocode") is None
+
+
+def test_repository_delete_by_code(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    notes = [n.Note.from_dict(data) for data in note_dicts]
+
+    assert repo.delete_by_code(code=str(notes[0].code)) == notes[0]
+    assert not any(n["code"] == notes[0].code for n in repo.data)
 
 
 @mock.patch("pathlib.Path")
@@ -133,5 +142,18 @@ def test_write_new_created_note_to_file_db(path, note_dicts) -> None:
             creator="default", url="https://example.com", lat=1, long=1
         )
         repo.add(new_note)
+
+    mock_open.assert_called_with("db.json", "w")
+
+
+@mock.patch("pathlib.Path")
+def test_remove_deleted_note_from_file_db(path, note_dicts) -> None:
+    notes = [n.Note.from_dict(data) for data in note_dicts]
+    read_data = json.dumps(notes, cls=ser.NoteJsonEncoder)
+    mock_open = mock.mock_open(read_data=read_data)
+
+    with mock.patch("jaanevis.repository.memrepo.open", mock_open):
+        repo = memrepo.MemRepo()
+        repo.delete_by_code(code=str(notes[0].code))
 
     mock_open.assert_called_with("db.json", "w")

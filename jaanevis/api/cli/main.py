@@ -1,6 +1,5 @@
 import logging
 import sys
-import uuid
 from typing import Optional
 
 sys.path = ["", ".."] + sys.path[1:]

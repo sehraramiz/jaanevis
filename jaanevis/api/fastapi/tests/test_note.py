@@ -46,6 +46,17 @@ def test_read_note_by_code(mock_usecase) -> None:
     mock_usecase().execute.assert_called()
 
 
+@mock.patch("jaanevis.usecases.delete_note.DeleteNoteUseCase")
+def test_delete_note(mock_usecase) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
+
+    response = client.delete(f"/note/{note_complete.code}")
+
+    assert response.status_code == 200
+    assert response.json() == note_complete.to_dict()
+    mock_usecase().execute.assert_called()
+
+
 @mock.patch("jaanevis.usecases.add_note.AddNoteUseCase")
 def test_create_note(mock_usecase) -> None:
     new_note = note.dict()

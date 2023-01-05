@@ -16,5 +16,8 @@ class Repository(Protocol):
     def get_by_code(self, code: str) -> n.Note:
         ...
 
+    def delete_by_code(self, code: str) -> n.Note:
+        ...
+
 
 repository: Repository = mr.MemRepo
