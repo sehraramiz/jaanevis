@@ -108,6 +108,7 @@ def test_repository_get_note_by_code_handle_nonexistent_code(
 
 def test_repository_delete_by_code(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
+    repo._write_data_to_file = mock.Mock()
 
     notes = [n.Note.from_dict(data) for data in note_dicts]
 
@@ -117,6 +118,7 @@ def test_repository_delete_by_code(note_dicts) -> None:
 
 def test_repository_update(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
+    repo._write_data_to_file = mock.Mock()
 
     notes = [n.Note.from_dict(data) for data in note_dicts]
     newurl = "https://newurl.com"
