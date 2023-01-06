@@ -43,6 +43,15 @@ createApp({
       if (this.notesLayer)
         this.notesLayer.clearLayers();
     },
+    hidePointer: function () {
+      if (this.pointer)
+        this.map.removeLayer(this.pointer);
+    },
+    showPointer: function (lat, long) {
+      if (this.pointer)
+        this.map.removeLayer(this.pointer);
+      this.pointer = new L.Marker([lat, long]).addTo(this.map);
+    },
     showNotesOnMap: async function () {
       this.clearMapNotes();
 
@@ -58,6 +67,7 @@ createApp({
           },
           onEachFeature: this.onEachFeature,
       }).addTo(this.map);
+      this.hidePointer();
     },
     readNotes: async function () {
       let url = this.baseUrl + '/note/geojson';
@@ -123,13 +133,18 @@ createApp({
       };
     },
     showNoteCreateForm: function (e) {
+      let lat = e.latlng.lat;
+      let long = e.latlng.lng;
+
+      this.showPointer(lat, long);
+
       this.panelView = 'create';
       this.note = {
         code: "",
         creator: "",
         url: "",
-        lat: e.latlng.lat,
-        long: e.latlng.lng
+        lat: lat,
+        long: long
       }
     },
   },
