@@ -16,17 +16,17 @@ body {
   flex: 30%;
 }
 
-#create-note {
+.note-form {
   margin: 0 10px 0 10px;
 }
 
-#create-note input {
+.note-form input {
   width: 100%;
   padding: 12px 20px;
   box-sizing:border-box
 }
 
-#create-note button {
+.note-form button {
   width: 100%;
   padding: 12px 20px;
 }

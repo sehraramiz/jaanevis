@@ -20,15 +20,27 @@
         <div id="main">
             <div id="map"></div>
             <div id="panel">
-                <div id="create-note">
+                <div class="note-form" v-if="panelView == 'create'" id="create-note">
                     <p>Create new note</p>
                     <label for="url">Url:</label>
-                    <input type="text" id="url" name="url" v-model="url">
+                    <input type="text" id="url" name="url" v-model="note.url">
                     <label for="lat">Latitude:</label>
-                    <input type="text" id="lat" name="lat" v-model="lat">
+                    <input type="text" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
-                    <input type="text" id="long" name="long" v-model="long">
+                    <input type="text" id="long" name="long" v-model="note.long">
                     <button @click="createNewNote">Create</button>
+                </div>
+                <div class="note-form" v-if="panelView == 'details'" id="note-detail">
+                    <p>Code: {{ note.code }}</p>
+                    <p>Creator: {{ note.creator }}</p>
+                    <label for="url">Url:</label>
+                    <input type="text" id="url" name="url" v-model="note.url">
+                    <label for="lat">Latitude:</label>
+                    <input type="text" id="lat" name="lat" v-model="note.lat">
+                    <label for="long">Longitude:</label>
+                    <input type="text" id="long" name="long" v-model="note.long">
+                    <button @click="updateNote">Update</button>
+                    <button @click="deleteNote">Delete</button>
                 </div>
             </div>
         </div>
