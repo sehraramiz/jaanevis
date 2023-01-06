@@ -25,9 +25,9 @@
                     <label for="url">Url:</label>
                     <input type="text" id="url" name="url" v-model="note.url">
                     <label for="lat">Latitude:</label>
-                    <input type="text" id="lat" name="lat" v-model="note.lat">
+                    <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
-                    <input type="text" id="long" name="long" v-model="note.long">
+                    <input type="number" step="any" id="long" name="long" v-model="note.long">
                     <button @click="createNewNote">Create</button>
                 </div>
                 <div class="note-form" v-if="panelView == 'details'" id="note-detail">
@@ -36,11 +36,19 @@
                     <label for="url">Url:</label>
                     <input type="text" id="url" name="url" v-model="note.url">
                     <label for="lat">Latitude:</label>
-                    <input type="text" id="lat" name="lat" v-model="note.lat">
+                    <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
-                    <input type="text" id="long" name="long" v-model="note.long">
+                    <input type="number" step="any" id="long" name="long" v-model="note.long">
                     <button @click="updateNote">Update</button>
                     <button @click="deleteNote">Delete</button>
+                </div>
+                <div>
+                  <p v-if="errors.length">
+                    <b>Please correct the following error(s):</b>
+                    <ul>
+                      <li v-for="error in errors">{{ error }}</li>
+                    </ul>
+                  </p>
                 </div>
             </div>
         </div>

@@ -7,14 +7,15 @@ createApp({
       title: 'Jaanevis',
       version: '0.0.1',
       baseUrl: 'http://127.0.0.1:8000',
-      panelView: "details",
+      panelView: "create",
       note: {
         code: "code",
         creator: "default",
         url: "",
         lat: "0.0",
         long: "0.0"
-      }
+      },
+      errors: []
     }
   },
   methods: {
@@ -68,6 +69,7 @@ createApp({
           onEachFeature: this.onEachFeature,
       }).addTo(this.map);
       this.hidePointer();
+      this.clearErrors();
     },
     readNotes: async function () {
       let url = this.baseUrl + '/note/geojson';
@@ -75,6 +77,9 @@ createApp({
       return await response.json();
     },
     createNewNote: async function () {
+      if (!this.checkForm())
+        return;
+
       let note = {
         url: this.note.url,
         lat: this.note.lat,
@@ -104,6 +109,9 @@ createApp({
       alert("Note deleted!");
     },
     updateNote: async function () {
+      if (!this.checkForm())
+        return;
+
       let note = {
         url: this.note.url,
         lat: this.note.lat,
@@ -147,6 +155,37 @@ createApp({
         long: long
       }
     },
+    checkForm: function (e) {
+      // validate url
+      var urlError = "";
+      try {
+        new URL (this.note.url);
+      } catch (error) {
+         urlError = error;
+      }
+
+      // validate lat long
+      var lat = this.note.lat, long = this.note.long;
+      var validLat = isFinite(lat) && Math.abs(lat) <= 90 && !isNaN(parseFloat(lat));
+      var validLong = isFinite(long) && Math.abs(long) <= 180 && !isNaN(parseFloat(long));
+
+      if (!urlError && validLat && validLong)
+        return true;
+
+      this.errors = [];
+
+      if (urlError)
+        this.errors.push(urlError);
+
+      if (!validLat)
+        this.errors.push('Latitude is not valid.');
+
+      if (!validLong)
+        this.errors.push('Longitude is not valid.');
+    },
+    clearErrors: function () {
+      this.errors = [];
+    }
   },
   mounted() {
     this.initMap();
