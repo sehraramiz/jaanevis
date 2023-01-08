@@ -25,7 +25,7 @@ class MemRepo:
             db.write(json.dumps(self.data))
 
     def list(self, filters: dict = None) -> list[n.Note]:
-        result = [n.Note.from_dict(d) for d in self.data]
+        result = [n.Note.from_dict(d) for d in self.data["notes"]]
 
         if filters is None:
             return result
@@ -45,27 +45,27 @@ class MemRepo:
         return result
 
     def add(self, note: n.Note) -> None:
-        self.data.append(note.to_dict())
+        self.data["notes"].append(note.to_dict())
         self._write_data_to_file()
 
     def get_by_code(self, code: str) -> Optional[n.Note]:
-        for note in self.data:
+        for note in self.data["notes"]:
             if note["code"] == code:
                 return n.Note.from_dict(note)
         return None
 
     def delete_by_code(self, code: str) -> Optional[n.Note]:
         note = None
-        for index, note in enumerate(self.data):
+        for index, note in enumerate(self.data["notes"]):
             if note["code"] == code:
-                note = n.Note.from_dict(self.data.pop(index))
+                note = n.Note.from_dict(self.data["notes"].pop(index))
                 break
         self._write_data_to_file()
         return note
 
     def update(self, obj: n.Note, data: str) -> n.Note:
         updated_note = obj
-        for _index, note in enumerate(self.data):
+        for _index, note in enumerate(self.data["notes"]):
             if note["code"] == str(obj.code):
                 for field in data:
                     note[field] = data[field]

@@ -1,5 +1,6 @@
 import json
 import uuid
+from typing import Any
 from unittest import mock
 
 import pytest
@@ -10,29 +11,32 @@ from jaanevis.serializers import note_json_serializer as ser
 
 
 @pytest.fixture
-def note_dicts() -> list[dict]:
-    return [
-        {
-            "code": str(uuid.uuid4()),
-            "creator": "default",
-            "url": "http://example.com/1",
-            "lat": 1,
-            "long": 1,
-        },
-        {
-            "code": str(uuid.uuid4()),
-            "creator": "default",
-            "url": "http://example.com/2",
-            "lat": 2,
-            "long": 2,
-        },
-    ]
+def note_dicts() -> dict[str, list[Any]]:
+    return {
+        "notes": [
+            {
+                "code": str(uuid.uuid4()),
+                "creator": "default",
+                "url": "http://example.com/1",
+                "lat": 1,
+                "long": 1,
+            },
+            {
+                "code": str(uuid.uuid4()),
+                "creator": "default",
+                "url": "http://example.com/2",
+                "lat": 2,
+                "long": 2,
+            },
+        ],
+        "users": [{"username": "test@test.com"}],
+    }
 
 
 def test_repository_list_without_parameters(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
-    notes = [n.Note.from_dict(data) for data in note_dicts]
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
 
     assert repo.list() == notes
 
@@ -40,10 +44,12 @@ def test_repository_list_without_parameters(note_dicts) -> None:
 def test_repository_list_with_code_equal_filter(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
-    repo_notes = repo.list(filters={"code__eq": note_dicts[0]["code"]})
+    repo_notes = repo.list(
+        filters={"code__eq": note_dicts["notes"][0]["code"]}
+    )
 
     assert len(repo_notes) == 1
-    assert str(repo_notes[0].code) == note_dicts[0]["code"]
+    assert str(repo_notes[0].code) == note_dicts["notes"][0]["code"]
 
 
 def test_repository_list_with_url_equal_filter(note_dicts) -> None:
@@ -74,7 +80,7 @@ def test_repository_list_with_long_equal_filter(note_dicts) -> None:
 
 
 def test_repository_adds_new_note() -> None:
-    mock_open = mock.mock_open(read_data="[]")
+    mock_open = mock.mock_open(read_data=json.dumps({"notes": []}))
 
     with mock.patch(
         "jaanevis.repository.memrepo.open", mock_open, create=True
@@ -93,7 +99,7 @@ def test_repository_adds_new_note() -> None:
 def test_repository_get_note_by_code(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
-    notes = [n.Note.from_dict(data) for data in note_dicts]
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
 
     assert repo.get_by_code(code=str(notes[0].code)) == notes[0]
 
@@ -110,17 +116,17 @@ def test_repository_delete_by_code(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
     repo._write_data_to_file = mock.Mock()
 
-    notes = [n.Note.from_dict(data) for data in note_dicts]
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
 
     assert repo.delete_by_code(code=str(notes[0].code)) == notes[0]
-    assert not any(n["code"] == notes[0].code for n in repo.data)
+    assert not any(n["code"] == notes[0].code for n in repo.data["notes"])
 
 
 def test_repository_update(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
     repo._write_data_to_file = mock.Mock()
 
-    notes = [n.Note.from_dict(data) for data in note_dicts]
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
     newurl = "https://newurl.com"
     update_data = {
         "url": newurl,
@@ -133,7 +139,7 @@ def test_repository_update(note_dicts) -> None:
 
     updated_note = repo.update(obj=notes[0], data=update_data)
     note_in_db = None
-    for note in repo.data:
+    for note in repo.data["notes"]:
         if note["code"] == str(notes[0].code):
             note_in_db = n.Note.from_dict(note)
 
@@ -143,7 +149,7 @@ def test_repository_update(note_dicts) -> None:
 
 @mock.patch("pathlib.Path")
 def test_read_notes_from_file_with_no_init_data(path, note_dicts) -> None:
-    notes = [n.Note.from_dict(data) for data in note_dicts]
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
     read_data = json.dumps(notes, cls=ser.NoteJsonEncoder)
     mock_open = mock.mock_open(read_data=read_data)
 
@@ -158,8 +164,9 @@ def test_read_notes_from_file_with_no_init_data(path, note_dicts) -> None:
 
 @mock.patch("pathlib.Path")
 def test_write_new_created_note_to_file_db(path, note_dicts) -> None:
-    notes = [n.Note.from_dict(data) for data in note_dicts]
-    read_data = json.dumps(notes, cls=ser.NoteJsonEncoder)
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    data = {"notes": notes, "users": []}
+    read_data = json.dumps(data, cls=ser.NoteJsonEncoder)
     mock_open = mock.mock_open(read_data=read_data)
 
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
@@ -174,8 +181,9 @@ def test_write_new_created_note_to_file_db(path, note_dicts) -> None:
 
 @mock.patch("pathlib.Path")
 def test_remove_deleted_note_from_file_db(path, note_dicts) -> None:
-    notes = [n.Note.from_dict(data) for data in note_dicts]
-    read_data = json.dumps(notes, cls=ser.NoteJsonEncoder)
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    data = {"notes": notes, "users": []}
+    read_data = json.dumps(data, cls=ser.NoteJsonEncoder)
     mock_open = mock.mock_open(read_data=read_data)
 
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
@@ -187,8 +195,9 @@ def test_remove_deleted_note_from_file_db(path, note_dicts) -> None:
 
 @mock.patch("pathlib.Path")
 def test_write_db_to_file_after_note_update(path, note_dicts) -> None:
-    notes = [n.Note.from_dict(data) for data in note_dicts]
-    read_data = json.dumps(notes, cls=ser.NoteJsonEncoder)
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    data = {"notes": notes, "users": []}
+    read_data = json.dumps(data, cls=ser.NoteJsonEncoder)
     mock_open = mock.mock_open(read_data=read_data)
     update_data = {
         "url": "https://newurl.com",
