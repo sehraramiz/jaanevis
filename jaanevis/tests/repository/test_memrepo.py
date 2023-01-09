@@ -6,6 +6,7 @@ from unittest import mock
 import pytest
 
 from jaanevis.domain import note as n
+from jaanevis.domain import user as u
 from jaanevis.repository import memrepo
 from jaanevis.serializers import note_json_serializer as ser
 
@@ -210,3 +211,11 @@ def test_write_db_to_file_after_note_update(path, note_dicts) -> None:
         repo.update(obj=notes[0], data=update_data)
 
     mock_open.assert_called_with("db.json", "w")
+
+
+def test_get_user_by_username(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    users = [u.User.from_dict(data) for data in note_dicts["users"]]
+
+    assert repo.get_user_by_username(username=users[0].username) == users[0]

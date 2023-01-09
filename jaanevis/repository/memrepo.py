@@ -3,6 +3,7 @@ import pathlib
 from typing import Optional
 
 from jaanevis.domain import note as n
+from jaanevis.domain import user as u
 
 
 class MemRepo:
@@ -73,3 +74,9 @@ class MemRepo:
                 break
         self._write_data_to_file()
         return updated_note
+
+    def get_user_by_username(self, username: str) -> u.User:
+        for user in self.data["users"]:
+            if user["username"] == username:
+                return u.User.from_dict(user)
+        return None

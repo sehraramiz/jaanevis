@@ -1,6 +1,7 @@
 from typing import Optional, Protocol
 
 from jaanevis.domain import note as n
+from jaanevis.domain import user as u
 from jaanevis.repository import memrepo as mr
 
 
@@ -20,6 +21,9 @@ class Repository(Protocol):
         ...
 
     def update(self, obj: n.Note, data: dict) -> n.Note:
+        ...
+
+    def get_user_by_username(self, username: str) -> u.User:
         ...
 
 
