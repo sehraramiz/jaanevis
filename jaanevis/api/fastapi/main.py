@@ -28,7 +28,7 @@ def read_notes() -> list[n.Note]:
     repo = repository()
 
     note_list_usecase = note_list.NoteListUseCase(repo)
-    request_obj = NoteListRequest(filters={})
+    request_obj = NoteListRequest.from_dict({"filters": {}})
     response = note_list_usecase.execute(request_obj)
 
     return response.value
@@ -41,7 +41,7 @@ def read_notes_geojson() -> list[n.NoteGeoJsonFeature]:
     repo = repository()
 
     note_list_usecase = note_list.GeoJsonNoteListUseCase(repo)
-    request_obj = NoteListRequest(filters={})
+    request_obj = NoteListRequest.from_dict(data={"filters": {}})
     response = note_list_usecase.execute(request_obj)
 
     return response.value

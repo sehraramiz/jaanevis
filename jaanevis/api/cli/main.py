@@ -28,7 +28,7 @@ def get_notes_list(filters: Optional[dict]) -> ResponseObject:
 
 def add_note(note_in: NoteCreateApi) -> ResponseObject:
     note = Note(**note_in.dict(), creator="default")
-    request_obj = AddNoteRequest(note)
+    request_obj = AddNoteRequest.build(note)
 
     repo = repository()
     usecase = AddNoteUseCase(repo)
