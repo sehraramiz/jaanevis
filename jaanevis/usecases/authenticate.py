@@ -16,7 +16,6 @@ class AuthenticateUseCase:
         try:
             username = request.token.split(":")[0]
             user = self.repo.get_user_by_username(username=username)
-            print(username, user)
             if not user:
                 return ResponseFailure.build_resource_error("User not found")
             return ResponseSuccess(user)

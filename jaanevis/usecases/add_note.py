@@ -11,6 +11,7 @@ class AddNoteUseCase:
         if not request:
             return ResponseFailure.build_from_invalid_request_object(request)
         try:
+            request.note.creator = request.user.username
             self.repo.add(request.note)
             return ResponseSuccess(request.note)
         except Exception as exc:

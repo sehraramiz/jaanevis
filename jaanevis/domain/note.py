@@ -11,11 +11,11 @@ from jaanevis.domain.geojson import GeoJsonFeature
 class Note:
     """Model for taking note on a location."""
 
-    creator: str
     url: AnyHttpUrl
     lat: float
     long: float
     code: UUID4 = field(default_factory=uuid.uuid4)
+    creator: Optional[str] = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Note":

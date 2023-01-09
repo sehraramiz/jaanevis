@@ -1,4 +1,5 @@
 import uuid
+from base64 import b64encode
 from unittest import mock
 
 from fastapi.testclient import TestClient
@@ -57,20 +58,25 @@ def test_delete_note(mock_usecase) -> None:
     mock_usecase().execute.assert_called()
 
 
+@mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")
 @mock.patch("jaanevis.usecases.add_note.AddNoteUseCase")
-def test_create_note(mock_usecase) -> None:
+def test_create_note(mock_usecase, auth_usecase) -> None:
     new_note = note.dict()
-    new_note["creator"] = "default"
+    new_note["creator"] = "username"
     new_note.pop("code", None)
     mock_usecase().execute.return_value = res.ResponseSuccess(new_note)
+    token = b64encode("username:password".encode("utf-8")).decode("ascii")
 
-    response = client.post("/note", json=new_note)
+    response = client.post(
+        "/note", json=new_note, headers={"Authorization": f"Basic {token}"}
+    )
     result = response.json()
     result.pop("code", None)
 
     assert result == new_note
     assert response.status_code == 200
     mock_usecase().execute.assert_called()
+    auth_usecase().execute.assert_called()
 
 
 @mock.patch("jaanevis.usecases.update_note.UpdateNoteUseCase")
@@ -110,3 +116,9 @@ def test_read_notes_geojson_data(mock_usecase) -> None:
     assert result[0]["properties"]["creator"] == "default"
     assert len(result[0]["properties"]["code"])
     mock_usecase().execute.assert_called()
+
+
+def test_create_note_respose_unauthorized_with_no_header() -> None:
+    response = client.post("/note", json={})
+
+    assert response.status_code == 401

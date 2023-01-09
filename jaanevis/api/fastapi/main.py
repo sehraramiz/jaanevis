@@ -1,14 +1,22 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from jaanevis.domain import note as n
 from jaanevis.repository import repository
-from jaanevis.requests.add_note_request import AddNoteRequest
+from jaanevis.requests import add_note_request
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.note_list_request import NoteListRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
 from jaanevis.requests.update_note_request import UpdateNoteRequest
-from jaanevis.usecases import add_note, delete_note, note_list, read_note, update_note
+from jaanevis.usecases import (
+    add_note,
+    authenticate,
+    delete_note,
+    note_list,
+    read_note,
+    update_note,
+)
 
 app = FastAPI()
 
@@ -19,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+security = HTTPBasic()
 
 
 @app.get("/note", response_model=list[n.Note])
@@ -73,15 +83,25 @@ def delete_note_by_code(code: str) -> n.Note:
     return response.value
 
 
-@app.post("/note", response_model=n.Note)
-def create_note(note_in: n.NoteCreateApi) -> n.Note:
+@app.post("/note")
+def create_note(
+    note_in: n.NoteCreateApi,
+    credentials: HTTPBasicCredentials = Depends(security),
+    authorization: str = Header(default=None),
+) -> n.Note:
     """add new note"""
 
-    note = n.Note(**note_in.dict(), creator="default")
     repo = repository()
+    auth_usecase = authenticate.AuthenticateUseCase(repo)
+    auth_request = authenticate.AuthenticateRequest.build(token=authorization)
+    auth_res = auth_usecase.execute(auth_request)
+
+    note = n.Note(**note_in.dict())
 
     add_note_usecase = add_note.AddNoteUseCase(repo)
-    request_obj = AddNoteRequest(note)
+    request_obj = add_note_request.AddNoteRequest.build(
+        note=note, user=auth_res.value
+    )
     response = add_note_usecase.execute(request_obj)
 
     return response.value
