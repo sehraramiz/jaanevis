@@ -14,8 +14,15 @@ class AuthenticateUseCase:
             return ResponseFailure.build_from_invalid_request_object(request)
 
         try:
-            username = request.token.split(":")[0]
-            user = self.repo.get_user_by_username(username=username)
+            session = self.repo.get_session_by_session_id(
+                session_id=request.session
+            )
+            if not session:
+                return ResponseFailure.build_resource_error(
+                    "Session not found"
+                )
+
+            user = self.repo.get_user_by_username(username=session.username)
             if not user:
                 return ResponseFailure.build_resource_error("User not found")
             return ResponseSuccess(user)

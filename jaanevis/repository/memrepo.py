@@ -3,6 +3,7 @@ import pathlib
 from typing import Optional
 
 from jaanevis.domain import note as n
+from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 
 
@@ -79,4 +80,10 @@ class MemRepo:
         for user in self.data["users"]:
             if user["username"] == username:
                 return u.User.from_dict(user)
+        return None
+
+    def get_session_by_session_id(self, session_id: str) -> u.User:
+        for session in self.data["sessions"]:
+            if session["session_id"] == session_id:
+                return s.Session.from_dict(session)
         return None

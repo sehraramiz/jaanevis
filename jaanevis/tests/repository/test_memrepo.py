@@ -6,9 +6,12 @@ from unittest import mock
 import pytest
 
 from jaanevis.domain import note as n
+from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 from jaanevis.repository import memrepo
 from jaanevis.serializers import note_json_serializer as ser
+
+uuid_session = "554f8c37-b3a1-4846-a1b6-02cc4d158646"
 
 
 @pytest.fixture
@@ -31,6 +34,9 @@ def note_dicts() -> dict[str, list[Any]]:
             },
         ],
         "users": [{"username": "test@test.com"}],
+        "sessions": [
+            {"session_id": uuid_session, "username": "test@test.com"}
+        ],
     }
 
 
@@ -219,3 +225,14 @@ def test_get_user_by_username(note_dicts) -> None:
     users = [u.User.from_dict(data) for data in note_dicts["users"]]
 
     assert repo.get_user_by_username(username=users[0].username) == users[0]
+
+
+def test_get_session_by_session_id(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    sessions = [s.Session.from_dict(data) for data in note_dicts["sessions"]]
+
+    assert (
+        repo.get_session_by_session_id(session_id=str(sessions[0].session_id))
+        == sessions[0]
+    )

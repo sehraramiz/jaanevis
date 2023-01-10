@@ -1,6 +1,5 @@
-from fastapi import Depends, FastAPI, Header
+from fastapi import Cookie, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from jaanevis.domain import note as n
 from jaanevis.repository import repository
@@ -27,8 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-security = HTTPBasic()
 
 
 @app.get("/note", response_model=list[n.Note])
@@ -86,15 +83,17 @@ def delete_note_by_code(code: str) -> n.Note:
 @app.post("/note")
 def create_note(
     note_in: n.NoteCreateApi,
-    credentials: HTTPBasicCredentials = Depends(security),
-    authorization: str = Header(default=None),
+    session: str = Cookie(default=None),
 ) -> n.Note:
     """add new note"""
 
     repo = repository()
     auth_usecase = authenticate.AuthenticateUseCase(repo)
-    auth_request = authenticate.AuthenticateRequest.build(token=authorization)
+    auth_request = authenticate.AuthenticateRequest.build(session=session)
     auth_res = auth_usecase.execute(auth_request)
+
+    if not auth_res:
+        raise HTTPException(status_code=401, detail=auth_res.message)
 
     note = n.Note(**note_in.dict())
 

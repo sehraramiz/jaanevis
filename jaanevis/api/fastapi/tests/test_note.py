@@ -1,5 +1,4 @@
 import uuid
-from base64 import b64encode
 from unittest import mock
 
 from fastapi.testclient import TestClient
@@ -65,10 +64,10 @@ def test_create_note(mock_usecase, auth_usecase) -> None:
     new_note["creator"] = "username"
     new_note.pop("code", None)
     mock_usecase().execute.return_value = res.ResponseSuccess(new_note)
-    token = b64encode("username:password".encode("utf-8")).decode("ascii")
+    session = uuid.uuid4()
 
     response = client.post(
-        "/note", json=new_note, headers={"Authorization": f"Basic {token}"}
+        "/note", json=new_note, headers={"cookie": f"session={session}"}
     )
     result = response.json()
     result.pop("code", None)
@@ -118,7 +117,7 @@ def test_read_notes_geojson_data(mock_usecase) -> None:
     mock_usecase().execute.assert_called()
 
 
-def test_create_note_respose_unauthorized_with_no_header() -> None:
-    response = client.post("/note", json={})
+def test_create_note_respose_unauthorized_with_no_cookie() -> None:
+    response = client.post("/note", json=note.dict())
 
     assert response.status_code == 401
