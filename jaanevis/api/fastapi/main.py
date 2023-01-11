@@ -46,10 +46,8 @@ async def get_repository() -> Repository:
 
 
 @app.get("/note", response_model=list[n.Note])
-def read_notes() -> list[n.Note]:
+def read_notes(repo: Repository = Depends(get_repository)) -> list[n.Note]:
     """read notes"""
-
-    repo = repository()
 
     note_list_usecase = note_list.NoteListUseCase(repo)
     request_obj = NoteListRequest.from_dict({"filters": {}})
@@ -59,10 +57,10 @@ def read_notes() -> list[n.Note]:
 
 
 @app.get("/note/geojson", response_model=list[n.NoteGeoJsonFeature])
-def read_notes_geojson() -> list[n.NoteGeoJsonFeature]:
+def read_notes_geojson(
+    repo: Repository = Depends(get_repository),
+) -> list[n.NoteGeoJsonFeature]:
     """read notes as geojson feature objects"""
-
-    repo = repository()
 
     note_list_usecase = note_list.GeoJsonNoteListUseCase(repo)
     request_obj = NoteListRequest.from_dict(data={"filters": {}})
@@ -72,10 +70,10 @@ def read_notes_geojson() -> list[n.NoteGeoJsonFeature]:
 
 
 @app.get("/note/{code}", response_model=n.Note)
-def read_note_by_code(code: str) -> n.Note:
+def read_note_by_code(
+    code: str, repo: Repository = Depends(get_repository)
+) -> n.Note:
     """read note by code"""
-
-    repo = repository()
 
     read_note_usecase = read_note.ReadNoteUseCase(repo)
     request_obj = ReadNoteRequest(code=code)
@@ -85,7 +83,9 @@ def read_note_by_code(code: str) -> n.Note:
 
 
 @app.delete("/note/{code}", response_model=n.Note)
-def delete_note_by_code(code: str) -> n.Note:
+def delete_note_by_code(
+    code: str, repo: Repository = Depends(get_repository)
+) -> n.Note:
     """delete note by code"""
 
     repo = repository()
@@ -115,10 +115,12 @@ def create_note(
 
 
 @app.put("/note/{code}", response_model=n.Note)
-def update_note_by_code(code: str, note_in: n.NoteUpdateApi) -> n.Note:
+def update_note_by_code(
+    code: str,
+    note_in: n.NoteUpdateApi,
+    repo: Repository = Depends(get_repository),
+) -> n.Note:
     """update note"""
-
-    repo = repository()
 
     update_note_usecase = update_note.UpdateNoteUseCase(repo)
     request_obj = UpdateNoteRequest(code=code, note=note_in)
@@ -128,10 +130,10 @@ def update_note_by_code(code: str, note_in: n.NoteUpdateApi) -> n.Note:
 
 
 @app.post("/login")
-def login(login_data: s.LoginInputApi) -> None:
+def login(
+    login_data: s.LoginInputApi, repo: Repository = Depends(get_repository)
+) -> None:
     """login user and get session"""
-
-    repo = repository()
 
     login_usecase = login_uc.LoginUseCase(repo)
     request = login_request.LoginRequest.build(
