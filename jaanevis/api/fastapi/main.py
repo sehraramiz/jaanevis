@@ -82,16 +82,18 @@ def read_note_by_code(
     return response.value
 
 
-@app.delete("/note/{code}", response_model=n.Note)
+@app.delete("/note/{code}")
 def delete_note_by_code(
-    code: str, repo: Repository = Depends(get_repository)
+    code: str,
+    repo: Repository = Depends(get_repository),
+    user: u.User = Depends(get_user),
 ) -> n.Note:
     """delete note by code"""
 
     repo = repository()
 
     delete_note_usecase = delete_note.DeleteNoteUseCase(repo)
-    request_obj = DeleteNoteRequest(code=code)
+    request_obj = DeleteNoteRequest(code=code, user=user)
     response = delete_note_usecase.execute(request_obj)
 
     return response.value
@@ -118,6 +120,7 @@ def create_note(
 def update_note_by_code(
     code: str,
     note_in: n.NoteUpdateApi,
+    user: u.User = Depends(get_user),
     repo: Repository = Depends(get_repository),
 ) -> n.Note:
     """update note"""

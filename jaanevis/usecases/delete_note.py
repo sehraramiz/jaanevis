@@ -13,11 +13,16 @@ class DeleteNoteUseCase:
         if not request:
             return ResponseFailure.build_from_invalid_request_object(request)
         try:
-            note = self.repo.delete_by_code(code=request.code)
+            note = self.repo.get_by_code(code=request.code)
             if not note:
                 return ResponseFailure.build_resource_error(
                     f"note with code '{request.code}' not found"
                 )
+            if note.creator != request.user.username:
+                return ResponseFailure.build_parameters_error(
+                    "permission denied"
+                )
+            self.repo.delete_by_code(code=request.code)
             return ResponseSuccess(note)
         except Exception as exc:
             return ResponseFailure.build_system_error(

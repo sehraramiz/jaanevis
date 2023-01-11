@@ -46,11 +46,15 @@ def test_read_note_by_code(mock_usecase) -> None:
     mock_usecase().execute.assert_called()
 
 
+@mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")
 @mock.patch("jaanevis.usecases.delete_note.DeleteNoteUseCase")
-def test_delete_note(mock_usecase) -> None:
+def test_delete_note(mock_usecase, auth_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
+    session = uuid.uuid4()
 
-    response = client.delete(f"/note/{note_complete.code}")
+    response = client.delete(
+        f"/note/{note_complete.code}", headers={"cookie": f"session={session}"}
+    )
 
     assert response.status_code == 200
     assert response.json() == note_complete.to_dict()
@@ -78,8 +82,9 @@ def test_create_note(mock_usecase, auth_usecase) -> None:
     auth_usecase().execute.assert_called()
 
 
+@mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")
 @mock.patch("jaanevis.usecases.update_note.UpdateNoteUseCase")
-def test_update_note(mock_usecase) -> None:
+def test_update_note(mock_usecase, auth_usecase) -> None:
     new_note = note_complete.to_dict()
     note_update = NoteUpdateApi(
         url="https://newurl.com",
@@ -87,9 +92,12 @@ def test_update_note(mock_usecase) -> None:
         long=note_complete.long,
     )
     mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
+    session = uuid.uuid4()
 
     response = client.put(
-        f"/note/{note_complete.code}", json=note_update.dict()
+        f"/note/{note_complete.code}",
+        json=note_update.dict(),
+        headers={"cookie": f"session={session}"},
     )
     result = response.json()
 
@@ -119,5 +127,17 @@ def test_read_notes_geojson_data(mock_usecase) -> None:
 
 def test_create_note_respose_unauthorized_with_no_cookie() -> None:
     response = client.post("/note", json=note.dict())
+
+    assert response.status_code == 401
+
+
+def test_update_note_respose_unauthorized_with_no_cookie() -> None:
+    response = client.put("/note/somenotecode", json=note.dict())
+
+    assert response.status_code == 401
+
+
+def test_delete_note_respose_unauthorized_with_no_cookie() -> None:
+    response = client.delete("/note/somenotecode")
 
     assert response.status_code == 401
