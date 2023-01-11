@@ -2,7 +2,7 @@ import uuid
 from dataclasses import asdict, field
 from typing import Any
 
-from pydantic import UUID4, dataclasses
+from pydantic import UUID4, BaseModel, dataclasses
 
 
 @dataclasses.dataclass
@@ -20,3 +20,10 @@ class Session:
         data = asdict(self)
         data["session_id"] = str(self.session_id)
         return data
+
+
+class LoginInputApi(BaseModel):
+    """schema for user login via api"""
+
+    username: str
+    password: str

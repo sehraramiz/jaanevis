@@ -11,7 +11,9 @@ from jaanevis.usecases import authenticate as uc
 def test_authenticte_finds_correct_user() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = u.User(username="username")
+    repo.get_user_by_username.return_value = u.User(
+        username="username", password="password"
+    )
     repo.get_session_by_session_id.return_value = s.Session(
         username="username", session_id=session
     )

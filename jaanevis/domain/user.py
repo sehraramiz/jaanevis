@@ -9,6 +9,7 @@ class User:
     """Model for user."""
 
     username: str
+    password: str
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "User":

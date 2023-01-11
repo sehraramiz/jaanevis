@@ -1,21 +1,18 @@
 from fastapi import Cookie, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from jaanevis.domain import note as n
+from jaanevis.domain import session as s
 from jaanevis.repository import repository
-from jaanevis.requests import add_note_request
+from jaanevis.requests import add_note_request, login_request
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.note_list_request import NoteListRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
 from jaanevis.requests.update_note_request import UpdateNoteRequest
-from jaanevis.usecases import (
-    add_note,
-    authenticate,
-    delete_note,
-    note_list,
-    read_note,
-    update_note,
-)
+from jaanevis.usecases import add_note, authenticate, delete_note
+from jaanevis.usecases import login as login_uc
+from jaanevis.usecases import note_list, read_note, update_note
 
 app = FastAPI()
 
@@ -117,3 +114,20 @@ def update_note_by_code(code: str, note_in: n.NoteUpdateApi) -> n.Note:
     response = update_note_usecase.execute(request_obj)
 
     return response.value
+
+
+@app.post("/login")
+def login(login_data: s.LoginInputApi) -> None:
+    """login user and get session"""
+
+    repo = repository()
+
+    login_usecase = login_uc.LoginUseCase(repo)
+    request = login_request.LoginRequest.build(
+        username=login_data.username, password=login_data.password
+    )
+    login_response = login_usecase.execute(request)
+
+    response = JSONResponse(content={"session": login_response.value})
+    response.set_cookie(key="session", value=login_response.value)
+    return response

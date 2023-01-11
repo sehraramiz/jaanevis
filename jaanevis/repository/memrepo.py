@@ -82,8 +82,21 @@ class MemRepo:
                 return u.User.from_dict(user)
         return None
 
-    def get_session_by_session_id(self, session_id: str) -> u.User:
+    def get_session_by_session_id(self, session_id: str) -> s.Session:
         for session in self.data["sessions"]:
             if session["session_id"] == session_id:
                 return s.Session.from_dict(session)
         return None
+
+    def create_or_update_session(
+        self, username: str, session_id: str
+    ) -> s.Session:
+        new_session = s.Session(username=username, session_id=session_id)
+        for session in self.data["sessions"]:
+            if session["username"] == username:
+                session["session_id"] = session_id
+                break
+        else:
+            self.data["sessions"].append(new_session.to_dict())
+        self._write_data_to_file()
+        return new_session

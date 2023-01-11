@@ -1,6 +1,7 @@
 from typing import Optional, Protocol
 
 from jaanevis.domain import note as n
+from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 from jaanevis.repository import memrepo as mr
 
@@ -24,6 +25,14 @@ class Repository(Protocol):
         ...
 
     def get_user_by_username(self, username: str) -> u.User:
+        ...
+
+    def get_session_by_session_id(self, session_id: str) -> s.Session:
+        ...
+
+    def create_or_update_session(
+        self, username: str, session_id: str
+    ) -> s.Session:
         ...
 
 
