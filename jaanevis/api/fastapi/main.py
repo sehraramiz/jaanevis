@@ -1,10 +1,11 @@
-from fastapi import Cookie, FastAPI, HTTPException
+from fastapi import Cookie, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
-from jaanevis.repository import repository
+from jaanevis.domain import user as u
+from jaanevis.repository import Repository, repository
 from jaanevis.requests import add_note_request, login_request
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.note_list_request import NoteListRequest
@@ -23,6 +24,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+async def get_user(session: str = Cookie(default=None)) -> u.User:
+    """dependency function to authenticate user with session"""
+
+    repo = repository()
+    auth_usecase = authenticate.AuthenticateUseCase(repo)
+    auth_request = authenticate.AuthenticateRequest.build(session=session)
+    auth_res = auth_usecase.execute(auth_request)
+
+    if not auth_res:
+        raise HTTPException(status_code=401, detail=auth_res.message)
+    return auth_res.value
+
+
+async def get_repository() -> Repository:
+    """dependency to get data repository"""
+
+    return repository()
 
 
 @app.get("/note", response_model=list[n.Note])
@@ -80,24 +100,15 @@ def delete_note_by_code(code: str) -> n.Note:
 @app.post("/note")
 def create_note(
     note_in: n.NoteCreateApi,
-    session: str = Cookie(default=None),
+    user: u.User = Depends(get_user),
+    repo: Repository = Depends(get_repository),
 ) -> n.Note:
     """add new note"""
-
-    repo = repository()
-    auth_usecase = authenticate.AuthenticateUseCase(repo)
-    auth_request = authenticate.AuthenticateRequest.build(session=session)
-    auth_res = auth_usecase.execute(auth_request)
-
-    if not auth_res:
-        raise HTTPException(status_code=401, detail=auth_res.message)
 
     note = n.Note(**note_in.dict())
 
     add_note_usecase = add_note.AddNoteUseCase(repo)
-    request_obj = add_note_request.AddNoteRequest.build(
-        note=note, user=auth_res.value
-    )
+    request_obj = add_note_request.AddNoteRequest.build(note=note, user=user)
     response = add_note_usecase.execute(request_obj)
 
     return response.value
