@@ -23,3 +23,18 @@ def test_login(mock_usecase, request_mock) -> None:
     )
     assert "set-cookie" in dict(response.headers)
     assert "session=validsession" in response.headers["set-cookie"]
+
+
+@mock.patch("jaanevis.requests.login_request.LoginRequest")
+@mock.patch("jaanevis.usecases.login.LoginUseCase")
+def test_login_invalid_credentials(mock_usecase, request_mock) -> None:
+    body = {"username": "username", "password": "wrong_password"}
+    mock_usecase().execute.return_value = (
+        res.ResponseFailure.build_parameters_error("auth error")
+    )
+
+    response = client.post("/login", json=body)
+
+    assert response.status_code == 401
+    mock_usecase().execute.assert_called()
+    assert response.json() == {"detail": "auth error"}

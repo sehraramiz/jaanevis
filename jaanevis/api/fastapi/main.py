@@ -144,6 +144,12 @@ def login(
     )
     login_response = login_usecase.execute(request)
 
+    if not login_response:
+        raise HTTPException(
+            status_code=401, detail=login_response.value["message"]
+        )
+
     response = JSONResponse(content={"session": login_response.value})
     response.set_cookie(key="session", value=login_response.value)
+
     return response
