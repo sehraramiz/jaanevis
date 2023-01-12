@@ -15,6 +15,15 @@ class UpdateNoteUseCase:
 
         try:
             note = self.repo.get_by_code(code=request.code)
+            if not note:
+                return ResponseFailure.build_resource_error(
+                    f"note with code '{request.code}' not found"
+                )
+            if note.creator != request.user.username:
+                return ResponseFailure.build_parameters_error(
+                    f"permission denied"
+                )
+
             data = request.note.dict(exclude_unset=True)
             data["url"] = str(data["url"])
             updated_note = self.repo.update(obj=note, data=data)

@@ -126,7 +126,7 @@ def update_note_by_code(
     """update note"""
 
     update_note_usecase = update_note.UpdateNoteUseCase(repo)
-    request_obj = UpdateNoteRequest(code=code, note=note_in)
+    request_obj = UpdateNoteRequest(code=code, note=note_in, user=user)
     response = update_note_usecase.execute(request_obj)
 
     return response.value
