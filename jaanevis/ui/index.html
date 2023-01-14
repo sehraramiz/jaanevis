@@ -10,6 +10,7 @@
     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
     crossorigin=""></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js"></script>
 
     <link rel="stylesheet" href="main.css"/>
 
@@ -41,6 +42,19 @@
                     <input type="number" step="any" id="long" name="long" v-model="note.long">
                     <button @click="updateNote">Update</button>
                     <button @click="deleteNote">Delete</button>
+                </div>
+                <div id="auth" v-if="panelView == 'auth'" >
+                    <div id="profile" v-if="authenticated == true">
+                        <p>Username: {{ this.authUser.username }}</p>
+                    </div>
+                    <div class="note-form" v-if="authenticated == false " id="login">
+                        <p>Login</p>
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" v-model="username">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" v-model="password">
+                        <button @click="login">Login</button>
+                    </div>
                 </div>
                 <div>
                   <p v-if="errors.length">

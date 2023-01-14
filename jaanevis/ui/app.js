@@ -7,15 +7,17 @@ createApp({
       title: 'Jaanevis',
       version: '0.0.1',
       baseUrl: 'http://127.0.0.1:8000',
-      panelView: "create",
+      panelView: "auth",
       note: {
-        code: "code",
-        creator: "default",
+        code: "",
+        creator: "",
         url: "",
         lat: "0.0",
         long: "0.0"
       },
-      errors: []
+      errors: [],
+      authenticated: false,
+      authUser: {username: ""}
     }
   },
   methods: {
@@ -185,9 +187,63 @@ createApp({
     },
     clearErrors: function () {
       this.errors = [];
+    },
+    checkLoginForm: function (e) {
+      if (this.username && this.password)
+        return true;
+
+      this.errors = [];
+
+      if (!this.username)
+        this.errors.push('Username is mandatory.');
+
+      if (!this.password)
+        this.errors.push('Password is mandatory.');
+    },
+    login: async function () {
+      if (!this.checkLoginForm())
+        return;
+
+      let loginData = {
+        username: this.username,
+        password: this.password,
+      };
+      const response = await fetch(this.baseUrl + "/login", {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      })
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(response);
+        return response.json();
+      })
+      .then(data => {
+        this.authUser.username = loginData.username;
+        this.authenticated = true;
+        this.$cookies.set("username", loginData.username);
+        console.log(this.$cookies.get("session"));
+      })
+      .catch(error => {
+        console.log("Fetch error", error);
+        return;
+      });
+    },
+    initAuth: function () {
+      if (this.$cookies.get("session")) {
+        this.authenticated = true;
+        this.authUser.username = this.$cookies.get("username");
+      }
     }
+
   },
   mounted() {
+    this.$cookies = window.$cookies;
+    this.initAuth();
     this.initMap();
     this.showNotesOnMap();
   },
