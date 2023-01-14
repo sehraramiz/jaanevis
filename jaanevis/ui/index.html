@@ -56,8 +56,8 @@
                         <button @click="login">Login</button>
                     </div>
                 </div>
-                <a @click="showLogin" href="#"
-                    v-if="!authenticated && panelView != 'auth'">Login to create/edit notes</a>
+                <br><a @click="showLogin" href="#"
+                    v-if="!authenticated && panelView != 'auth'">Login to create/modify notes</a>
                 <div>
                   <p v-if="errors.length">
                     <b>Please correct the following error(s):</b>
