@@ -29,7 +29,7 @@
                     <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
                     <input type="number" step="any" id="long" name="long" v-model="note.long">
-                    <button @click="createNewNote">Create</button>
+                    <button @click="createNewNote" v-if="authenticated">Create</button>
                 </div>
                 <div class="note-form" v-if="panelView == 'details'" id="note-detail">
                     <p>Code: {{ note.code }}</p>
@@ -47,7 +47,7 @@
                     <div id="profile" v-if="authenticated == true">
                         <p>Username: {{ this.authUser.username }}</p>
                     </div>
-                    <div class="note-form" v-if="authenticated == false " id="login">
+                    <div class="note-form" v-else id="login">
                         <p>Login</p>
                         <label for="username">Username:</label>
                         <input type="text" id="username" name="username" v-model="username">
@@ -56,6 +56,8 @@
                         <button @click="login">Login</button>
                     </div>
                 </div>
+                <a @click="showLogin" href="#"
+                    v-if="!authenticated && panelView != 'auth'">Login to create/edit notes</a>
                 <div>
                   <p v-if="errors.length">
                     <b>Please correct the following error(s):</b>

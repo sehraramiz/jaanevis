@@ -7,7 +7,7 @@ createApp({
       title: 'Jaanevis',
       version: '0.0.1',
       baseUrl: 'http://127.0.0.1:8000',
-      panelView: "auth",
+      panelView: "create",
       note: {
         code: "",
         creator: "",
@@ -249,6 +249,7 @@ createApp({
         this.authUser.username = loginData.username;
         this.authenticated = true;
         this.$cookies.set("username", loginData.username);
+        this.panelView = 'create';
       })
       .catch(error => {
         console.log("Fetch error", error);
@@ -260,8 +261,10 @@ createApp({
         this.authenticated = true;
         this.authUser.username = this.$cookies.get("username");
       }
+    },
+    showLogin: function () {
+      this.panelView = 'auth';
     }
-
   },
   mounted() {
     this.$cookies = window.$cookies;
