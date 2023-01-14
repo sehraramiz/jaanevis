@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from fastapi import Cookie, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -6,13 +8,14 @@ from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 from jaanevis.repository import Repository, repository
-from jaanevis.requests import add_note_request, login_request
+from jaanevis.requests import add_note_request, login_request, logout_request
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.note_list_request import NoteListRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
 from jaanevis.requests.update_note_request import UpdateNoteRequest
 from jaanevis.usecases import add_note, authenticate, delete_note
 from jaanevis.usecases import login as login_uc
+from jaanevis.usecases import logout as logout_uc
 from jaanevis.usecases import note_list, read_note, update_note
 
 app = FastAPI()
@@ -156,4 +159,22 @@ def login(
     response = JSONResponse(content={"session": login_response.value})
     response.set_cookie(key="session", value=login_response.value)
 
+    return response
+
+
+@app.get("/logout")
+def logout(
+    session: str = Cookie(default=None),
+    repo: Repository = Depends(get_repository),
+) -> None:
+    """user logout"""
+
+    logout_usecase = logout_uc.LogoutUseCase(repo)
+    request = logout_request.LogoutRequest.build(session=session)
+    logout_usecase.execute(request)
+
+    response = JSONResponse(content={"success": True})
+    yesterday = datetime.now() - timedelta(days=1)
+    expire_yesterday = yesterday.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    response.set_cookie(key="session", value="", expires=expire_yesterday)
     return response

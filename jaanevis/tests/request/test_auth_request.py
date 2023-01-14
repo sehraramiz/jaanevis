@@ -1,5 +1,6 @@
 from jaanevis.requests import auth_request as req
 from jaanevis.requests import login_request as login_req
+from jaanevis.requests import logout_request as logout_req
 
 
 def test_auth_request_build_from_empty_session() -> None:
@@ -34,3 +35,10 @@ def test_login_request_build() -> None:
     assert bool(request) is True
     assert request.username == "username"
     assert request.password == "password"
+
+
+def test_logout_request_build() -> None:
+    request = logout_req.LogoutRequest.build(session="session")
+
+    assert bool(request) is True
+    assert request.session == "session"

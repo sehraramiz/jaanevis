@@ -88,6 +88,14 @@ class MemRepo:
                 return s.Session.from_dict(session)
         return None
 
+    def delete_session_by_session_id(self, session_id: str) -> s.Session:
+        for index, session in enumerate(self.data["sessions"]):
+            if session["session_id"] == session_id:
+                del self.data["sessions"][index]
+                break
+        self._write_data_to_file()
+        return True
+
     def create_or_update_session(
         self, username: str, session_id: str
     ) -> s.Session:

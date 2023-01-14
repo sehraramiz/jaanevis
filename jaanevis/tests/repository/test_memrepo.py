@@ -239,6 +239,20 @@ def test_get_session_by_session_id(note_dicts) -> None:
 
 
 @mock.patch("jaanevis.repository.memrepo.open")
+def test_delete_session_by_session_id(mock_open, note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    sessions = [s.Session.from_dict(data) for data in note_dicts["sessions"]]
+    session_id = str(sessions[0].session_id)
+
+    repo.delete_session_by_session_id(session_id=session_id)
+
+    assert not any(
+        s["session_id"] == session_id for s in repo.data["sessions"]
+    )
+
+
+@mock.patch("jaanevis.repository.memrepo.open")
 def test_create_or_update_creates_new_session(mock_open, note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
     new_session_id = uuid.uuid4()
@@ -298,5 +312,19 @@ def test_write_db_to_file_after_session_update(path, note_dicts) -> None:
         repo.create_or_update_session(
             username="username", session_id=session_id
         )
+
+    mock_open.assert_called_with("db.json", "w")
+
+
+@mock.patch("pathlib.Path")
+def test_write_db_to_file_after_session_delete(path, note_dicts) -> None:
+    session_id = str(uuid.uuid4())
+    data = {"notes": [], "users": [], "sessions": []}
+    read_data = json.dumps(data, cls=ser.NoteJsonEncoder)
+    mock_open = mock.mock_open(read_data=read_data)
+
+    with mock.patch("jaanevis.repository.memrepo.open", mock_open):
+        repo = memrepo.MemRepo()
+        repo.delete_session_by_session_id(session_id=session_id)
 
     mock_open.assert_called_with("db.json", "w")

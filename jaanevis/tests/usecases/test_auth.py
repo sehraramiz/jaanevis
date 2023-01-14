@@ -4,8 +4,10 @@ from unittest import mock
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 from jaanevis.requests import auth_request as req
+from jaanevis.requests import logout_request as logout_req
 from jaanevis.responses import response as res
 from jaanevis.usecases import authenticate as uc
+from jaanevis.usecases import logout as logout_uc
 
 
 def test_authenticte_finds_correct_user() -> None:
@@ -76,3 +78,56 @@ def test_authenticte_handles_non_existant_user() -> None:
         "type": res.ResponseFailure.RESOURCE_ERROR,
         "message": "User not found",
     }
+
+
+def test_logout_removes_existant_user_session() -> None:
+    session = uuid.uuid4()
+    repo = mock.Mock()
+    repo.get_user_by_username.return_value = u.User(
+        username="username", password="password"
+    )
+    repo.get_session_by_session_id.return_value = s.Session(
+        username="username", session_id=session
+    )
+
+    logout_usecase = logout_uc.LogoutUseCase(repo)
+    request_obj = logout_req.LogoutRequest.build(session=str(session))
+
+    response = logout_usecase.execute(request_obj)
+
+    assert bool(response) is True
+    repo.delete_session_by_session_id.assert_called_with(
+        session_id=str(session)
+    )
+
+
+def test_logout_success_non_existent_session() -> None:
+    session = uuid.uuid4()
+    repo = mock.Mock()
+    repo.get_user_by_username.return_value = u.User(
+        username="username", password="password"
+    )
+    repo.get_session_by_session_id.return_value = None
+
+    logout_usecase = logout_uc.LogoutUseCase(repo)
+    request_obj = logout_req.LogoutRequest.build(session=str(session))
+
+    response = logout_usecase.execute(request_obj)
+
+    assert bool(response) is True
+
+
+def test_logout_success_non_existent_user() -> None:
+    session = uuid.uuid4()
+    repo = mock.Mock()
+    repo.get_user_by_username.return_value = None
+    repo.get_session_by_session_id.return_value = s.Session(
+        username="username", session_id=session
+    )
+
+    logout_usecase = logout_uc.LogoutUseCase(repo)
+    request_obj = logout_req.LogoutRequest.build(session=str(session))
+
+    response = logout_usecase.execute(request_obj)
+
+    assert bool(response) is True
