@@ -115,6 +115,7 @@ createApp({
       })
       .then(data => {
         this.showNotesOnMap();
+        this.panelView = 'create';
         alert("Note deleted!");
       })
       .catch(error => {
@@ -252,7 +253,32 @@ createApp({
         this.panelView = 'create';
       })
       .catch(error => {
-        console.log("Fetch error", error);
+        console.log("Login error", error);
+        return;
+      });
+    },
+    logout: async function () {
+      const response = await fetch(this.baseUrl + "/logout", {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(response);
+        return response.json();
+      })
+      .then(data => {
+        this.authUser = {username: ""};
+        this.authenticated = false;
+        this.$cookies.set("username", null);
+        this.panelView = 'create';
+      })
+      .catch(error => {
+        console.log("Logout error", error);
         return;
       });
     },
