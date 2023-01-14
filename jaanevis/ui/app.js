@@ -89,6 +89,7 @@ createApp({
       };
       const response = await fetch(this.baseUrl + "/note", {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -102,13 +103,24 @@ createApp({
     deleteNote: async function () {
       const response = await fetch(this.baseUrl + `/note/${this.note.code}`, {
         method: 'DELETE',
+        credentials: "include",
         headers: {
           'Accept': 'application/json',
         },
+      })
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(response);
+        return response.json();
+      })
+      .then(data => {
+        this.showNotesOnMap();
+        alert("Note deleted!");
+      })
+      .catch(error => {
+        console.log("Note delete error", error);
+        return;
       });
-      const content = await response.json();
-      this.showNotesOnMap();
-      alert("Note deleted!");
     },
     updateNote: async function () {
       if (!this.checkForm())
@@ -121,15 +133,26 @@ createApp({
       };
       const response = await fetch(this.baseUrl + `/note/${this.note.code}`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(note)
+      })
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(response);
+        return response.json();
+      })
+      .then(data => {
+        this.showNotesOnMap();
+        alert("Note updated!");
+      })
+      .catch(error => {
+        console.log("Note update error", error);
+        return;
       });
-      const content = await response.json();
-      this.showNotesOnMap();
-      alert("Note updated!");
     },
     showNoteDetailsForm: function (e) {
       this.panelView = 'details';
@@ -226,7 +249,6 @@ createApp({
         this.authUser.username = loginData.username;
         this.authenticated = true;
         this.$cookies.set("username", loginData.username);
-        console.log(this.$cookies.get("session"));
       })
       .catch(error => {
         console.log("Fetch error", error);

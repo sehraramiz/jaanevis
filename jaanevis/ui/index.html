@@ -40,8 +40,8 @@
                     <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
                     <input type="number" step="any" id="long" name="long" v-model="note.long">
-                    <button @click="updateNote">Update</button>
-                    <button @click="deleteNote">Delete</button>
+                    <button @click="updateNote" v-if="authUser.username == note.creator">Update</button>
+                    <button @click="deleteNote" v-if="authUser.username == note.creator">Delete</button>
                 </div>
                 <div id="auth" v-if="panelView == 'auth'" >
                     <div id="profile" v-if="authenticated == true">
