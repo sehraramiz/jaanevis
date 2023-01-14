@@ -141,3 +141,43 @@ def test_delete_note_respose_unauthorized_with_no_cookie() -> None:
     response = client.delete("/note/somenotecode")
 
     assert response.status_code == 401
+
+
+@mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")
+@mock.patch("jaanevis.usecases.delete_note.DeleteNoteUseCase")
+def test_delete_note_from_wrong_user(mock_usecase, auth_usecase) -> None:
+    mock_usecase().execute.return_value = (
+        res.ResponseFailure.build_parameters_error("forbidden")
+    )
+    session = uuid.uuid4()
+
+    response = client.delete(
+        f"/note/{note_complete.code}", headers={"cookie": f"session={session}"}
+    )
+
+    assert response.status_code == 403
+    assert response.json() == {"detail": "forbidden"}
+
+
+@mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")
+@mock.patch("jaanevis.usecases.update_note.UpdateNoteUseCase")
+def test_update_note_from_wrong_user(mock_usecase, auth_usecase) -> None:
+    note_update = NoteUpdateApi(
+        url="https://newurl.com",
+        lat=note_complete.lat,
+        long=note_complete.long,
+    )
+    mock_usecase().execute.return_value = (
+        res.ResponseFailure.build_parameters_error("forbidden")
+    )
+    session = uuid.uuid4()
+
+    response = client.put(
+        f"/note/{note_complete.code}",
+        json=note_update.dict(),
+        headers={"cookie": f"session={session}"},
+    )
+    result = response.json()
+
+    assert response.status_code == 403
+    assert result == {"detail": "forbidden"}

@@ -96,6 +96,8 @@ def delete_note_by_code(
     request_obj = DeleteNoteRequest(code=code, user=user)
     response = delete_note_usecase.execute(request_obj)
 
+    if not response:
+        raise HTTPException(status_code=403, detail=response.value["message"])
     return response.value
 
 
@@ -116,7 +118,7 @@ def create_note(
     return response.value
 
 
-@app.put("/note/{code}", response_model=n.Note)
+@app.put("/note/{code}")
 def update_note_by_code(
     code: str,
     note_in: n.NoteUpdateApi,
@@ -129,6 +131,8 @@ def update_note_by_code(
     request_obj = UpdateNoteRequest(code=code, note=note_in, user=user)
     response = update_note_usecase.execute(request_obj)
 
+    if not response:
+        raise HTTPException(status_code=403, detail=response.value["message"])
     return response.value
 
 
