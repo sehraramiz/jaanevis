@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 from fastapi import Cookie, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,9 +9,13 @@ from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 from jaanevis.repository import Repository, repository
-from jaanevis.requests import add_note_request, login_request, logout_request
+from jaanevis.requests import (
+    add_note_request,
+    login_request,
+    logout_request,
+    note_list_request,
+)
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
-from jaanevis.requests.note_list_request import NoteListRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
 from jaanevis.requests.update_note_request import UpdateNoteRequest
 from jaanevis.usecases import add_note, authenticate, delete_note
@@ -49,11 +54,15 @@ async def get_repository() -> Repository:
 
 
 @app.get("/note", response_model=list[n.Note])
-def read_notes(repo: Repository = Depends(get_repository)) -> list[n.Note]:
+def read_notes(
+    creator: Optional[str] = None, repo: Repository = Depends(get_repository)
+) -> list[n.Note]:
     """read notes"""
 
     note_list_usecase = note_list.NoteListUseCase(repo)
-    request_obj = NoteListRequest.from_dict({"filters": {}})
+    request_obj = note_list_request.NoteListRequest.from_dict(
+        data={"filters": {"creator__eq": creator}}
+    )
     response = note_list_usecase.execute(request_obj)
 
     return response.value
@@ -61,12 +70,15 @@ def read_notes(repo: Repository = Depends(get_repository)) -> list[n.Note]:
 
 @app.get("/note/geojson", response_model=list[n.NoteGeoJsonFeature])
 def read_notes_geojson(
+    creator: Optional[str] = None,
     repo: Repository = Depends(get_repository),
 ) -> list[n.NoteGeoJsonFeature]:
     """read notes as geojson feature objects"""
 
     note_list_usecase = note_list.GeoJsonNoteListUseCase(repo)
-    request_obj = NoteListRequest.from_dict(data={"filters": {}})
+    request_obj = note_list_request.NoteListRequest.from_dict(
+        data={"filters": {"creator__eq": creator}}
+    )
     response = note_list_usecase.execute(request_obj)
 
     return response.value

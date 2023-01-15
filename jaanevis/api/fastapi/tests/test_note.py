@@ -35,6 +35,22 @@ def test_read_notes(mock_usecase) -> None:
     assert response.json() == [note_complete.to_dict()]
 
 
+@mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
+@mock.patch("jaanevis.usecases.note_list.NoteListUseCase")
+def test_read_notes_with_creator_filter(mock_usecase, mock_request) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
+    creator = "default"
+
+    response = client.get(f"/note?creator={creator}")
+
+    mock_request.from_dict.assert_called_with(
+        data={"filters": {"creator__eq": creator}}
+    )
+    mock_usecase().execute.assert_called()
+    assert response.status_code == 200
+    assert response.json() == [note_complete.to_dict()]
+
+
 @mock.patch("jaanevis.usecases.read_note.ReadNoteUseCase")
 def test_read_note_by_code(mock_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
@@ -123,6 +139,32 @@ def test_read_notes_geojson_data(mock_usecase) -> None:
     assert result[0]["properties"]["creator"] == "default"
     assert len(result[0]["properties"]["code"])
     mock_usecase().execute.assert_called()
+
+
+@mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
+@mock.patch("jaanevis.usecases.note_list.NoteListUseCase")
+def test_read_notes_geojson_data_with_creator_filter(
+    mock_usecase, mock_request
+) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
+    creator = "default"
+
+    response = client.get(f"/note/geojson?creator={creator}")
+    result = response.json()
+
+    assert response.status_code == 200
+    assert result[0]["type"] == "Feature"
+    assert result[0]["geometry"] == {
+        "type": "Point",
+        "coordinates": [note.long, note.lat],
+    }
+    assert result[0]["properties"]["url"] == note.url
+    assert result[0]["properties"]["creator"] == "default"
+    assert len(result[0]["properties"]["code"])
+    mock_usecase().execute.assert_called()
+    mock_request.from_dict.assert_called_with(
+        data={"filters": {"creator__eq": creator}}
+    )
 
 
 def test_create_note_respose_unauthorized_with_no_cookie() -> None:
