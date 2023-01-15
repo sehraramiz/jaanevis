@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from jaanevis.repository.base import Repository
 from jaanevis.requests.login_request import LoginRequest
 from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.utils import security
 
 
 class LoginUseCase:
@@ -20,14 +21,16 @@ class LoginUseCase:
                     "Wrong username or password"
                 )
 
-        if user.password != request.password:
+        password_valid = security.verify_password(
+            hashed_password=user.password, password=request.password
+        )
+        if not password_valid:
             return ResponseFailure.build_parameters_error(
                 "Wrong username or password"
             )
 
         new_session_id = str(uuid.uuid4())
         tomorrow = datetime.now() + timedelta(days=1)
-        print(datetime)
         expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
         self.repo.create_or_update_session(
             username=user.username,

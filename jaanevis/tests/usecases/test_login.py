@@ -8,17 +8,20 @@ from jaanevis.domain import user as u
 from jaanevis.requests import login_request as req
 from jaanevis.responses import response as res
 from jaanevis.usecases import login as uc
+from jaanevis.utils.security import hash_password
 
 
 @freeze_time(datetime.now())
 def test_login_create_session_on_success() -> None:
     session_id = uuid.uuid4()
     repo = mock.Mock()
+    password = "password"
+    hashed_password = hash_password(password)
 
     with mock.patch("uuid.uuid4") as uuid_mock:
         uuid_mock.return_value = session_id
         repo.get_user_by_username.return_value = u.User(
-            username="username", password="password"
+            username="username", password=hashed_password
         )
         tomorrow = datetime.now() + timedelta(days=1)
 
@@ -42,11 +45,13 @@ def test_login_create_session_on_success() -> None:
 def test_login_create_session_with_correct_expire_time() -> None:
     session_id = uuid.uuid4()
     repo = mock.Mock()
+    password = "password"
+    hashed_password = hash_password(password)
 
     with mock.patch("uuid.uuid4") as uuid_mock:
         uuid_mock.return_value = session_id
         repo.get_user_by_username.return_value = u.User(
-            username="username", password="password"
+            username="username", password=hashed_password
         )
 
         tomorrow = datetime.now() + timedelta(days=1)
@@ -54,7 +59,7 @@ def test_login_create_session_with_correct_expire_time() -> None:
 
         login_usecase = uc.LoginUseCase(repo)
         login_request = req.LoginRequest(
-            username="username", password="password"
+            username="username", password=password
         )
         response = login_usecase.execute(login_request)
 
