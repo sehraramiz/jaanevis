@@ -163,6 +163,8 @@ def login(
         key="session",
         value=login_response.value["session"],
         expires=login_response.value["expires"],
+        secure=True,
+        httponly=True
     )
 
     return response

@@ -274,7 +274,7 @@ createApp({
       .then(data => {
         this.authUser = {username: ""};
         this.authenticated = false;
-        this.$cookies.set("username", null);
+        this.$cookies.set("username", "");
         this.panelView = 'create';
       })
       .catch(error => {
@@ -283,7 +283,7 @@ createApp({
       });
     },
     initAuth: function () {
-      if (this.$cookies.get("session")) {
+      if (this.$cookies.get("username")) {
         this.authenticated = true;
         this.authUser.username = this.$cookies.get("username");
       }
