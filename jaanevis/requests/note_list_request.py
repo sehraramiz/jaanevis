@@ -6,7 +6,7 @@ from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestO
 class NoteListRequest(ValidRequestObject):
     """Request object for list of notes"""
 
-    accepted_filters = ["code__eq", "url__eq", "lat__eq", "long__eq"]
+    accepted_filters = ["code__eq", "url__eq", "lat__eq", "long__eq", "creator__eq"]
 
     def __init__(self, filters: Optional[dict[str, Any]] = None) -> None:
         self.filters = filters

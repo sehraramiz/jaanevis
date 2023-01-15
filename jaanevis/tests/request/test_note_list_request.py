@@ -47,7 +47,9 @@ def test_build_note_list_request_from_dict_with_invalid_filters() -> None:
     assert bool(request) is False
 
 
-@pytest.mark.parametrize("key", ["code__eq", "url__eq", "lat__eq", "long__eq"])
+@pytest.mark.parametrize(
+    "key", ["code__eq", "url__eq", "lat__eq", "long__eq", "creator__eq"]
+)
 def test_build_note_list_request_accepted_filters(key: str) -> None:
     filters = {key: 1}
 

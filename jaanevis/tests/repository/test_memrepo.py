@@ -28,7 +28,7 @@ def note_dicts() -> dict[str, list[Any]]:
             },
             {
                 "code": str(uuid.uuid4()),
-                "creator": "default",
+                "creator": "default2",
                 "url": "http://example.com/2",
                 "lat": 2,
                 "long": 2,
@@ -91,6 +91,15 @@ def test_repository_list_with_long_equal_filter(note_dicts) -> None:
 
     assert len(repo_notes) == 1
     assert repo_notes[0].long == 2
+
+
+def test_repository_list_with_creator_equal_filter(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    repo_notes = repo.list(filters={"creator__eq": "default"})
+
+    assert len(repo_notes) == 1
+    assert repo_notes[0].creator == "default"
 
 
 def test_repository_adds_new_note() -> None:
