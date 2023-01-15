@@ -26,12 +26,15 @@ class NoteListRequest(ValidRequestObject):
                 invalid_req.add_error("filters", "Is not iterable")
                 return invalid_req
 
-            for key, _value in data["filters"].items():
+            filters_copy = data["filters"].copy()
+            for key, _value in filters_copy.items():
                 if key not in cls.accepted_filters:
                     invalid_req.add_error(
                         "filters",
                         f"key {key} cannot be used",
                     )
+                if _value is None:
+                    data["filters"].pop(key)
 
         if invalid_req.has_errors():
             return invalid_req

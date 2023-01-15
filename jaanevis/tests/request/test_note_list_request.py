@@ -59,6 +59,18 @@ def test_build_note_list_request_accepted_filters(key: str) -> None:
     assert bool(request) is True
 
 
+@pytest.mark.parametrize(
+    "key", ["code__eq", "url__eq", "lat__eq", "long__eq", "creator__eq"]
+)
+def test_build_note_list_request_null_filters(key: str) -> None:
+    filters = {key: None}
+
+    request = req.NoteListRequest.from_dict({"filters": filters})
+
+    assert request.filters == {}
+    assert bool(request) is True
+
+
 @pytest.mark.parametrize("key", ["code__lte", "code__gte"])
 def test_build_note_list_request_rejected_filters(key) -> None:
     filters = {key: 1}
