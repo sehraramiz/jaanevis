@@ -156,8 +156,14 @@ def login(
             status_code=401, detail=login_response.value["message"]
         )
 
-    response = JSONResponse(content={"session": login_response.value})
-    response.set_cookie(key="session", value=login_response.value)
+    response = JSONResponse(
+        content={"session": login_response.value["session"]}
+    )
+    response.set_cookie(
+        key="session",
+        value=login_response.value["session"],
+        expires=login_response.value["expires"],
+    )
 
     return response
 

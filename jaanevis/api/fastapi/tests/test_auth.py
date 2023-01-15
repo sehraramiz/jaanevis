@@ -14,7 +14,11 @@ client = TestClient(app)
 @mock.patch("jaanevis.usecases.login.LoginUseCase")
 def test_login(mock_usecase, request_mock) -> None:
     body = {"username": "username", "password": "password"}
-    mock_usecase().execute.return_value = res.ResponseSuccess("validsession")
+    tomorrow = datetime.now() + timedelta(days=1)
+    expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    mock_usecase().execute.return_value = res.ResponseSuccess(
+        {"session": "validsession", "expires": expire_tomorrow}
+    )
 
     response = client.post("/login", json=body)
 
@@ -25,6 +29,7 @@ def test_login(mock_usecase, request_mock) -> None:
     )
     assert "set-cookie" in dict(response.headers)
     assert "session=validsession" in response.headers["set-cookie"]
+    assert f"expires={expire_tomorrow}" in response.headers["set-cookie"]
 
 
 @mock.patch("jaanevis.requests.login_request.LoginRequest")

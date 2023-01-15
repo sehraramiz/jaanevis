@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timedelta
 
 from jaanevis.repository.base import Repository
 from jaanevis.requests.login_request import LoginRequest
@@ -25,7 +26,14 @@ class LoginUseCase:
             )
 
         new_session_id = str(uuid.uuid4())
+        tomorrow = datetime.now() + timedelta(days=1)
+        print(datetime)
+        expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
         self.repo.create_or_update_session(
-            username=user.username, session_id=new_session_id
+            username=user.username,
+            session_id=new_session_id,
+            expire_time=tomorrow.timestamp(),
         )
-        return ResponseSuccess(new_session_id)
+        return ResponseSuccess(
+            {"session": new_session_id, "expires": expire_tomorrow}
+        )
