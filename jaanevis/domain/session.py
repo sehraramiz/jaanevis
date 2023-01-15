@@ -1,8 +1,13 @@
 import uuid
 from dataclasses import asdict, field
+from datetime import datetime, timedelta
 from typing import Any
 
 from pydantic import UUID4, BaseModel, dataclasses
+
+
+def default_expire_time() -> float:
+    return (datetime.now() + timedelta(days=1)).timestamp()
 
 
 @dataclasses.dataclass
@@ -10,6 +15,7 @@ class Session:
     """Model for session."""
 
     username: str
+    expire_time: float = field(default_factory=default_expire_time)
     session_id: UUID4 = field(default_factory=uuid.uuid4)
 
     @classmethod

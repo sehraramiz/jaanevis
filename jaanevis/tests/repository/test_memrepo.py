@@ -1,5 +1,6 @@
 import json
 import uuid
+from datetime import datetime, timedelta
 from typing import Any
 from unittest import mock
 
@@ -35,7 +36,13 @@ def note_dicts() -> dict[str, list[Any]]:
         ],
         "users": [{"username": "test@test.com", "password": "password"}],
         "sessions": [
-            {"session_id": uuid_session, "username": "test@test.com"}
+            {
+                "session_id": uuid_session,
+                "username": "test@test.com",
+                "expire_time": (
+                    datetime.now() + timedelta(days=1)
+                ).timestamp(),
+            }
         ],
     }
 
@@ -256,12 +263,18 @@ def test_delete_session_by_session_id(mock_open, note_dicts) -> None:
 def test_create_or_update_creates_new_session(mock_open, note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
     new_session_id = uuid.uuid4()
-    new_session = s.Session(username="username2", session_id=new_session_id)
+    expire_time = 0.0
+    new_session = s.Session(
+        username="username2",
+        session_id=new_session_id,
+        expire_time=expire_time,
+    )
 
     assert (
         repo.create_or_update_session(
             username="username2",
             session_id=str(new_session_id),
+            expire_time=expire_time,
         )
         == new_session
     )
@@ -279,6 +292,7 @@ def test_create_or_update_updates_existing_session(
         repo.create_or_update_session(
             username=sessions[0].username,
             session_id=str(sessions[0].session_id),
+            expire_time=sessions[0].expire_time,
         )
         == sessions[0]
     )
@@ -294,7 +308,7 @@ def test_write_db_to_file_after_session_create(path, note_dicts) -> None:
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
         repo.create_or_update_session(
-            username="username", session_id=session_id
+            username="username", session_id=session_id, expire_time=0
         )
 
     mock_open.assert_called_with("db.json", "w")
@@ -310,7 +324,7 @@ def test_write_db_to_file_after_session_update(path, note_dicts) -> None:
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
         repo.create_or_update_session(
-            username="username", session_id=session_id
+            username="username", session_id=session_id, expire_time=0
         )
 
     mock_open.assert_called_with("db.json", "w")

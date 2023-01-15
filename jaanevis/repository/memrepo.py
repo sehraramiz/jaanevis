@@ -97,9 +97,11 @@ class MemRepo:
         return True
 
     def create_or_update_session(
-        self, username: str, session_id: str
+        self, username: str, session_id: str, expire_time: float
     ) -> s.Session:
-        new_session = s.Session(username=username, session_id=session_id)
+        new_session = s.Session(
+            username=username, session_id=session_id, expire_time=expire_time
+        )
         for session in self.data["sessions"]:
             if session["username"] == username:
                 session["session_id"] = session_id

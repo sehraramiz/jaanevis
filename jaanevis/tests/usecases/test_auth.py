@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timedelta
 from unittest import mock
 
 from jaanevis.domain import session as s
@@ -77,6 +78,34 @@ def test_authenticte_handles_non_existant_user() -> None:
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
         "message": "User not found",
+    }
+
+
+def test_authenticte_handles_expired_session() -> None:
+    repo = mock.Mock()
+    repo.get_user_by_username.return_value = None
+    session = uuid.uuid4()
+    repo.get_user_by_username.return_value = u.User(
+        username="username", password="password"
+    )
+    expire_time = (datetime.now() - timedelta(hours=1)).timestamp()
+
+    repo.get_session_by_session_id.return_value = s.Session(
+        username="username", session_id=session, expire_time=expire_time
+    )
+
+    auth_usecase = uc.AuthenticateUseCase(repo)
+    request_obj = req.AuthenticateRequest.build(session=session)
+
+    response = auth_usecase.execute(request_obj)
+
+    assert bool(response) is False
+    repo.delete_session_by_session_id.assert_called_with(
+        session_id=str(session)
+    )
+    assert response.value == {
+        "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "message": "Session expired",
     }
 
 

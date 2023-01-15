@@ -1,24 +1,38 @@
+from datetime import datetime, timedelta
+
+import pytest
+
 from jaanevis.domain import session as s
 
 
-def test_session_model_init() -> None:
-    session = s.Session(username="username")
+@pytest.fixture
+def expire_time() -> float:
+    return (datetime.now() - timedelta(hours=1)).timestamp()
+
+
+def test_session_model_init(expire_time) -> None:
+    session = s.Session(username="username", expire_time=expire_time)
 
     assert str(session.session_id)
     assert session.username == "username"
+    assert session.expire_time == expire_time
 
 
-def test_session_model_from_dict() -> None:
-    session = s.Session.from_dict({"username": "username"})
+def test_session_model_from_dict(expire_time) -> None:
+    session = s.Session.from_dict(
+        {"username": "username", "expire_time": expire_time}
+    )
 
     assert str(session.session_id)
     assert session.username == "username"
+    assert session.expire_time == expire_time
 
 
-def test_session_model_to_dict() -> None:
-    session = s.Session(username="username")
+def test_session_model_to_dict(expire_time) -> None:
+    session = s.Session(username="username", expire_time=expire_time)
 
     assert session.to_dict() == {
         "session_id": str(session.session_id),
         "username": "username",
+        "expire_time": expire_time,
     }
