@@ -13,6 +13,8 @@ from jaanevis.repository import memrepo
 from jaanevis.serializers import note_json_serializer as ser
 
 uuid_session = "554f8c37-b3a1-4846-a1b6-02cc4d158646"
+LAT, LONG = 30.0, 50.0
+COUNTRY = "IR"
 
 
 @pytest.fixture
@@ -23,15 +25,15 @@ def note_dicts() -> dict[str, list[Any]]:
                 "code": str(uuid.uuid4()),
                 "creator": "default",
                 "url": "http://example.com/1",
-                "lat": 1,
-                "long": 1,
+                "lat": LAT,
+                "long": LONG,
             },
             {
                 "code": str(uuid.uuid4()),
                 "creator": "default2",
                 "url": "http://example.com/2",
-                "lat": 2,
-                "long": 2,
+                "lat": LAT + 1,
+                "long": LONG + 1,
             },
         ],
         "users": [{"username": "test@test.com", "password": "password"}],
@@ -78,19 +80,19 @@ def test_repository_list_with_url_equal_filter(note_dicts) -> None:
 def test_repository_list_with_lat_equal_filter(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
-    repo_notes = repo.list(filters={"lat__eq": 2})
+    repo_notes = repo.list(filters={"lat__eq": LAT})
 
     assert len(repo_notes) == 1
-    assert repo_notes[0].lat == 2
+    assert repo_notes[0].lat == LAT
 
 
 def test_repository_list_with_long_equal_filter(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
-    repo_notes = repo.list(filters={"long__eq": 2})
+    repo_notes = repo.list(filters={"long__eq": LONG})
 
     assert len(repo_notes) == 1
-    assert repo_notes[0].long == 2
+    assert repo_notes[0].long == LONG
 
 
 def test_repository_list_with_creator_equal_filter(note_dicts) -> None:
@@ -100,6 +102,15 @@ def test_repository_list_with_creator_equal_filter(note_dicts) -> None:
 
     assert len(repo_notes) == 1
     assert repo_notes[0].creator == "default"
+
+
+def test_repository_list_with_country_equal_filter(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    repo_notes = repo.list(filters={"country__eq": COUNTRY})
+
+    assert len(repo_notes) == 2
+    assert repo_notes[0].country == COUNTRY
 
 
 def test_repository_adds_new_note() -> None:

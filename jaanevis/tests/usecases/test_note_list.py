@@ -10,36 +10,37 @@ from jaanevis.responses import response as res
 from jaanevis.usecases import note_list as uc
 
 DEFAULT_CREATOR = "default"
-
+LAT, LONG = 30.0, 50.0
+COUNTRY = "IR"
 
 notes = [
     n.Note(
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/1",
-        lat=1,
-        long=1,
+        lat=LAT,
+        long=LONG,
     ),
     n.Note(
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/2",
-        lat=2,
-        long=2,
+        lat=LAT + 1,
+        long=LONG + 1,
     ),
     n.Note(
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/3",
-        lat=1,
-        long=1,
+        lat=LAT + 2,
+        long=LONG + 2,
     ),
     n.Note(
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/4",
-        lat=4,
-        long=4,
+        lat=LAT + 3,
+        long=LONG + 3,
     ),
 ]
 
@@ -54,7 +55,7 @@ def domain_notes_geojson() -> list[n.NoteGeoJsonFeature]:
     geojson_notes = []
     for note in notes:
         properties = n.NoteGeoJsonProperties(
-            url=note.url, creator=note.creator, code=note.code
+            url=note.url, creator=note.creator, code=note.code, country=COUNTRY
         )
         geometry = geo.GeoJsonPoint(coordinates=[note.long, note.lat])
         geojson_notes.append(

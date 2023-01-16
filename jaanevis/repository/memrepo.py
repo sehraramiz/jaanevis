@@ -40,6 +40,11 @@ class MemRepo:
                 r for r in result if str(r.creator) == filters["creator__eq"]
             ]
 
+        if "country__eq" in filters:
+            result = [
+                r for r in result if str(r.country) == filters["country__eq"]
+            ]
+
         if "url__eq" in filters:
             result = [r for r in result if r.url == filters["url__eq"]]
 

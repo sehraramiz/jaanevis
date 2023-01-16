@@ -55,13 +55,15 @@ async def get_repository() -> Repository:
 
 @app.get("/note", response_model=list[n.Note])
 def read_notes(
-    creator: Optional[str] = None, repo: Repository = Depends(get_repository)
+    creator: Optional[str] = None,
+    country: Optional[str] = None,
+    repo: Repository = Depends(get_repository),
 ) -> list[n.Note]:
     """read notes"""
 
     note_list_usecase = note_list.NoteListUseCase(repo)
     request_obj = note_list_request.NoteListRequest.from_dict(
-        data={"filters": {"creator__eq": creator}}
+        data={"filters": {"creator__eq": creator, "country__eq": country}}
     )
     response = note_list_usecase.execute(request_obj)
 
@@ -71,13 +73,14 @@ def read_notes(
 @app.get("/note/geojson", response_model=list[n.NoteGeoJsonFeature])
 def read_notes_geojson(
     creator: Optional[str] = None,
+    country: Optional[str] = None,
     repo: Repository = Depends(get_repository),
 ) -> list[n.NoteGeoJsonFeature]:
     """read notes as geojson feature objects"""
 
     note_list_usecase = note_list.GeoJsonNoteListUseCase(repo)
     request_obj = note_list_request.NoteListRequest.from_dict(
-        data={"filters": {"creator__eq": creator}}
+        data={"filters": {"creator__eq": creator, "country__eq": country}}
     )
     response = note_list_usecase.execute(request_obj)
 

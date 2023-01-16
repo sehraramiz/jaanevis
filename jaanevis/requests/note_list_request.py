@@ -12,6 +12,7 @@ class NoteListRequest(ValidRequestObject):
         "lat__eq",
         "long__eq",
         "creator__eq",
+        "country__eq",
     ]
 
     def __init__(self, filters: Optional[dict[str, Any]] = None) -> None:

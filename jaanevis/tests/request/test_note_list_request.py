@@ -48,7 +48,15 @@ def test_build_note_list_request_from_dict_with_invalid_filters() -> None:
 
 
 @pytest.mark.parametrize(
-    "key", ["code__eq", "url__eq", "lat__eq", "long__eq", "creator__eq"]
+    "key",
+    [
+        "code__eq",
+        "url__eq",
+        "lat__eq",
+        "long__eq",
+        "creator__eq",
+        "country__eq",
+    ],
 )
 def test_build_note_list_request_accepted_filters(key: str) -> None:
     filters = {key: 1}
@@ -60,7 +68,15 @@ def test_build_note_list_request_accepted_filters(key: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "key", ["code__eq", "url__eq", "lat__eq", "long__eq", "creator__eq"]
+    "key",
+    [
+        "code__eq",
+        "url__eq",
+        "lat__eq",
+        "long__eq",
+        "creator__eq",
+        "country__eq",
+    ],
 )
 def test_build_note_list_request_null_filters(key: str) -> None:
     filters = {key: None}

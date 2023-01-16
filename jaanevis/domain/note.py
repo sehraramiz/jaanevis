@@ -53,6 +53,7 @@ class NoteUpdateApi(BaseModel):
 class NoteGeoJsonProperties(BaseModel):
     url: AnyHttpUrl
     creator: str
+    country: str
     code: UUID4
 
 

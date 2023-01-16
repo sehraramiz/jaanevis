@@ -2,7 +2,7 @@ import uuid
 
 from jaanevis.domain import note as n
 
-LAT, LONG = 30, 50
+LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
 
 
@@ -54,7 +54,7 @@ def test_note_model_to_dict() -> None:
 def test_note_geojson_properties_init() -> None:
     code = uuid.uuid4()
     note_properties = n.NoteGeoJsonProperties(
-        code=code, creator="default", url="http://exp.com"
+        code=code, creator="default", url="http://exp.com", country=COUNTRY
     )
 
     assert note_properties.code == code

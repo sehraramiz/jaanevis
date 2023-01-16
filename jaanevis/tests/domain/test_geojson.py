@@ -1,10 +1,11 @@
 from jaanevis.domain import geojson as geo
 
+LAT, LONG = 30.0, 50.0
+COUNTRY = "IR"
+
 
 def test_geojson_point_init() -> None:
-    lat = 1.0
-    long = 2.0
-    coordinates = (long, lat)
+    coordinates = (LONG, LAT)
     point = geo.GeoJsonPoint(coordinates=coordinates)
 
     assert point.coordinates == coordinates
@@ -12,7 +13,7 @@ def test_geojson_point_init() -> None:
 
 
 def test_geojson_feature_init() -> None:
-    geometry = geo.GeoJsonPoint(coordinates=(2.0, 1.0))
+    geometry = geo.GeoJsonPoint(coordinates=(LONG, LAT))
     feature = geo.GeoJsonFeature(geometry=geometry)
 
     assert feature.type == "Feature"
