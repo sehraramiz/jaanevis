@@ -314,9 +314,16 @@ createApp({
     },
     handleNotesPath: async function () {
       this.filters = this.$route.query
-      var notes = await this.$root.readNotes(this.filters);
+      var notes = await this.readNotes(this.filters);
       this.$root.showNotesOnMap(notes);
     },
+    removeFilter(filter) {
+      delete this.filters[filter];
+      this.$router.replace({
+        path: this.$route.path,
+        query: this.filters
+      });
+    }
   },
   mounted() {
     this.$cookies = window.$cookies;
@@ -325,4 +332,3 @@ createApp({
     this.showNotesOnMap();
   },
 }).use(router).mount('#app')
-

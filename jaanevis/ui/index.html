@@ -23,6 +23,13 @@
             <div id="map"></div>
             <div id="panel">
                 <router-view></router-view>
+                <div>
+                    <p>Filters:</p>
+                    <div v-for="(value, filter) in filters">
+                        <span>{{ filter }}[{{ value }}]</span>
+                        <button class="destroy" @click="removeFilter(filter)">X</button>
+                    </div>
+                </div>
                 <div class="note-form" v-if="panelView == 'create'" id="create-note">
                     <p>Create new note</p>
                     <label for="url">Url:</label>
