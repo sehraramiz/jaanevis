@@ -11,6 +11,7 @@
     crossorigin=""></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
 
     <link rel="stylesheet" href="main.css"/>
 
@@ -21,6 +22,7 @@
         <div id="main">
             <div id="map"></div>
             <div id="panel">
+                <router-view></router-view>
                 <div class="note-form" v-if="panelView == 'create'" id="create-note">
                     <p>Create new note</p>
                     <label for="url">Url:</label>
@@ -33,7 +35,7 @@
                 </div>
                 <div class="note-form" v-if="panelView == 'details'" id="note-detail">
                     <p>Code: {{ note.code }}</p>
-                    <p>Creator: {{ note.creator }}</p>
+                    <p>Creator: <a :href="`#/notes?creator=${note.creator}`">{{ note.creator }}</a></p>
                     <label for="url">Url:</label>
                     <input type="text" id="url" name="url" v-model="note.url">
                     <label for="lat">Latitude:</label>

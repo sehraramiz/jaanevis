@@ -1,5 +1,12 @@
 const { createApp } = Vue;
 
+var routes = [];
+
+const router = VueRouter.createRouter({
+  history: VueRouter.createWebHashHistory(),
+  routes,
+})
+
 createApp({
   name: 'Jaanevis',
   data() {
@@ -17,8 +24,15 @@ createApp({
       },
       errors: [],
       authenticated: false,
-      authUser: {username: ""}
+      authUser: {username: ""},
     }
+  },
+  watch:{
+    '$route': async function (to, from){
+      if (this.$route.path == "/notes"){
+        this.handleNotesPath();
+      }
+    },
   },
   methods: {
     initMap: function () {
@@ -32,8 +46,9 @@ createApp({
       this.map.on('click', this.showNoteCreateForm);
     },
     onEachFeature: function (feature, layer) {
+      var creator = feature.properties.creator;
       var content = `
-          <p><b>creator</b>: ${feature.properties.creator}</p>
+          <p><b>creator</b>: <a href="#/notes?creator=${creator}">${creator}</a></p>
           <span><b>link</b>: </span>
           <a target="_blank" href="${feature.properties.url}">${feature.properties.url}</a>
       `;
@@ -55,10 +70,12 @@ createApp({
         this.map.removeLayer(this.pointer);
       this.pointer = new L.Marker([lat, long]).addTo(this.map);
     },
-    showNotesOnMap: async function () {
+    showNotesOnMap: async function (notes) {
       this.clearMapNotes();
 
-      let notes = await this.readNotes();
+      if (!notes){
+        var notes = await this.readNotes();
+      }
 
       var notesCollection = {
           'type': 'FeatureCollection',
@@ -73,8 +90,12 @@ createApp({
       this.hidePointer();
       this.clearErrors();
     },
-    readNotes: async function () {
-      let url = this.baseUrl + '/note/geojson';
+    readNotes: async function (filters) {
+      var params = "";
+      if (filters) {
+        params = new URLSearchParams(filters).toString();
+      }
+      let url = this.baseUrl + '/note/geojson?' + params;
       const response = await fetch(url);
       return await response.json();
     },
@@ -290,7 +311,12 @@ createApp({
     },
     showLogin: function () {
       this.panelView = 'auth';
-    }
+    },
+    handleNotesPath: async function () {
+      this.filters = this.$route.query
+      var notes = await this.$root.readNotes(this.filters);
+      this.$root.showNotesOnMap(notes);
+    },
   },
   mounted() {
     this.$cookies = window.$cookies;
@@ -298,4 +324,5 @@ createApp({
     this.initMap();
     this.showNotesOnMap();
   },
-}).mount('#app')
+}).use(router).mount('#app')
+
