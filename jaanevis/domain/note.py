@@ -5,6 +5,7 @@ from typing import Any, Optional
 from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses
 
 from jaanevis.domain.geojson import GeoJsonFeature
+from jaanevis.utils import geo
 
 
 @dataclasses.dataclass
@@ -14,6 +15,7 @@ class Note:
     url: AnyHttpUrl
     lat: float
     long: float
+    country: str = ""
     code: UUID4 = field(default_factory=uuid.uuid4)
     creator: Optional[str] = None
 
@@ -26,6 +28,10 @@ class Note:
         data["code"] = str(self.code)
         data["url"] = str(self.url)
         return data
+
+    def __post_init__(self):
+        if not self.country:
+            self.country = geo.get_country_from_latlong(self.lat, self.long)
 
 
 class NoteCreateApi(BaseModel):

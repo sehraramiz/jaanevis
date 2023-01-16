@@ -2,15 +2,20 @@ import uuid
 
 from jaanevis.domain import note as n
 
+LAT, LONG = 30, 50
+COUNTRY = "IR"
+
 
 def test_note_model_init() -> None:
-    note = n.Note(creator="default", url="http://example.com", lat=1, long=1)
+    note = n.Note(
+        creator="default", url="http://example.com", lat=LAT, long=LONG
+    )
 
     assert str(note.code)
     assert note.creator == "default"
     assert note.url == "http://example.com"
-    assert note.lat == 1
-    assert note.long == 1
+    assert note.lat == LAT
+    assert note.long == LONG
 
 
 def test_note_model_from_dict() -> None:
@@ -18,27 +23,31 @@ def test_note_model_from_dict() -> None:
         {
             "creator": "default",
             "url": "http://example.com",
-            "lat": 1,
-            "long": 1,
+            "lat": LAT,
+            "long": LONG,
         }
     )
 
     assert str(note.code)
     assert note.creator == "default"
     assert note.url == "http://example.com"
-    assert note.lat == 1
-    assert note.long == 1
+    assert note.lat == LAT
+    assert note.long == LONG
+    assert note.country == COUNTRY
 
 
 def test_note_model_to_dict() -> None:
-    note = n.Note(creator="default", url="http://example.com", lat=1, long=1)
+    note = n.Note(
+        creator="default", url="http://example.com", lat=LAT, long=LONG
+    )
 
     assert note.to_dict() == {
         "code": str(note.code),
         "creator": "default",
         "url": "http://example.com",
-        "lat": 1,
-        "long": 1,
+        "lat": LAT,
+        "long": LONG,
+        "country": COUNTRY,
     }
 
 

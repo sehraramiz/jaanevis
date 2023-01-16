@@ -6,6 +6,9 @@ from jaanevis.domain import note as n
 from jaanevis.serializers import note_geojson_serializer as geo_serializer
 from jaanevis.serializers import note_json_serializer as ser
 
+LAT, LONG = 30.0, 50.0
+COUNTRY = "IR"
+
 
 def test_serialize_domain_note() -> None:
     code = uuid.uuid4()
@@ -14,20 +17,21 @@ def test_serialize_domain_note() -> None:
         code=code,
         creator="default",
         url="http://example.com",
-        lat=1,
-        long=1,
+        lat=LAT,
+        long=LONG,
     )
 
     expected_json = """
         {{
             "code": "{}",
             "creator": "default",
+            "country": "{}",
             "url": "http://example.com",
-            "lat": 1,
-            "long": 1
+            "lat": {},
+            "long": {}
         }}
     """.format(
-        code
+        code, COUNTRY, LAT, LONG
     )
 
     json_note = json.dumps(note, cls=ser.NoteJsonEncoder)
@@ -41,23 +45,28 @@ def test_serialize_domain_note_to_geojson() -> None:
     note = n.Note(
         code=code,
         creator="default",
+        country=COUNTRY,
         url="http://example.com",
-        lat=1,
-        long=2,
+        lat=LAT,
+        long=LONG,
     )
 
     expected_json = """
         {{
             "type": "Feature",
-            "coordinates": [2, 1],
+            "coordinates": [{long}, {lat}],
             "properties": {{
                 "url": "http://example.com",
                 "creator": "default",
-                "code": "{}"
+                "country": "{country}",
+                "code": "{code}"
             }}
         }}
     """.format(
-        code
+        lat=LAT,
+        long=LONG,
+        country=COUNTRY,
+        code=code,
     )
 
     json_note = json.dumps(note, cls=ser.NoteGeoJsonEncoder)
@@ -74,15 +83,15 @@ def test_serialize_notes_to_geojson() -> None:
             code=code_1,
             creator="default",
             url="http://example.com/1",
-            lat=1,
-            long=2,
+            lat=LAT,
+            long=LONG,
         ),
         n.Note(
             code=code_2,
             creator="default",
             url="http://example.com/2",
-            lat=3,
-            long=4,
+            lat=LAT + 1,
+            long=LONG + 1,
         ),
     ]
 
@@ -98,6 +107,7 @@ def test_serialize_notes_to_geojson() -> None:
             "properties": {
                 "url": notes[0].url,
                 "creator": "default",
+                "country": COUNTRY,
                 "code": code_1,
             },
         },
@@ -110,6 +120,7 @@ def test_serialize_notes_to_geojson() -> None:
             "properties": {
                 "url": notes[1].url,
                 "creator": "default",
+                "country": COUNTRY,
                 "code": code_2,
             },
         },
@@ -124,8 +135,8 @@ def test_serialize_notes_to_geojson_features() -> None:
             code=code_1,
             creator="default",
             url="http://example.com/1",
-            lat=1,
-            long=2,
+            lat=LAT,
+            long=LONG,
         ),
     ]
 
@@ -137,7 +148,10 @@ def test_serialize_notes_to_geojson_features() -> None:
                 coordinates=[notes[0].long, notes[0].lat]
             ),
             properties=n.NoteGeoJsonProperties(
-                code=code_1, creator="default", url=notes[0].url
+                code=code_1,
+                creator="default",
+                country=COUNTRY,
+                url=notes[0].url,
             ),
         )
     ]

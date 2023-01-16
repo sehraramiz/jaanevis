@@ -7,6 +7,7 @@ class NoteJsonEncoder(json.JSONEncoder):
             to_serialize = {
                 "code": str(o.code),
                 "creator": o.creator,
+                "country": o.country,
                 "url": o.url,
                 "lat": o.lat,
                 "long": o.long,
@@ -25,6 +26,7 @@ class NoteGeoJsonEncoder(json.JSONEncoder):
                 "properties": {
                     "code": str(o.code),
                     "creator": o.creator,
+                    "country": o.country,
                     "url": o.url,
                 },
             }

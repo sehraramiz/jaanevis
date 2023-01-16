@@ -3,3 +3,4 @@ fastapi
 uvicorn
 httpx
 argon2-cffi
+reverse_geocode
