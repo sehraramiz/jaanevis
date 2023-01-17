@@ -18,6 +18,7 @@ createApp({
       note: {
         code: "",
         creator: "",
+        country: "",
         url: "",
         lat: "0.0",
         long: "0.0"
@@ -47,8 +48,10 @@ createApp({
     },
     onEachFeature: function (feature, layer) {
       var creator = feature.properties.creator;
+      var country = feature.properties.country;
       var content = `
           <p><b>creator</b>: <a href="#/notes?creator=${creator}">${creator}</a></p>
+          <p><b>country</b>: <a href="#/notes?country=${country}">${country}</a></p>
           <span><b>link</b>: </span>
           <a target="_blank" href="${feature.properties.url}">${feature.properties.url}</a>
       `;
@@ -182,6 +185,7 @@ createApp({
       this.note = {
         code: properties.code,
         creator: properties.creator,
+        country: properties.country,
         url: properties.url,
         lat: e.latlng.lat,
         long: e.latlng.lng,
@@ -197,6 +201,7 @@ createApp({
       this.note = {
         code: "",
         creator: "",
+        country: "",
         url: "",
         lat: lat,
         long: long
@@ -313,7 +318,7 @@ createApp({
       this.panelView = 'auth';
     },
     handleNotesPath: async function () {
-      this.filters = this.$route.query
+      this.filters = {...this.filters, ...this.$route.query};
       var notes = await this.readNotes(this.filters);
       this.$root.showNotesOnMap(notes);
     },
