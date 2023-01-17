@@ -19,6 +19,7 @@ createApp({
         code: "",
         creator: "",
         country: "",
+        text: "",
         url: "",
         lat: "0.0",
         long: "0.0"
@@ -108,6 +109,7 @@ createApp({
 
       let note = {
         url: this.note.url,
+        text: this.note.text,
         lat: this.note.lat,
         long: this.note.long
       };
@@ -153,6 +155,7 @@ createApp({
 
       let note = {
         url: this.note.url,
+        text: this.note.text,
         lat: this.note.lat,
         long: this.note.long
       };
@@ -187,6 +190,7 @@ createApp({
         creator: properties.creator,
         country: properties.country,
         url: properties.url,
+        text: properties.text,
         lat: e.latlng.lat,
         long: e.latlng.lng,
       };
@@ -203,6 +207,7 @@ createApp({
         creator: "",
         country: "",
         url: "",
+        text: "",
         lat: lat,
         long: long
       }

@@ -34,6 +34,8 @@
                     <p>Create new note</p>
                     <label for="url">Url:</label>
                     <input type="text" id="url" name="url" v-model="note.url">
+                    <label for="text">Text:</label>
+                    <input type="text" id="text" name="text" v-model="note.text">
                     <label for="lat">Latitude:</label>
                     <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
@@ -46,6 +48,8 @@
                     <p>Country: <a :href="`#/notes?country=${note.country}`">{{ note.country }}</a></p>
                     <label for="url">Url:</label>
                     <input type="text" id="url" name="url" v-model="note.url">
+                    <label for="text">Text:</label>
+                    <input type="text" id="text" name="text" v-model="note.text">
                     <label for="lat">Latitude:</label>
                     <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
                     <label for="long">Longitude:</label>
