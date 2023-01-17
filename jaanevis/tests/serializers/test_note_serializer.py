@@ -17,6 +17,7 @@ def test_serialize_domain_note() -> None:
         code=code,
         creator="default",
         url="http://example.com",
+        text="some text",
         lat=LAT,
         long=LONG,
     )
@@ -26,6 +27,7 @@ def test_serialize_domain_note() -> None:
             "code": "{}",
             "creator": "default",
             "country": "{}",
+            "text": "some text",
             "url": "http://example.com",
             "lat": {},
             "long": {}
@@ -45,6 +47,7 @@ def test_serialize_domain_note_to_geojson() -> None:
     note = n.Note(
         code=code,
         creator="default",
+        text="some text",
         country=COUNTRY,
         url="http://example.com",
         lat=LAT,
@@ -58,6 +61,7 @@ def test_serialize_domain_note_to_geojson() -> None:
             "properties": {{
                 "url": "http://example.com",
                 "creator": "default",
+                "text": "some text",
                 "country": "{country}",
                 "code": "{code}"
             }}
@@ -82,6 +86,7 @@ def test_serialize_notes_to_geojson() -> None:
         n.Note(
             code=code_1,
             creator="default",
+            text="some text",
             url="http://example.com/1",
             lat=LAT,
             long=LONG,
@@ -89,6 +94,7 @@ def test_serialize_notes_to_geojson() -> None:
         n.Note(
             code=code_2,
             creator="default",
+            text="some text",
             url="http://example.com/2",
             lat=LAT + 1,
             long=LONG + 1,
@@ -107,6 +113,7 @@ def test_serialize_notes_to_geojson() -> None:
             "properties": {
                 "url": notes[0].url,
                 "creator": "default",
+                "text": "some text",
                 "country": COUNTRY,
                 "code": code_1,
             },
@@ -120,6 +127,7 @@ def test_serialize_notes_to_geojson() -> None:
             "properties": {
                 "url": notes[1].url,
                 "creator": "default",
+                "text": "some text",
                 "country": COUNTRY,
                 "code": code_2,
             },
@@ -134,6 +142,7 @@ def test_serialize_notes_to_geojson_features() -> None:
         n.Note(
             code=code_1,
             creator="default",
+            text="some text",
             url="http://example.com/1",
             lat=LAT,
             long=LONG,
@@ -150,6 +159,7 @@ def test_serialize_notes_to_geojson_features() -> None:
             properties=n.NoteGeoJsonProperties(
                 code=code_1,
                 creator="default",
+                text="some text",
                 country=COUNTRY,
                 url=notes[0].url,
             ),

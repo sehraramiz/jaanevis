@@ -19,6 +19,7 @@ def notes_to_geojson(notes: list[n.Note]) -> list[dict]:
                 "properties": {
                     "code": note.code,
                     "creator": note.creator,
+                    "text": note.text,
                     "country": note.country,
                     "url": note.url,
                 },
@@ -37,6 +38,7 @@ def notes_to_geojson_features(
         properties = n.NoteGeoJsonProperties(
             url=note.url,
             creator=note.creator,
+            text=note.text,
             code=note.code,
             country=note.country,
         )

@@ -16,6 +16,7 @@ class Note:
     lat: float
     long: float
     country: str = ""
+    text: str = ""
     code: UUID4 = field(default_factory=uuid.uuid4)
     creator: Optional[str] = None
 
@@ -38,6 +39,7 @@ class NoteCreateApi(BaseModel):
     """schema for creating a note via api"""
 
     url: AnyHttpUrl
+    text: str = ""
     lat: float
     long: float
 
@@ -46,6 +48,7 @@ class NoteUpdateApi(BaseModel):
     """schema for updatig a note via api"""
 
     url: Optional[AnyHttpUrl] = None
+    text: str = ""
     lat: Optional[float] = None
     long: Optional[float] = None
 
@@ -54,6 +57,7 @@ class NoteGeoJsonProperties(BaseModel):
     url: AnyHttpUrl
     creator: str
     country: str
+    text: str
     code: UUID4
 
 

@@ -13,7 +13,7 @@ DEFAULT_CREATOR = "default"
 
 @pytest.fixture
 def new_note() -> n.Note:
-    return n.Note(url="http://example.com", lat=1, long=1)
+    return n.Note(url="http://example.com", text="some text", lat=1, long=1)
 
 
 def test_add_note(new_note: n.Note) -> None:
@@ -30,6 +30,7 @@ def test_add_note(new_note: n.Note) -> None:
         lat=new_note.lat,
         long=new_note.long,
         creator="username",
+        text="some text",
     )
 
     assert bool(response) is True

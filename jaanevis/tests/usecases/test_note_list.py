@@ -18,6 +18,7 @@ notes = [
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/1",
+        text="some text",
         lat=LAT,
         long=LONG,
     ),
@@ -25,6 +26,7 @@ notes = [
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/2",
+        text="some text",
         lat=LAT + 1,
         long=LONG + 1,
     ),
@@ -32,6 +34,7 @@ notes = [
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/3",
+        text="some text",
         lat=LAT + 2,
         long=LONG + 2,
     ),
@@ -39,6 +42,7 @@ notes = [
         code=uuid.uuid4(),
         creator=DEFAULT_CREATOR,
         url="https://example.com/4",
+        text="some text",
         lat=LAT + 3,
         long=LONG + 3,
     ),
@@ -55,7 +59,11 @@ def domain_notes_geojson() -> list[n.NoteGeoJsonFeature]:
     geojson_notes = []
     for note in notes:
         properties = n.NoteGeoJsonProperties(
-            url=note.url, creator=note.creator, code=note.code, country=COUNTRY
+            url=note.url,
+            creator=note.creator,
+            code=note.code,
+            country=COUNTRY,
+            text=note.text,
         )
         geometry = geo.GeoJsonPoint(coordinates=[note.long, note.lat])
         geojson_notes.append(

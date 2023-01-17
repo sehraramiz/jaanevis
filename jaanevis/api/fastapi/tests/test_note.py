@@ -12,6 +12,7 @@ COUNTRY = "IR"
 client = TestClient(app)
 note = NoteCreateApi(
     url="http://example.com",
+    text="some text",
     lat=LAT,
     long=LONG,
 )
@@ -19,6 +20,7 @@ note = NoteCreateApi(
 note_complete = Note(
     code=uuid.uuid4(),
     creator="default",
+    text="some text",
     url="http://example.com",
     lat=LAT,
     long=LONG,
@@ -122,6 +124,7 @@ def test_update_note(mock_usecase, auth_usecase) -> None:
     new_note = note_complete.to_dict()
     note_update = NoteUpdateApi(
         url="https://newurl.com",
+        text="some text",
         lat=note_complete.lat,
         long=note_complete.long,
     )
