@@ -13,6 +13,7 @@ class NoteListRequest(ValidRequestObject):
         "long__eq",
         "creator__eq",
         "country__eq",
+        "tag__eq",
     ]
 
     def __init__(self, filters: Optional[dict[str, Any]] = None) -> None:

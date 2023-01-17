@@ -56,6 +56,7 @@ def test_build_note_list_request_from_dict_with_invalid_filters() -> None:
         "long__eq",
         "creator__eq",
         "country__eq",
+        "tag__eq",
     ],
 )
 def test_build_note_list_request_accepted_filters(key: str) -> None:
@@ -76,6 +77,7 @@ def test_build_note_list_request_accepted_filters(key: str) -> None:
         "long__eq",
         "creator__eq",
         "country__eq",
+        "tag__eq",
     ],
 )
 def test_build_note_list_request_null_filters(key: str) -> None:

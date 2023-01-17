@@ -1,3 +1,4 @@
+import re
 import uuid
 from dataclasses import asdict, field
 from typing import Any, Optional
@@ -17,6 +18,7 @@ class Note:
     long: float
     country: str = ""
     text: str = ""
+    tags: list[str] = field(default_factory=list)
     code: UUID4 = field(default_factory=uuid.uuid4)
     creator: Optional[str] = None
 
@@ -33,6 +35,9 @@ class Note:
     def __post_init__(self):
         if not self.country:
             self.country = geo.get_country_from_latlong(self.lat, self.long)
+        if not self.tags and "#" in self.text:
+            r = "#(\\w+)"
+            self.tags = re.findall(r, self.text)
 
 
 class NoteCreateApi(BaseModel):
@@ -48,7 +53,7 @@ class NoteUpdateApi(BaseModel):
     """schema for updatig a note via api"""
 
     url: Optional[AnyHttpUrl] = None
-    text: str = ""
+    text: Optional[str] = ""
     lat: Optional[float] = None
     long: Optional[float] = None
 
@@ -57,8 +62,8 @@ class NoteGeoJsonProperties(BaseModel):
     url: AnyHttpUrl
     creator: str
     country: str
-    text: str
     code: UUID4
+    text: str = ""
 
 
 class NoteGeoJsonFeature(GeoJsonFeature):

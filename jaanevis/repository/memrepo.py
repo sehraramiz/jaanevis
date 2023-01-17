@@ -48,6 +48,9 @@ class MemRepo:
         if "url__eq" in filters:
             result = [r for r in result if r.url == filters["url__eq"]]
 
+        if "tag__eq" in filters:
+            result = [r for r in result if filters["tag__eq"] in r.tags]
+
         if "lat__eq" in filters:
             result = [r for r in result if r.lat == filters["lat__eq"]]
 

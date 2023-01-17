@@ -23,6 +23,18 @@ def test_note_model_init() -> None:
     assert note.long == LONG
 
 
+def test_note_model_init_with_tags() -> None:
+    note = n.Note(
+        creator="default",
+        url="http://example.com",
+        text="some #text #for_test",
+        lat=LAT,
+        long=LONG,
+    )
+
+    assert note.tags == ["text", "for_test"]
+
+
 def test_note_model_from_dict() -> None:
     note = n.Note.from_dict(
         {
@@ -57,6 +69,28 @@ def test_note_model_to_dict() -> None:
         "creator": "default",
         "url": "http://example.com",
         "text": "some text",
+        "tags": [],
+        "lat": LAT,
+        "long": LONG,
+        "country": COUNTRY,
+    }
+
+
+def test_note_model_to_dict_with_tags() -> None:
+    note = n.Note(
+        creator="default",
+        url="http://example.com",
+        text="some #text",
+        lat=LAT,
+        long=LONG,
+    )
+
+    assert note.to_dict() == {
+        "code": str(note.code),
+        "creator": "default",
+        "url": "http://example.com",
+        "text": "some #text",
+        "tags": ["text"],
         "lat": LAT,
         "long": LONG,
         "country": COUNTRY,

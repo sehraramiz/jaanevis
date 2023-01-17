@@ -48,7 +48,13 @@ def test_read_notes_with_creator_filter(mock_usecase, mock_request) -> None:
     response = client.get(f"/note?creator={creator}")
 
     mock_request.from_dict.assert_called_with(
-        data={"filters": {"creator__eq": creator, "country__eq": None}}
+        data={
+            "filters": {
+                "creator__eq": creator,
+                "country__eq": None,
+                "tag__eq": None,
+            }
+        }
     )
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
@@ -64,7 +70,35 @@ def test_read_notes_with_country_filter(mock_usecase, mock_request) -> None:
     response = client.get(f"/note?country={country}")
 
     mock_request.from_dict.assert_called_with(
-        data={"filters": {"country__eq": country, "creator__eq": None}}
+        data={
+            "filters": {
+                "country__eq": country,
+                "creator__eq": None,
+                "tag__eq": None,
+            }
+        }
+    )
+    mock_usecase().execute.assert_called()
+    assert response.status_code == 200
+    assert response.json() == [note_complete.to_dict()]
+
+
+@mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
+@mock.patch("jaanevis.usecases.note_list.NoteListUseCase")
+def test_read_notes_with_tag_filter(mock_usecase, mock_request) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
+    tag = "text"
+
+    response = client.get(f"/note?tag={tag}")
+
+    mock_request.from_dict.assert_called_with(
+        data={
+            "filters": {
+                "tag__eq": tag,
+                "country__eq": None,
+                "creator__eq": None,
+            }
+        }
     )
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
@@ -184,7 +218,13 @@ def test_read_notes_geojson_data_with_creator_filter(
     assert len(result[0]["properties"]["code"])
     mock_usecase().execute.assert_called()
     mock_request.from_dict.assert_called_with(
-        data={"filters": {"creator__eq": creator, "country__eq": None}}
+        data={
+            "filters": {
+                "creator__eq": creator,
+                "country__eq": None,
+                "tag__eq": None,
+            }
+        }
     )
 
 
@@ -209,7 +249,44 @@ def test_read_notes_geojson_data_with_country_filter(
     assert len(result[0]["properties"]["code"])
     mock_usecase().execute.assert_called()
     mock_request.from_dict.assert_called_with(
-        data={"filters": {"country__eq": COUNTRY, "creator__eq": None}}
+        data={
+            "filters": {
+                "country__eq": COUNTRY,
+                "creator__eq": None,
+                "tag__eq": None,
+            }
+        }
+    )
+
+
+@mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
+@mock.patch("jaanevis.usecases.note_list.NoteListUseCase")
+def test_read_notes_geojson_data_with_tag_filter(
+    mock_usecase, mock_request
+) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
+
+    response = client.get(f"/note/geojson?tag=text")
+    result = response.json()
+
+    assert response.status_code == 200
+    assert result[0]["type"] == "Feature"
+    assert result[0]["geometry"] == {
+        "type": "Point",
+        "coordinates": [note.long, note.lat],
+    }
+    assert result[0]["properties"]["url"] == note.url
+    assert result[0]["properties"]["country"] == COUNTRY
+    assert len(result[0]["properties"]["code"])
+    mock_usecase().execute.assert_called()
+    mock_request.from_dict.assert_called_with(
+        data={
+            "filters": {
+                "tag__eq": "text",
+                "country__eq": None,
+                "creator__eq": None,
+            }
+        }
     )
 
 

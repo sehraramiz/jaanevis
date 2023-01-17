@@ -25,6 +25,8 @@ def note_dicts() -> dict[str, list[Any]]:
                 "code": str(uuid.uuid4()),
                 "creator": "default",
                 "url": "http://example.com/1",
+                "text": "some #text",
+                "tags": ["text"],
                 "lat": LAT,
                 "long": LONG,
             },
@@ -32,6 +34,8 @@ def note_dicts() -> dict[str, list[Any]]:
                 "code": str(uuid.uuid4()),
                 "creator": "default2",
                 "url": "http://example.com/2",
+                "text": "#some text",
+                "tags": ["some"],
                 "lat": LAT + 1,
                 "long": LONG + 1,
             },
@@ -113,6 +117,15 @@ def test_repository_list_with_country_equal_filter(note_dicts) -> None:
     assert repo_notes[0].country == COUNTRY
 
 
+def test_repository_list_with_tag_equal_filter(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    repo_notes = repo.list(filters={"tag__eq": "text"})
+
+    assert len(repo_notes) == 1
+    assert "text" in repo_notes[0].tags
+
+
 def test_repository_adds_new_note() -> None:
     mock_open = mock.mock_open(read_data=json.dumps({"notes": []}))
 
@@ -164,6 +177,7 @@ def test_repository_update(note_dicts) -> None:
     newurl = "https://newurl.com"
     update_data = {
         "url": newurl,
+        "text": notes[0].text,
         "lat": notes[0].lat,
         "long": notes[0].long,
     }
