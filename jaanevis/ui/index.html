@@ -46,16 +46,27 @@
                     <p>Code: {{ note.code }}</p>
                     <p>Creator: <a :href="`#/notes?creator=${note.creator}`">{{ note.creator }}</a></p>
                     <p>Country: <a :href="`#/notes?country=${note.country}`">{{ note.country }}</a></p>
-                    <label for="url">Url:</label>
-                    <input type="text" id="url" name="url" v-model="note.url">
-                    <label for="text">Text:</label>
-                    <input type="text" id="text" name="text" v-model="note.text">
-                    <label for="lat">Latitude:</label>
-                    <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
-                    <label for="long">Longitude:</label>
-                    <input type="number" step="any" id="long" name="long" v-model="note.long">
-                    <button @click="updateNote" v-if="authUser.username == note.creator">Update</button>
-                    <button @click="deleteNote" v-if="authUser.username == note.creator">Delete</button>
+                    <div v-if="authUser.username == note.creator && editing">
+                        <label for="url">Url:</label>
+                        <input type="text" id="url" name="url" v-model="note.url">
+                        <label for="text">Text:</label>
+                        <input type="text" id="text" name="text" v-model="note.text">
+                        <label for="lat">Latitude:</label>
+                        <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
+                        <label for="long">Longitude:</label>
+                        <input type="number" step="any" id="long" name="long" v-model="note.long">
+                        <button @click="updateNote">Update</button>
+                        <button @click="deleteNote">Delete</button>
+                        <button @click="editing = !editing">Cancel Edit</button>
+                    </div>
+                    <div v-else>
+                        <p>Url: <a target="_blank" :href="note.url">{{ note.url }}</a></p>
+                        <p v-html="hashtagText(note.text)"></p>
+                        <p>Latitude: {{ note.lat }}</p>
+                        <p>Longitude: {{ note.long }}</p>
+                        <button v-if="authUser.username == note.creator"
+                            @click="editing = !editing">Edit</button>
+                    </div>
                 </div>
                 <div id="auth" v-if="panelView == 'auth'" >
                     <div id="profile" v-if="authenticated == true">

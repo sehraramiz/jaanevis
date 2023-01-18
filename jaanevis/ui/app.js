@@ -26,6 +26,7 @@ createApp({
       },
       errors: [],
       authenticated: false,
+      editing: false,
       authUser: {username: ""},
     }
   },
@@ -333,6 +334,10 @@ createApp({
         path: this.$route.path,
         query: this.filters
       });
+    },
+    hashtagText: function (text) {
+      var repl = text.replace(/#(\w+)/g, '<a href="#/notes?tag=$1">#$1</a>');
+      return repl;
     }
   },
   mounted() {
