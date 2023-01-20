@@ -15,7 +15,7 @@ def test_authenticte_finds_correct_user() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password"
+        username="username", password="password", is_active=True
     )
     repo.get_session_by_session_id.return_value = s.Session(
         username="username", session_id=session
@@ -86,7 +86,7 @@ def test_authenticte_handles_expired_session() -> None:
     repo.get_user_by_username.return_value = None
     session = uuid.uuid4()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password"
+        username="username", password="password", is_active=True
     )
     expire_time = (datetime.now() - timedelta(hours=1)).timestamp()
 
@@ -113,7 +113,7 @@ def test_logout_removes_existant_user_session() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password"
+        username="username", password="password", is_active=True
     )
     repo.get_session_by_session_id.return_value = s.Session(
         username="username", session_id=session
@@ -134,7 +134,7 @@ def test_logout_success_non_existent_session() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password"
+        username="username", password="password", is_active=True
     )
     repo.get_session_by_session_id.return_value = None
 
@@ -160,3 +160,25 @@ def test_logout_success_non_existent_user() -> None:
     response = logout_usecase.execute(request_obj)
 
     assert bool(response) is True
+
+
+def test_authenticte_handles_deactive_user() -> None:
+    repo = mock.Mock()
+    repo.get_user_by_username.return_value = u.User(
+        username="username", password="password", is_active=False
+    )
+    session = uuid.uuid4()
+    repo.get_session_by_session_id.return_value = s.Session(
+        username="username", session_id=session
+    )
+
+    auth_usecase = uc.AuthenticateUseCase(repo)
+    request_obj = req.AuthenticateRequest.build(session=session)
+
+    response = auth_usecase.execute(request_obj)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "message": "User is not active",
+    }

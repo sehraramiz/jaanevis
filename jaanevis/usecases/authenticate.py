@@ -28,6 +28,11 @@ class AuthenticateUseCase:
             if not user:
                 return ResponseFailure.build_resource_error("User not found")
 
+            if not user.is_active:
+                return ResponseFailure.build_parameters_error(
+                    "User is not active"
+                )
+
             if session.expire_time < datetime.now().timestamp():
                 self.repo.delete_session_by_session_id(
                     session_id=str(session.session_id)

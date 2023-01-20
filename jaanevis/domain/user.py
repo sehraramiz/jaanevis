@@ -10,6 +10,7 @@ class User:
 
     username: str
     password: str
+    is_active: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "User":
