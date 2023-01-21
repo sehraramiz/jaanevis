@@ -27,11 +27,19 @@ class Repository(Protocol):
     def get_user_by_username(self, username: str) -> u.User:
         ...
 
+    def create_user(self, username: str, password: str) -> u.User:
+        ...
+
     def get_session_by_session_id(self, session_id: str) -> s.Session:
         ...
 
+    def create_session(
+        self, username: str, session_id: str, expire_time: float
+    ) -> s.Session:
+        ...
+
     def create_or_update_session(
-        self, username: str, session_id: str
+        self, username: str, session_id: str, expire_time: float
     ) -> s.Session:
         ...
 

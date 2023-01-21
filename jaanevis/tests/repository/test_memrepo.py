@@ -268,6 +268,18 @@ def test_get_user_by_username(note_dicts) -> None:
     assert repo.get_user_by_username(username=users[0].username) == users[0]
 
 
+def test_create_user(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+    repo._write_data_to_file = mock.Mock()
+    with mock.patch("jaanevis.repository.memrepo.open"):
+        username, password = "a@a.com", "22334455"
+        user = u.User(username=username, password=password, is_active=False)
+
+        assert repo.create_user(username=username, password=password) == user
+        assert len(repo.data["users"]) == 2
+        assert any(u == user.to_dict() for u in repo.data["users"])
+
+
 def test_get_session_by_session_id(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
@@ -315,6 +327,27 @@ def test_create_or_update_creates_new_session(mock_open, note_dicts) -> None:
 
 
 @mock.patch("jaanevis.repository.memrepo.open")
+def test_create_new_session(mock_open, note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+    new_session_id = str(uuid.uuid4())
+    expire_time = 0.0
+    new_session = s.Session(
+        username="username2",
+        session_id=new_session_id,
+        expire_time=expire_time,
+    )
+
+    assert (
+        repo.create_session(
+            username="username2",
+            session_id=str(new_session_id),
+            expire_time=expire_time,
+        )
+        == new_session
+    )
+
+
+@mock.patch("jaanevis.repository.memrepo.open")
 def test_create_or_update_updates_existing_session(
     mock_open, note_dicts
 ) -> None:
@@ -344,8 +377,12 @@ def test_write_db_to_file_after_session_create(path, note_dicts) -> None:
         repo.create_or_update_session(
             username="username", session_id=session_id, expire_time=0
         )
+        repo.create_session(
+            username="username", session_id=session_id, expire_time=0
+        )
 
     mock_open.assert_called_with("db.json", "w")
+    assert mock_open.call_count == 3
 
 
 @mock.patch("pathlib.Path")
@@ -374,5 +411,18 @@ def test_write_db_to_file_after_session_delete(path, note_dicts) -> None:
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
         repo.delete_session_by_session_id(session_id=session_id)
+
+    mock_open.assert_called_with("db.json", "w")
+
+
+@mock.patch("pathlib.Path")
+def test_write_db_to_file_after_user_create(path, note_dicts) -> None:
+    data = {"notes": [], "users": [], "sessions": []}
+    read_data = json.dumps(data, cls=ser.NoteJsonEncoder)
+    mock_open = mock.mock_open(read_data=read_data)
+
+    with mock.patch("jaanevis.repository.memrepo.open", mock_open):
+        repo = memrepo.MemRepo()
+        repo.create_user(username="username", password="22334455")
 
     mock_open.assert_called_with("db.json", "w")

@@ -95,6 +95,16 @@ class MemRepo:
                 return u.User.from_dict(user)
         return None
 
+    def create_user(
+        self, username: str, password: str, is_active: bool = False
+    ) -> u.User:
+        user = u.User(
+            username=username, password=password, is_active=is_active
+        )
+        self.data["users"].append(user.to_dict())
+        self._write_data_to_file()
+        return user
+
     def get_session_by_session_id(self, session_id: str) -> s.Session:
         for session in self.data["sessions"]:
             if session["session_id"] == session_id:
@@ -121,5 +131,15 @@ class MemRepo:
                 break
         else:
             self.data["sessions"].append(new_session.to_dict())
+        self._write_data_to_file()
+        return new_session
+
+    def create_session(
+        self, username: str, session_id: str, expire_time: float
+    ) -> s.Session:
+        new_session = s.Session(
+            username=username, session_id=session_id, expire_time=expire_time
+        )
+        self.data["sessions"].append(new_session.to_dict())
         self._write_data_to_file()
         return new_session
