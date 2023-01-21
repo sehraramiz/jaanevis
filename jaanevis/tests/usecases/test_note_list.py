@@ -15,7 +15,7 @@ COUNTRY = "IR"
 
 notes = [
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/1",
         text="some text",
@@ -23,7 +23,7 @@ notes = [
         long=LONG,
     ),
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/2",
         text="some text",
@@ -31,7 +31,7 @@ notes = [
         long=LONG + 1,
     ),
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/3",
         text="some text",
@@ -39,7 +39,7 @@ notes = [
         long=LONG + 2,
     ),
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/4",
         text="some text",

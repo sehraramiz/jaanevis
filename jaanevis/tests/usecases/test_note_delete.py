@@ -9,7 +9,7 @@ from jaanevis.usecases import delete_note as uc
 
 notes = [
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator="username",
         url="https://example.com/1",
         lat=1,

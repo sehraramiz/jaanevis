@@ -296,7 +296,7 @@ def test_delete_session_by_session_id(mock_open, note_dicts) -> None:
 @mock.patch("jaanevis.repository.memrepo.open")
 def test_create_or_update_creates_new_session(mock_open, note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
-    new_session_id = uuid.uuid4()
+    new_session_id = str(uuid.uuid4())
     expire_time = 0.0
     new_session = s.Session(
         username="username2",

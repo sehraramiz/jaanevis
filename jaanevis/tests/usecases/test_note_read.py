@@ -8,14 +8,14 @@ from jaanevis.usecases import read_note as uc
 
 notes = [
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator="default",
         url="https://example.com/1",
         lat=1,
         long=1,
     ),
     n.Note(
-        code=uuid.uuid4(),
+        code=str(uuid.uuid4()),
         creator="default",
         url="https://example.com/2",
         lat=2,

@@ -16,7 +16,7 @@ class Session:
 
     username: str
     expire_time: float = field(default_factory=default_expire_time)
-    session_id: UUID4 = field(default_factory=uuid.uuid4)
+    session_id: str | UUID4 = field(default_factory=uuid.uuid4)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "User":

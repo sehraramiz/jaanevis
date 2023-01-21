@@ -19,7 +19,7 @@ class Note:
     country: str = ""
     text: str = ""
     tags: list[str] = field(default_factory=list)
-    code: UUID4 = field(default_factory=uuid.uuid4)
+    code: str | UUID4 = field(default_factory=uuid.uuid4)
     creator: Optional[str] = None
 
     @classmethod
@@ -62,7 +62,7 @@ class NoteGeoJsonProperties(BaseModel):
     url: AnyHttpUrl
     creator: str
     country: str
-    code: UUID4
+    code: str | UUID4
     text: str = ""
 
 

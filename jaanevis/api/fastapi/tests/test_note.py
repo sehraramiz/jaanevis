@@ -18,7 +18,7 @@ note = NoteCreateApi(
 )
 
 note_complete = Note(
-    code=uuid.uuid4(),
+    code=str(uuid.uuid4()),
     creator="default",
     text="some text",
     url="http://example.com",
