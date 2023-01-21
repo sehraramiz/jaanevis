@@ -3,7 +3,7 @@ from dataclasses import asdict, field
 from datetime import datetime, timedelta
 from typing import Any
 
-from pydantic import UUID4, BaseModel, dataclasses
+from pydantic import UUID4, BaseModel, EmailStr, dataclasses
 
 
 def default_expire_time() -> float:
@@ -32,4 +32,11 @@ class LoginInputApi(BaseModel):
     """schema for user login via api"""
 
     username: str
+    password: str
+
+
+class RegisterInputApi(BaseModel):
+    """schema for user registeration via api"""
+
+    email: EmailStr
     password: str

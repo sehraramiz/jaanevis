@@ -1,3 +1,5 @@
+import uuid
+
 from argon2 import PasswordHasher
 
 ph = PasswordHasher()
@@ -12,3 +14,8 @@ def verify_password(hashed_password: str, password: str) -> str:
         return ph.verify(hashed_password, password)
     except Exception as e:
         return False
+
+
+if __name__ == "__main__":
+    _hash = hash_password(uuid.uuid4().hex)
+    print(_hash)

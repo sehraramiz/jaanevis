@@ -14,6 +14,7 @@ from jaanevis.requests import (
     login_request,
     logout_request,
     note_list_request,
+    register_request,
 )
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
@@ -21,7 +22,10 @@ from jaanevis.requests.update_note_request import UpdateNoteRequest
 from jaanevis.usecases import add_note, authenticate, delete_note
 from jaanevis.usecases import login as login_uc
 from jaanevis.usecases import logout as logout_uc
-from jaanevis.usecases import note_list, read_note, update_note
+from jaanevis.usecases import note_list, read_note
+from jaanevis.usecases import register as register_uc
+from jaanevis.usecases import update_note
+from jaanevis.utils import email
 
 app = FastAPI()
 
@@ -215,3 +219,22 @@ def logout(
     expire_yesterday = yesterday.strftime("%a, %d %b %Y %H:%M:%S GMT")
     response.set_cookie(key="session", value="", expires=expire_yesterday)
     return response
+
+
+@app.post("/register")
+def register(
+    register_data: s.RegisterInputApi,
+    repo: Repository = Depends(get_repository),
+) -> None:
+    """user registeration"""
+
+    email_handler = email.EmailHandler()
+    register_usecase = register_uc.RegisterUseCase(
+        repo=repo, email_handler=email_handler
+    )
+    request = register_request.RegisterRequest.build(
+        email=register_data.email, password=register_data.password
+    )
+    response = register_usecase.execute(request)
+
+    return response.value

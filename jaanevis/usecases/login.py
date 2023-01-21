@@ -21,9 +21,7 @@ class LoginUseCase:
                     "Wrong username or password"
                 )
         if not user.is_active:
-            return ResponseFailure.build_parameters_error(
-                "User is not active"
-            )
+            return ResponseFailure.build_parameters_error("User is not active")
 
         password_valid = security.verify_password(
             hashed_password=user.password, password=request.password

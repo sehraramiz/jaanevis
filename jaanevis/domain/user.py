@@ -1,7 +1,7 @@
 from dataclasses import asdict
 from typing import Any
 
-from pydantic import dataclasses
+from pydantic import BaseModel, dataclasses
 
 
 @dataclasses.dataclass
@@ -19,3 +19,10 @@ class User:
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         return data
+
+
+class UserRead(BaseModel):
+    """schema for user without password"""
+
+    username: str
+    is_active: bool = False

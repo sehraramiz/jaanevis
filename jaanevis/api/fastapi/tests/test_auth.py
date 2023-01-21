@@ -71,3 +71,32 @@ def test_logout_with_invalid_session(
     assert "set-cookie" in dict(response.headers)
     assert f'session="";' in response.headers["set-cookie"]
     assert f"expires={expire_yesterday}" in response.headers["set-cookie"]
+
+
+@mock.patch("jaanevis.utils.email.EmailHandler")
+@mock.patch("jaanevis.requests.register_request.RegisterRequest")
+@mock.patch("jaanevis.usecases.register.RegisterUseCase")
+def test_register(mock_usecase, request_mock, mock_email) -> None:
+    body = {"email": "a@a.com", "password": "password"}
+    mock_usecase().execute.return_value = res.ResponseSuccess(
+        {"type": "Success", "message": "activation email was sent"}
+    )
+
+    response = client.post("/register", json=body)
+
+    assert response.status_code == 200
+    mock_usecase.assert_called_with(repo=mock.ANY, email_handler=mock_email())
+    request_mock.build.assert_called_with(email="a@a.com", password="password")
+    mock_usecase().execute.assert_called_with(request_mock.build())
+    assert response.json() == {
+        "type": "Success",
+        "message": "activation email was sent",
+    }
+
+
+def test_register_with_invalid_email() -> None:
+    pass
+
+
+def test_register_with_invalid_password() -> None:
+    pass
