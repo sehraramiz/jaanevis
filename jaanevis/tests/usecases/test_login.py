@@ -21,7 +21,7 @@ def test_login_create_session_on_success() -> None:
     with mock.patch("uuid.uuid4") as uuid_mock:
         uuid_mock.return_value = session_id
         repo.get_user_by_username.return_value = u.User(
-            username="username", password=hashed_password
+            username="username", password=hashed_password, is_active=True
         )
         tomorrow = datetime.now() + timedelta(days=1)
 
@@ -51,7 +51,7 @@ def test_login_create_session_with_correct_expire_time() -> None:
     with mock.patch("uuid.uuid4") as uuid_mock:
         uuid_mock.return_value = session_id
         repo.get_user_by_username.return_value = u.User(
-            username="username", password=hashed_password
+            username="username", password=hashed_password, is_active=True
         )
 
         tomorrow = datetime.now() + timedelta(days=1)
@@ -87,7 +87,7 @@ def test_login_fails_on_non_existant_user() -> None:
 
 def test_login_fails_on_wrong_password() -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password")
+    user = u.User(username="username", password="password", is_active=True)
 
     repo.get_user_by_username.return_value = user
 
@@ -99,3 +99,24 @@ def test_login_fails_on_wrong_password() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+
+
+@mock.patch("jaanevis.utils.security.verify_password")
+def test_login_fails_on_deactive_user(pass_verify_mock) -> None:
+    repo = mock.Mock()
+    user = u.User(username="username", password="password", is_active=False)
+
+    repo.get_user_by_username.return_value = user
+
+    login_usecase = uc.LoginUseCase(repo)
+    login_request = req.LoginRequest(
+        username="username", password="password"
+    )
+    response = login_usecase.execute(login_request)
+
+    assert bool(response) is False
+    assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.value == {
+        "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "message": "User is not active",
+    }
