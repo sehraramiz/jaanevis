@@ -33,6 +33,9 @@ class Repository(Protocol):
     def get_session_by_session_id(self, session_id: str) -> s.Session:
         ...
 
+    def delete_session_by_session_id(self, session_id: str) -> bool:
+        ...
+
     def create_session(
         self, username: str, session_id: str, expire_time: float
     ) -> s.Session:

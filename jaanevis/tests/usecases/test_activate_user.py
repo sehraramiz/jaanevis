@@ -85,3 +85,21 @@ def test_activate_user() -> None:
     assert bool(response) is True
     repo.update_user.assert_called()
     assert response.value == user_result
+
+
+def test_delete_session_after_user_activation() -> None:
+    repo = mock.Mock()
+    user = u.User(username="username", password="password", is_active=False)
+    updated_user = u.User(
+        username="username", password="password", is_active=True
+    )
+
+    repo.get_user_by_username.return_value = user
+    repo.update_user.return_value = updated_user
+
+    usecase = uc.ActivateUserUseCase(repo)
+    request = req.ActivateUserRequest.build(username="username", token="token")
+    response = usecase.execute(request)
+
+    assert bool(response) is True
+    repo.delete_session_by_session_id.assert_called_with(session_id="token")

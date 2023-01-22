@@ -32,6 +32,7 @@ class ActivateUserUseCase:
         updated_user = self.repo.update_user(
             obj=user, data={"is_active": True}
         )
+        self.repo.delete_session_by_session_id(session_id=request.token)
         updated_user_res = u.UserRead(
             username=updated_user.username, is_active=updated_user.is_active
         )
