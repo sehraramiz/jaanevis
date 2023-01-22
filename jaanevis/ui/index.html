@@ -80,11 +80,22 @@
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password" v-model="password">
                         <button @click="login">Login</button>
+                        <p>or <a @click="showRegister" href="#">Register</a></p>
+                    </div>
+                </div>
+                <div id="register" v-if="panelView == 'register'" >
+                    <div class="note-form" id="register">
+                        <p>Register</p>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" v-model="username">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" v-model="password">
+                        <button @click="register">Register</button>
                     </div>
                 </div>
                 <br>
                 <a @click="showLogin" href="#"
-                    v-if="!authenticated && panelView != 'auth'">Login to create/modify notes</a>
+                    v-if="!authenticated && !(panelView.match('auth|register'))">Login to create/modify notes</a>
                 <button @click="logout" v-else-if="authenticated">Logout</button>
                 <div>
                   <p v-if="errors.length">

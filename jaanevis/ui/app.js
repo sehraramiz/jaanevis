@@ -256,6 +256,26 @@ createApp({
       if (!this.password)
         this.errors.push('Password is mandatory.');
     },
+    checkRegisterForm: function (e) {
+
+      this.errors = [];
+
+      if (!this.username)
+        this.errors.push('Username is mandatory.');
+
+      if (!this.password)
+        this.errors.push('Password is mandatory.');
+
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      var emailValid = re.test(this.username);
+      if (!emailValid)
+        this.errors.push('Invalid email address.');
+
+      if (this.errors.length){
+        return false;
+      }
+      return true;
+    },
     login: async function () {
       if (!this.checkLoginForm())
         return;
@@ -314,6 +334,36 @@ createApp({
         return;
       });
     },
+    register: async function () {
+      if (!this.checkRegisterForm())
+        return;
+
+      let registerData = {
+        email: this.username,
+        password: this.password,
+      };
+      const response = await fetch(this.baseUrl + "/user/register", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(registerData)
+      })
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(response);
+        return response.json();
+      })
+      .then(data => {
+        this.panelView = 'create';
+        alert("Register successful");
+      })
+      .catch(error => {
+        console.log("Register error", error);
+        return;
+      });
+    },
     initAuth: function () {
       if (this.$cookies.get("username")) {
         this.authenticated = true;
@@ -322,6 +372,9 @@ createApp({
     },
     showLogin: function () {
       this.panelView = 'auth';
+    },
+    showRegister: function () {
+      this.panelView = 'register';
     },
     handleNotesPath: async function () {
       this.filters = {...this.filters, ...this.$route.query};
