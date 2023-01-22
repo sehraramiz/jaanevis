@@ -174,7 +174,7 @@ def update_note_by_code(
     return response.value
 
 
-@app.post("/login")
+@app.post("/user/login")
 def login(
     login_data: s.LoginInputApi, repo: Repository = Depends(get_repository)
 ) -> None:
@@ -205,7 +205,7 @@ def login(
     return response
 
 
-@app.get("/logout")
+@app.get("/user/logout")
 def logout(
     session: str = Cookie(default=None),
     repo: Repository = Depends(get_repository),
@@ -223,7 +223,7 @@ def logout(
     return response
 
 
-@app.post("/register")
+@app.post("/user/register")
 def register(
     register_data: s.RegisterInputApi,
     repo: Repository = Depends(get_repository),
@@ -242,7 +242,7 @@ def register(
     return response.value
 
 
-@app.get("/activate")
+@app.get("/user/activate")
 def activate(
     username: str,
     token: str,

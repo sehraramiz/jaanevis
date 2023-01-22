@@ -20,7 +20,7 @@ def test_login(mock_usecase, request_mock) -> None:
         {"session": "validsession", "expires": expire_tomorrow}
     )
 
-    response = client.post("/login", json=body)
+    response = client.post("/user/login", json=body)
 
     assert response.status_code == 200
     mock_usecase().execute.assert_called()
@@ -40,7 +40,7 @@ def test_login_invalid_credentials(mock_usecase, request_mock) -> None:
         res.ResponseFailure.build_parameters_error("auth error")
     )
 
-    response = client.post("/login", json=body)
+    response = client.post("/user/login", json=body)
 
     assert response.status_code == 401
     mock_usecase().execute.assert_called()
@@ -63,7 +63,7 @@ def test_logout_with_invalid_session(
     req_obj = mock.Mock()
     mock_request.build.return_value = req_obj
 
-    response = client.get("/logout", headers={"cookie": f"session={session}"})
+    response = client.get("/user/logout", headers={"cookie": f"session={session}"})
 
     assert response.status_code == 200
     mock_usecase().execute.assert_called_with(req_obj)
@@ -82,7 +82,7 @@ def test_register(mock_usecase, request_mock, mock_email) -> None:
         {"type": "Success", "message": "activation email was sent"}
     )
 
-    response = client.post("/register", json=body)
+    response = client.post("/user/register", json=body)
 
     assert response.status_code == 200
     mock_usecase.assert_called_with(repo=mock.ANY, email_handler=mock_email())
@@ -109,7 +109,7 @@ def test_user_activation(mock_usecase, mock_request) -> None:
     activation_token = "token"
 
     response = client.get(
-        f"/activate?username={username}&token={activation_token}"
+        f"/user/activate?username={username}&token={activation_token}"
     )
 
     assert response.status_code == 200

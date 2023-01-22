@@ -264,7 +264,7 @@ createApp({
         username: this.username,
         password: this.password,
       };
-      const response = await fetch(this.baseUrl + "/login", {
+      const response = await fetch(this.baseUrl + "/user/login", {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -290,7 +290,7 @@ createApp({
       });
     },
     logout: async function () {
-      const response = await fetch(this.baseUrl + "/logout", {
+      const response = await fetch(this.baseUrl + "/user/logout", {
         method: 'GET',
         credentials: 'include',
         headers: {
