@@ -10,6 +10,7 @@ from jaanevis.domain import session as s
 from jaanevis.domain import user as u
 from jaanevis.repository import Repository, repository
 from jaanevis.requests import (
+    activate_user_request,
     add_note_request,
     login_request,
     logout_request,
@@ -19,6 +20,7 @@ from jaanevis.requests import (
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
 from jaanevis.requests.update_note_request import UpdateNoteRequest
+from jaanevis.usecases import activate_user as activate_user_uc
 from jaanevis.usecases import add_note, authenticate, delete_note
 from jaanevis.usecases import login as login_uc
 from jaanevis.usecases import logout as logout_uc
@@ -238,3 +240,20 @@ def register(
     response = register_usecase.execute(request)
 
     return response.value
+
+
+@app.get("/activate")
+def activate(
+    username: str,
+    token: str,
+    repo: Repository = Depends(get_repository),
+) -> None:
+    """activate user with activation token"""
+
+    request = activate_user_request.ActivateUserRequest.build(
+        username=username, token=token
+    )
+    activate_user_usecase = activate_user_uc.ActivateUserUseCase(repo=repo)
+    response = activate_user_usecase.execute(request)
+
+    return response

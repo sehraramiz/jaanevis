@@ -105,9 +105,31 @@ class MemRepo:
         self._write_data_to_file()
         return user
 
+    def update_user(self, obj: u.User, data: str) -> n.Note:
+        updated_user = obj
+        for _index, user in enumerate(self.data["users"]):
+            if user["username"] == str(obj.username):
+                for field in data:
+                    user[field] = data[field]
+                updated_user = u.User.from_dict(user)
+                break
+        self._write_data_to_file()
+        return updated_user
+
     def get_session_by_session_id(self, session_id: str) -> s.Session:
         for session in self.data["sessions"]:
             if session["session_id"] == session_id:
+                return s.Session.from_dict(session)
+        return None
+
+    def get_session_by_session_id_and_username(
+        self, session_id: str, username: str
+    ) -> s.Session:
+        for session in self.data["sessions"]:
+            if (
+                session["session_id"] == session_id
+                and session["username"] == username
+            ):
                 return s.Session.from_dict(session)
         return None
 

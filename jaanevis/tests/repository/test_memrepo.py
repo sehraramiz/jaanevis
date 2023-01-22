@@ -40,7 +40,13 @@ def note_dicts() -> dict[str, list[Any]]:
                 "long": LONG + 1,
             },
         ],
-        "users": [{"username": "test@test.com", "password": "password"}],
+        "users": [
+            {
+                "username": "test@test.com",
+                "password": "password",
+                "is_active": False,
+            }
+        ],
         "sessions": [
             {
                 "session_id": uuid_session,
@@ -291,6 +297,20 @@ def test_get_session_by_session_id(note_dicts) -> None:
     )
 
 
+def test_get_session_by_session_id_and_username(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    sessions = [s.Session.from_dict(data) for data in note_dicts["sessions"]]
+
+    assert (
+        repo.get_session_by_session_id_and_username(
+            session_id=str(sessions[0].session_id),
+            username=sessions[0].username,
+        )
+        == sessions[0]
+    )
+
+
 @mock.patch("jaanevis.repository.memrepo.open")
 def test_delete_session_by_session_id(mock_open, note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
@@ -426,3 +446,17 @@ def test_write_db_to_file_after_user_create(path, note_dicts) -> None:
         repo.create_user(username="username", password="22334455")
 
     mock_open.assert_called_with("db.json", "w")
+
+
+@mock.patch("jaanevis.repository.memrepo.open")
+def test_update_user_change_active_status(mock_open, note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+    users = [u.User.from_dict(data) for data in note_dicts["users"]]
+    updated_user = u.User(
+        username=users[0].username, password=users[0].password, is_active=True
+    )
+
+    result = repo.update_user(obj=users[0], data={"is_active": True})
+
+    assert repo.data["users"][0]["is_active"] is True
+    assert result == updated_user

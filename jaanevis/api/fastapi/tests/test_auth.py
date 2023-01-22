@@ -100,3 +100,21 @@ def test_register_with_invalid_email() -> None:
 
 def test_register_with_invalid_password() -> None:
     pass
+
+
+@mock.patch("jaanevis.requests.activate_user_request.ActivateUserRequest")
+@mock.patch("jaanevis.usecases.activate_user.ActivateUserUseCase")
+def test_user_activation(mock_usecase, mock_request) -> None:
+    username = "a@a.com"
+    activation_token = "token"
+
+    response = client.get(
+        f"/activate?username={username}&token={activation_token}"
+    )
+
+    assert response.status_code == 200
+    mock_usecase.assert_called_with(repo=mock.ANY)
+    mock_request.build.assert_called_with(
+        username=username, token=activation_token
+    )
+    mock_usecase().execute.assert_called_with(mock_request.build())
