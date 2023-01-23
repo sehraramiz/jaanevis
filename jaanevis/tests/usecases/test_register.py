@@ -3,6 +3,7 @@ from unittest import mock
 
 from freezegun import freeze_time
 
+from jaanevis.config import settings
 from jaanevis.domain import user as u
 from jaanevis.requests import register_request as req
 from jaanevis.responses import response as res
@@ -95,18 +96,18 @@ def test_register_creates_user(mock_hash) -> None:
 
 
 @freeze_time(datetime.now())
-@mock.patch("jaanevis.utils.security.hash_password")
-def test_register_creates_user_activation_session(mock_hash) -> None:
+@mock.patch("secrets.token_urlsafe")
+def test_register_creates_user_activation_session(mock_secrets) -> None:
     repo = mock.Mock()
     email_handler = mock.Mock()
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
-    hashed_session = "hashed_session"
+    secret_session = "secret_session"
     expire_time = (datetime.now() + timedelta(days=2)).timestamp()
 
     repo.get_user_by_username.return_value = None
     repo.create_user.return_value = user
-    mock_hash.return_value = hashed_session
+    mock_secrets.return_value = secret_session
 
     request = req.RegisterRequest.build(email=email, password=password)
     register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
@@ -114,21 +115,30 @@ def test_register_creates_user_activation_session(mock_hash) -> None:
 
     assert bool(response) is True
     repo.create_session.assert_called_with(
-        session_id=hashed_session, username=email, expire_time=expire_time
+        session_id=secret_session, username=email, expire_time=expire_time
     )
 
 
-def test_register_send_activation_email() -> None:
+@mock.patch("secrets.token_urlsafe")
+def test_register_send_activation_email(mock_secrets) -> None:
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = None
+    email_handler = mock.Mock()
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
+    activation_token = "token"
+    activation_url = f"{settings.PROJECT_URL}/user/activate?username={email}&token={activation_token}"
+    mail_text = f"visit this link to activate your account {activation_url}"
+    mail_subject = "Jaanevis Account Activation"
+
+    repo.get_user_by_username.return_value = None
     repo.create_user.return_value = user
-    email_handler = mock.Mock()
+    mock_secrets.return_value = activation_token
 
     request = req.RegisterRequest.build(email=email, password=password)
     register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
     response = register_usecase.execute(request)
 
     assert bool(response) is True
-    email_handler.send_email.assert_called()
+    email_handler.send_email.assert_called_with(
+        email_to=email, text=mail_text, subject=mail_subject
+    )

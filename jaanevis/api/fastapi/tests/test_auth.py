@@ -63,7 +63,9 @@ def test_logout_with_invalid_session(
     req_obj = mock.Mock()
     mock_request.build.return_value = req_obj
 
-    response = client.get("/user/logout", headers={"cookie": f"session={session}"})
+    response = client.get(
+        "/user/logout", headers={"cookie": f"session={session}"}
+    )
 
     assert response.status_code == 200
     mock_usecase().execute.assert_called_with(req_obj)
@@ -73,7 +75,7 @@ def test_logout_with_invalid_session(
     assert f"expires={expire_yesterday}" in response.headers["set-cookie"]
 
 
-@mock.patch("jaanevis.utils.email.EmailHandler")
+@mock.patch("jaanevis.utils.mail.EmailHandler")
 @mock.patch("jaanevis.requests.register_request.RegisterRequest")
 @mock.patch("jaanevis.usecases.register.RegisterUseCase")
 def test_register(mock_usecase, request_mock, mock_email) -> None:

@@ -1,7 +1,8 @@
-import uuid
+import secrets
 from datetime import datetime, timedelta
 from typing import Protocol
 
+from jaanevis.config import settings
 from jaanevis.domain import user as u
 from jaanevis.repository.base import Repository
 from jaanevis.requests.register_request import RegisterRequest
@@ -34,15 +35,22 @@ class RegisterUseCase:
             username=request.email, password=hashed_password
         )
 
-        hashed_session = security.hash_password(uuid.uuid4().hex)
+        activation_token = secrets.token_urlsafe(40)
         expire_time = (datetime.now() + timedelta(days=2)).timestamp()
         self.repo.create_session(
-            session_id=hashed_session,
+            session_id=activation_token,
             username=request.email,
             expire_time=expire_time,
         )
 
-        self.email_handler.send_email()
+        activation_url = f"{settings.PROJECT_URL}/user/activate?username={request.email}&token={activation_token}"
+        mail_text = (
+            f"visit this link to activate your account {activation_url}"
+        )
+        mail_subject = "Jaanevis Account Activation"
+        self.email_handler.send_email(
+            email_to=request.email, text=mail_text, subject=mail_subject
+        )
         new_user = u.UserRead(
             username=created_user.username, is_active=created_user.is_active
         )

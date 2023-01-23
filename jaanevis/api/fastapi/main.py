@@ -5,6 +5,7 @@ from fastapi import Cookie, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from jaanevis.config import settings
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
@@ -27,13 +28,13 @@ from jaanevis.usecases import logout as logout_uc
 from jaanevis.usecases import note_list, read_note
 from jaanevis.usecases import register as register_uc
 from jaanevis.usecases import update_note
-from jaanevis.utils import email
+from jaanevis.utils import mail
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:8001"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -230,7 +231,7 @@ def register(
 ) -> None:
     """user registeration"""
 
-    email_handler = email.EmailHandler()
+    email_handler = mail.EmailHandler()
     register_usecase = register_uc.RegisterUseCase(
         repo=repo, email_handler=email_handler
     )
