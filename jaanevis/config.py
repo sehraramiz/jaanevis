@@ -1,12 +1,16 @@
+import os
 from typing import Optional
 
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr
+
+import jaanevis
 
 
 class Settings(BaseSettings):
     PROJECT_NAME: str
     PROJECT_URL: str
     CORS_ORIGINS: list[AnyHttpUrl] = []
+    BASE_DIR = os.path.dirname(os.path.realpath(jaanevis.__file__))
 
     SMTP_TLS: bool = True
     SMTP_PORT: Optional[int] = None

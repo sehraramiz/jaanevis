@@ -15,6 +15,7 @@ from jaanevis.serializers import note_json_serializer as ser
 uuid_session = "554f8c37-b3a1-4846-a1b6-02cc4d158646"
 LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
+DB_PATH = "data/db.json"
 
 
 @pytest.fixture
@@ -212,7 +213,7 @@ def test_read_notes_from_file_with_no_init_data(path, note_dicts) -> None:
     ):
         repo = memrepo.MemRepo()
 
-    mock_open.assert_called_with("db.json", "r")
+    mock_open.assert_called_with(DB_PATH, "r")
     assert repo.data == json.loads(read_data)
 
 
@@ -230,7 +231,7 @@ def test_write_new_created_note_to_file_db(path, note_dicts) -> None:
         )
         repo.add(new_note)
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
 
 
 @mock.patch("pathlib.Path")
@@ -244,7 +245,7 @@ def test_remove_deleted_note_from_file_db(path, note_dicts) -> None:
         repo = memrepo.MemRepo()
         repo.delete_by_code(code=str(notes[0].code))
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
 
 
 @mock.patch("pathlib.Path")
@@ -263,7 +264,7 @@ def test_write_db_to_file_after_note_update(path, note_dicts) -> None:
         repo = memrepo.MemRepo()
         repo.update(obj=notes[0], data=update_data)
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
 
 
 def test_get_user_by_username(note_dicts) -> None:
@@ -401,7 +402,7 @@ def test_write_db_to_file_after_session_create(path, note_dicts) -> None:
             username="username", session_id=session_id, expire_time=0
         )
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
     assert mock_open.call_count == 3
 
 
@@ -418,7 +419,7 @@ def test_write_db_to_file_after_session_update(path, note_dicts) -> None:
             username="username", session_id=session_id, expire_time=0
         )
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
 
 
 @mock.patch("pathlib.Path")
@@ -432,7 +433,7 @@ def test_write_db_to_file_after_session_delete(path, note_dicts) -> None:
         repo = memrepo.MemRepo()
         repo.delete_session_by_session_id(session_id=session_id)
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
 
 
 @mock.patch("pathlib.Path")
@@ -445,7 +446,7 @@ def test_write_db_to_file_after_user_create(path, note_dicts) -> None:
         repo = memrepo.MemRepo()
         repo.create_user(username="username", password="22334455")
 
-    mock_open.assert_called_with("db.json", "w")
+    mock_open.assert_called_with(DB_PATH, "w")
 
 
 @mock.patch("jaanevis.repository.memrepo.open")

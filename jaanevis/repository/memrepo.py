@@ -1,29 +1,34 @@
 import json
 import pathlib
+import os
 from typing import Optional
 
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
+from jaanevis.config import settings
 
 
 class MemRepo:
     def __init__(self, data: list[dict] = []) -> None:
+        base_data_path = settings.BASE_DIR + "/data/"
+        os.makedirs(base_data_path, exist_ok=True)
+        self.db_path = base_data_path + "/db.json"
         if data:
             self.data = data
         else:
             self.data = self._read_data_from_file()
 
     def _read_data_from_file(self) -> Optional[list[dict]]:
-        if not pathlib.Path("db.json").is_file():
+        if not pathlib.Path(self.db_path).is_file():
             return []
 
-        with open("db.json", "r") as db:
+        with open(self.db_path, "r") as db:
             data = json.load(db)
             return data
 
     def _write_data_to_file(self) -> None:
-        with open("db.json", "w") as db:
+        with open(self.db_path, "w") as db:
             db.write(json.dumps(self.data))
 
     def list(self, filters: dict = None) -> list[n.Note]:
