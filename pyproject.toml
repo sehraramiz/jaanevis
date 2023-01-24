@@ -1,3 +1,27 @@
+[tool.poetry]
+name = "jaanevis"
+version = "0.0.1"
+description = ""
+authors = ["Admin <jaaanevis@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = {extras = ["email", "dotenv"], version = "*"}
+fastapi = "*"
+uvicorn = "*"
+httpx = "*"
+argon2-cffi = "*"
+reverse_geocode = "*"
+emails = "*"
+
+[tool.poetry.dev-dependencies]
+pytest="*"
+black="*"
+mypy="*"
+ruff="*"
+isort="*"
+freezegun="*"
+
 [tool.black]
 line-length = 79
 
@@ -9,16 +33,16 @@ plugins = ["pydantic.mypy"]
 
 [tool.ruff]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
+    "E",
+    "W",
+    "F",
     # "I",  # isort
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
+    "C",
+    "B",
 ]
 ignore = [
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults
+    "E501",
+    "B008",
 ]
 
 [tool.ruff.isort]
