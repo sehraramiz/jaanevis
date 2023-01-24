@@ -266,7 +266,7 @@ def test_read_notes_geojson_data_with_tag_filter(
 ) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
 
-    response = client.get(f"/note/geojson?tag=text")
+    response = client.get("/note/geojson?tag=text")
     result = response.json()
 
     assert response.status_code == 200

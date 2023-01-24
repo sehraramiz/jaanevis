@@ -12,7 +12,7 @@ def hash_password(password: str) -> str:
 def verify_password(hashed_password: str, password: str) -> str:
     try:
         return ph.verify(hashed_password, password)
-    except Exception as e:
+    except Exception:
         return False
 
 

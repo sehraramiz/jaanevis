@@ -1,12 +1,12 @@
 import json
-import pathlib
 import os
+import pathlib
 from typing import Optional
 
+from jaanevis.config import settings
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
-from jaanevis.config import settings
 
 
 class MemRepo:

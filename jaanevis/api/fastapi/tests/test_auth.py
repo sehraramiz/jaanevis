@@ -71,7 +71,7 @@ def test_logout_with_invalid_session(
     mock_usecase().execute.assert_called_with(req_obj)
     mock_request.build.assert_called_with(session=str(session))
     assert "set-cookie" in dict(response.headers)
-    assert f'session="";' in response.headers["set-cookie"]
+    assert 'session="";' in response.headers["set-cookie"]
     assert f"expires={expire_yesterday}" in response.headers["set-cookie"]
 
 
