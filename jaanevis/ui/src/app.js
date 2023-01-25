@@ -380,6 +380,10 @@ createApp({
     handleNotesPath: async function () {
       this.filters = {...this.filters, ...this.$route.query};
       var notes = await this.readNotes(this.filters);
+      this.$router.replace({
+        path: this.$route.path,
+        query: this.filters
+      });
       this.$root.showNotesOnMap(notes);
     },
     removeFilter(filter) {
