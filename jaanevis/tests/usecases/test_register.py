@@ -126,7 +126,7 @@ def test_register_send_activation_email(mock_secrets) -> None:
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
     activation_token = "token"
-    activation_url = f"{settings.PROJECT_URL}/user/activate?username={email}&token={activation_token}"
+    activation_url = f"{settings.PROJECT_URL}{settings.API_V1_STR}/user/activate?username={email}&token={activation_token}"
     mail_text = f"visit this link to activate your account {activation_url}"
     mail_subject = "Jaanevis Account Activation"
 
