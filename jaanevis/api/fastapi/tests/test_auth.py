@@ -5,8 +5,10 @@ from unittest import mock
 from fastapi.testclient import TestClient
 
 from jaanevis.api.fastapi.main import app
+from jaanevis.config import settings
 from jaanevis.responses import response as res
 
+PREFIX = settings.API_V1_STR
 client = TestClient(app)
 
 
@@ -20,7 +22,7 @@ def test_login(mock_usecase, request_mock) -> None:
         {"session": "validsession", "expires": expire_tomorrow}
     )
 
-    response = client.post("/user/login", json=body)
+    response = client.post(PREFIX + "/user/login", json=body)
 
     assert response.status_code == 200
     mock_usecase().execute.assert_called()
@@ -40,7 +42,7 @@ def test_login_invalid_credentials(mock_usecase, request_mock) -> None:
         res.ResponseFailure.build_parameters_error("auth error")
     )
 
-    response = client.post("/user/login", json=body)
+    response = client.post(PREFIX + "/user/login", json=body)
 
     assert response.status_code == 401
     mock_usecase().execute.assert_called()
@@ -64,7 +66,7 @@ def test_logout_with_invalid_session(
     mock_request.build.return_value = req_obj
 
     response = client.get(
-        "/user/logout", headers={"cookie": f"session={session}"}
+        PREFIX + "/user/logout", headers={"cookie": f"session={session}"}
     )
 
     assert response.status_code == 200
@@ -84,7 +86,7 @@ def test_register(mock_usecase, request_mock, mock_email) -> None:
         {"type": "Success", "message": "activation email was sent"}
     )
 
-    response = client.post("/user/register", json=body)
+    response = client.post(PREFIX + "/user/register", json=body)
 
     assert response.status_code == 200
     mock_usecase.assert_called_with(repo=mock.ANY, email_handler=mock_email())
@@ -111,7 +113,7 @@ def test_user_activation(mock_usecase, mock_request) -> None:
     activation_token = "token"
 
     response = client.get(
-        f"/user/activate?username={username}&token={activation_token}"
+        PREFIX + f"/user/activate?username={username}&token={activation_token}"
     )
 
     assert response.status_code == 200

@@ -4,11 +4,13 @@ from unittest import mock
 from fastapi.testclient import TestClient
 
 from jaanevis.api.fastapi.main import app
+from jaanevis.config import settings
 from jaanevis.domain.note import Note, NoteCreateApi, NoteUpdateApi
 from jaanevis.responses import response as res
 
 LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
+PREFIX = settings.API_V1_STR
 client = TestClient(app)
 note = NoteCreateApi(
     url="http://example.com",
@@ -32,7 +34,7 @@ note_list = [note_complete]
 def test_read_notes(mock_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
 
-    response = client.get("/note")
+    response = client.get(PREFIX + "/note")
 
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
@@ -45,7 +47,7 @@ def test_read_notes_with_creator_filter(mock_usecase, mock_request) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
     creator = "default"
 
-    response = client.get(f"/note?creator={creator}")
+    response = client.get(PREFIX + f"/note?creator={creator}")
 
     mock_request.from_dict.assert_called_with(
         data={
@@ -67,7 +69,7 @@ def test_read_notes_with_country_filter(mock_usecase, mock_request) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
     country = "IR"
 
-    response = client.get(f"/note?country={country}")
+    response = client.get(PREFIX + f"/note?country={country}")
 
     mock_request.from_dict.assert_called_with(
         data={
@@ -89,7 +91,7 @@ def test_read_notes_with_tag_filter(mock_usecase, mock_request) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
     tag = "text"
 
-    response = client.get(f"/note?tag={tag}")
+    response = client.get(PREFIX + f"/note?tag={tag}")
 
     mock_request.from_dict.assert_called_with(
         data={
@@ -109,7 +111,7 @@ def test_read_notes_with_tag_filter(mock_usecase, mock_request) -> None:
 def test_read_note_by_code(mock_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
 
-    response = client.get(f"/note/{note_complete.code}")
+    response = client.get(PREFIX + f"/note/{note_complete.code}")
 
     assert response.status_code == 200
     assert response.json() == note_complete.to_dict()
@@ -123,7 +125,8 @@ def test_delete_note(mock_usecase, auth_usecase) -> None:
     session = uuid.uuid4()
 
     response = client.delete(
-        f"/note/{note_complete.code}", headers={"cookie": f"session={session}"}
+        PREFIX + f"/note/{note_complete.code}",
+        headers={"cookie": f"session={session}"},
     )
 
     assert response.status_code == 200
@@ -141,7 +144,9 @@ def test_create_note(mock_usecase, auth_usecase) -> None:
     session = uuid.uuid4()
 
     response = client.post(
-        "/note", json=new_note, headers={"cookie": f"session={session}"}
+        PREFIX + "/note",
+        json=new_note,
+        headers={"cookie": f"session={session}"},
     )
     result = response.json()
     result.pop("code", None)
@@ -166,7 +171,7 @@ def test_update_note(mock_usecase, auth_usecase) -> None:
     session = uuid.uuid4()
 
     response = client.put(
-        f"/note/{note_complete.code}",
+        PREFIX + f"/note/{note_complete.code}",
         json=note_update.dict(),
         headers={"cookie": f"session={session}"},
     )
@@ -181,7 +186,7 @@ def test_update_note(mock_usecase, auth_usecase) -> None:
 def test_read_notes_geojson_data(mock_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
 
-    response = client.get("/note/geojson")
+    response = client.get(PREFIX + "/note/geojson")
     result = response.json()
 
     assert response.status_code == 200
@@ -204,7 +209,7 @@ def test_read_notes_geojson_data_with_creator_filter(
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
     creator = "default"
 
-    response = client.get(f"/note/geojson?creator={creator}")
+    response = client.get(PREFIX + f"/note/geojson?creator={creator}")
     result = response.json()
 
     assert response.status_code == 200
@@ -235,7 +240,7 @@ def test_read_notes_geojson_data_with_country_filter(
 ) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
 
-    response = client.get(f"/note/geojson?country={COUNTRY}")
+    response = client.get(PREFIX + f"/note/geojson?country={COUNTRY}")
     result = response.json()
 
     assert response.status_code == 200
@@ -266,7 +271,7 @@ def test_read_notes_geojson_data_with_tag_filter(
 ) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
 
-    response = client.get("/note/geojson?tag=text")
+    response = client.get(PREFIX + "/note/geojson?tag=text")
     result = response.json()
 
     assert response.status_code == 200
@@ -291,19 +296,19 @@ def test_read_notes_geojson_data_with_tag_filter(
 
 
 def test_create_note_respose_unauthorized_with_no_cookie() -> None:
-    response = client.post("/note", json=note.dict())
+    response = client.post(PREFIX + "/note", json=note.dict())
 
     assert response.status_code == 401
 
 
 def test_update_note_respose_unauthorized_with_no_cookie() -> None:
-    response = client.put("/note/somenotecode", json=note.dict())
+    response = client.put(PREFIX + "/note/somenotecode", json=note.dict())
 
     assert response.status_code == 401
 
 
 def test_delete_note_respose_unauthorized_with_no_cookie() -> None:
-    response = client.delete("/note/somenotecode")
+    response = client.delete(PREFIX + "/note/somenotecode")
 
     assert response.status_code == 401
 
@@ -317,7 +322,8 @@ def test_delete_note_from_wrong_user(mock_usecase, auth_usecase) -> None:
     session = uuid.uuid4()
 
     response = client.delete(
-        f"/note/{note_complete.code}", headers={"cookie": f"session={session}"}
+        PREFIX + f"/note/{note_complete.code}",
+        headers={"cookie": f"session={session}"},
     )
 
     assert response.status_code == 403
@@ -338,7 +344,7 @@ def test_update_note_from_wrong_user(mock_usecase, auth_usecase) -> None:
     session = uuid.uuid4()
 
     response = client.put(
-        f"/note/{note_complete.code}",
+        PREFIX + f"/note/{note_complete.code}",
         json=note_update.dict(),
         headers={"cookie": f"session={session}"},
     )

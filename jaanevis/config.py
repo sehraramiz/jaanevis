@@ -9,6 +9,7 @@ import jaanevis
 class Settings(BaseSettings):
     PROJECT_NAME: str
     PROJECT_URL: str
+    API_V1_STR: str = "/api/v1"
     BASE_DIR = pathlib.PurePath(jaanevis.__file__).parent
     DATA_BASE_DIR = pathlib.PurePath(jaanevis.__file__).parent.parent
     CORS_ORIGINS: list[AnyHttpUrl] | str = []
