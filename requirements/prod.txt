@@ -1,8 +1,0 @@
-pydantic[email]
-pydantic[dotenv]
-fastapi
-uvicorn
-httpx
-argon2-cffi
-reverse_geocode
-emails

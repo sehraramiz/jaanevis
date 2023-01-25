@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  api:
+    ports:
+      - 8000:8010
+    environment:
+      PORT: 8010
+    env_file:
+      - .env
+    build:
+      context: .
+    volumes:
+      - ./data/db:/app/jaanevis/data/
