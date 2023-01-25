@@ -1,4 +1,5 @@
 const { createApp } = Vue;
+import './main.css';
 
 var routes = [];
 
@@ -13,7 +14,7 @@ createApp({
     return {
       title: 'Jaanevis',
       version: '0.0.1',
-      baseUrl: 'http://127.0.0.1:8000',
+      baseUrl: process.env.API_URL,
       panelView: "create",
       note: {
         code: "",
