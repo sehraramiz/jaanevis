@@ -146,7 +146,7 @@ def test_create_note(mock_usecase, auth_usecase) -> None:
     result = response.json()
     result.pop("code", None)
 
-    assert result == new_note
+    assert result == {**new_note, "country": "", "tags": None}
     assert response.status_code == 200
     mock_usecase().execute.assert_called()
     auth_usecase().execute.assert_called()

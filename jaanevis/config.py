@@ -1,4 +1,4 @@
-import os
+import pathlib
 from typing import Optional
 
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, validator
@@ -9,7 +9,8 @@ import jaanevis
 class Settings(BaseSettings):
     PROJECT_NAME: str
     PROJECT_URL: str
-    BASE_DIR = os.path.dirname(os.path.realpath(jaanevis.__file__))
+    BASE_DIR = pathlib.PurePath(jaanevis.__file__).parent
+    DATA_BASE_DIR = pathlib.PurePath(jaanevis.__file__).parent.parent
     CORS_ORIGINS: list[AnyHttpUrl] | str = []
 
     @validator("CORS_ORIGINS", pre=True)

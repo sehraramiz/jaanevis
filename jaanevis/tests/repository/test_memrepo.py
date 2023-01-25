@@ -6,6 +6,7 @@ from unittest import mock
 
 import pytest
 
+from jaanevis.config import settings
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
@@ -15,7 +16,7 @@ from jaanevis.serializers import note_json_serializer as ser
 uuid_session = "554f8c37-b3a1-4846-a1b6-02cc4d158646"
 LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
-DB_PATH = "data/db.json"
+DB_PATH = settings.DATA_BASE_DIR / "data/db.json"
 
 
 @pytest.fixture

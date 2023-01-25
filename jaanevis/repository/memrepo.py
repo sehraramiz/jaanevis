@@ -10,18 +10,18 @@ from jaanevis.domain import user as u
 
 
 class MemRepo:
-    def __init__(self, data: list[dict] = []) -> None:
-        base_data_path = settings.BASE_DIR + "/data/"
+    def __init__(self, data: list[dict] = None) -> None:
+        base_data_path = settings.DATA_BASE_DIR / "data"
         os.makedirs(base_data_path, exist_ok=True)
-        self.db_path = base_data_path + "/db.json"
-        if data:
+        self.db_path = base_data_path / "db.json"
+        if data is not None:
             self.data = data
         else:
             self.data = self._read_data_from_file()
 
     def _read_data_from_file(self) -> Optional[list[dict]]:
         if not pathlib.Path(self.db_path).is_file():
-            return []
+            return {"notes": [], "users": [], "sessions": []}
 
         with open(self.db_path, "r") as db:
             data = json.load(db)
