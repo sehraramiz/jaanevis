@@ -83,6 +83,7 @@ def test_login_fails_on_non_existant_user() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.code == res.StatusCode.invalid_username_or_password
 
 
 def test_login_fails_on_wrong_password() -> None:
@@ -99,10 +100,11 @@ def test_login_fails_on_wrong_password() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.code == res.StatusCode.invalid_username_or_password
 
 
 @mock.patch("jaanevis.utils.security.verify_password")
-def test_login_fails_on_deactive_user(pass_verify_mock) -> None:
+def test_login_fails_on_inactive_user(pass_verify_mock) -> None:
     repo = mock.Mock()
     user = u.User(username="username", password="password", is_active=False)
 
@@ -116,5 +118,6 @@ def test_login_fails_on_deactive_user(pass_verify_mock) -> None:
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.inactive_user,
         "message": "User is not active",
     }

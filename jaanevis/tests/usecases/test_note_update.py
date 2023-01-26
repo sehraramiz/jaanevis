@@ -54,6 +54,7 @@ def test_note_update_handles_invalid_code(note: n.Note) -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "code: Invalid code",
     }
 
@@ -72,6 +73,7 @@ def test_note_update_handles_invalid_note(note: n.Note) -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "body: Invalid note type",
     }
 
@@ -93,6 +95,7 @@ def test_note_update_handles_nonexistent_note(note: n.Note) -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
+        "code": res.StatusCode.failure,
         "message": "note with code 'nocode' not found",
     }
 
@@ -119,5 +122,6 @@ def test_note_update_handles_wrong_user(note: n.Note) -> None:
     repo.update.assert_not_called()
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "permission denied",
     }

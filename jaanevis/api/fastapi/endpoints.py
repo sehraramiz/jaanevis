@@ -178,8 +178,9 @@ def login(
     login_response = login_usecase.execute(request)
 
     if not login_response:
-        raise HTTPException(
-            status_code=401, detail=login_response.value["message"]
+        return JSONResponse(
+            login_response.value,
+            status_code=401,
         )
 
     response = JSONResponse(
@@ -205,7 +206,13 @@ def logout(
 
     logout_usecase = logout_uc.LogoutUseCase(repo)
     request = logout_request.LogoutRequest.build(session=session)
-    logout_usecase.execute(request)
+    logout_response = logout_usecase.execute(request)
+
+    if not logout_response:
+        return JSONResponse(
+            logout_response.value,
+            status_code=401,
+        )
 
     response = JSONResponse(content={"success": True})
     yesterday = datetime.now() - timedelta(days=1)

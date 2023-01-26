@@ -1,7 +1,12 @@
 from jaanevis.domain import user as u
 from jaanevis.repository.base import Repository
 from jaanevis.requests.activate_user_request import ActivateUserRequest
-from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+    StatusCode,
+)
 
 
 class ActivateUserUseCase:
@@ -19,7 +24,8 @@ class ActivateUserUseCase:
         )
         if not session:
             return ResponseFailure.build_parameters_error(
-                "Invalid activation token"
+                "Invalid activation token",
+                code=StatusCode.invalid_activation_token,
             )
 
         user = self.repo.get_user_by_username(username=request.username)

@@ -44,6 +44,7 @@ def test_authenticte_response_unauthorized_on_invalid_session() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
+        "code": res.StatusCode.invalid_session,
         "message": "Session not found",
     }
 
@@ -60,6 +61,7 @@ def test_authenticte_response_unauthorized_on_empty_session() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.invalid_session,
         "message": "session: Invalid session",
     }
 
@@ -77,6 +79,7 @@ def test_authenticte_handles_non_existant_user() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
+        "code": res.StatusCode.failure,
         "message": "User not found",
     }
 
@@ -105,6 +108,7 @@ def test_authenticte_handles_expired_session() -> None:
     )
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.expired_session,
         "message": "Session expired",
     }
 
@@ -180,5 +184,6 @@ def test_authenticte_handles_deactive_user() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.inactive_user,
         "message": "User is not active",
     }

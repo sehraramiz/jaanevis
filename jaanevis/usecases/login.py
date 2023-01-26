@@ -3,7 +3,12 @@ from datetime import datetime, timedelta
 
 from jaanevis.repository.base import Repository
 from jaanevis.requests.login_request import LoginRequest
-from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+    StatusCode,
+)
 from jaanevis.utils import security
 
 
@@ -18,17 +23,21 @@ class LoginUseCase:
         if not user:
             if not user:
                 return ResponseFailure.build_parameters_error(
-                    "Wrong username or password"
+                    "Wrong username or password",
+                    code=StatusCode.invalid_username_or_password,
                 )
         if not user.is_active:
-            return ResponseFailure.build_parameters_error("User is not active")
+            return ResponseFailure.build_parameters_error(
+                "User is not active", code=StatusCode.inactive_user
+            )
 
         password_valid = security.verify_password(
             hashed_password=user.password, password=request.password
         )
         if not password_valid:
             return ResponseFailure.build_parameters_error(
-                "Wrong username or password"
+                "Wrong username or password",
+                code=StatusCode.invalid_username_or_password,
             )
 
         new_session_id = str(uuid.uuid4())

@@ -1,4 +1,5 @@
 from jaanevis.requests import register_request as register_req
+from jaanevis.responses import response as res
 
 
 def test_register_request_build() -> None:
@@ -19,6 +20,7 @@ def test_register_request_build_from_invalid_email() -> None:
     assert bool(request) is False
     assert request.has_errors()
     assert request.errors[0]["parameter"] == "email"
+    assert request.error_code == res.StatusCode.invalid_email
 
 
 def test_register_request_build_from_invalid_password() -> None:
@@ -29,6 +31,7 @@ def test_register_request_build_from_invalid_password() -> None:
     assert bool(request) is False
     assert request.has_errors()
     assert request.errors[0]["parameter"] == "password"
+    assert request.error_code == res.StatusCode.invalid_password
 
 
 def test_register_request_build_from_less_than_8_character_password() -> None:
@@ -39,3 +42,4 @@ def test_register_request_build_from_less_than_8_character_password() -> None:
     assert bool(request) is False
     assert request.has_errors()
     assert request.errors[0]["parameter"] == "password"
+    assert request.error_code == res.StatusCode.invalid_password

@@ -30,6 +30,7 @@ def test_note_delete_handles_invalid_code() -> None:
     assert bool(response_obj) is False
     assert response_obj.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "code: Invalid code value",
     }
 
@@ -46,6 +47,7 @@ def test_note_delete_handles_invalid_user() -> None:
     assert bool(response_obj) is False
     assert response_obj.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "user: Invalid user",
     }
 
@@ -79,6 +81,7 @@ def test_delete_note_by_code_wrong_user() -> None:
     repo.delete_by_code.assert_not_called()
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "permission denied",
     }
 
@@ -95,5 +98,6 @@ def test_delete_note_by_code_handles_nonexistent_code() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
+        "code": res.StatusCode.failure,
         "message": "note with code 'nocode' not found",
     }

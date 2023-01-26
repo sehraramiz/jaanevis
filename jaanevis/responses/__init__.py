@@ -1,3 +1,8 @@
-from .response import ResponseFailure, ResponseObject, ResponseSuccess
+from .response import ResponseFailure, ResponseObject, ResponseSuccess, StatusCode
 
-__all__ = ["ResponseSuccess", "ResponseFailure", "ResponseObject"]
+__all__ = [
+    "ResponseSuccess",
+    "ResponseFailure",
+    "ResponseObject",
+    "StatusCode",
+]

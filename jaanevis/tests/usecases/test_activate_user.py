@@ -2,7 +2,7 @@ from unittest import mock
 
 from jaanevis.domain import user as u
 from jaanevis.requests import activate_user_request as req
-from jaanevis.responses import ResponseFailure
+from jaanevis.responses import ResponseFailure, StatusCode
 from jaanevis.usecases import activate_user as uc
 
 
@@ -16,6 +16,7 @@ def test_activate_user_handle_invalid_request() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": ResponseFailure.PARAMETERS_ERROR,
+        "code": StatusCode.failure,
         "message": "username: Username can not be empty",
     }
 
@@ -31,6 +32,7 @@ def test_activate_user_handle_non_existent_token() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": ResponseFailure.PARAMETERS_ERROR,
+        "code": StatusCode.invalid_activation_token,
         "message": "Invalid activation token",
     }
 
@@ -46,6 +48,7 @@ def test_activate_user_handle_non_existent_user() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": ResponseFailure.RESOURCE_ERROR,
+        "code": StatusCode.failure,
         "message": "User not found",
     }
 
@@ -63,6 +66,7 @@ def test_activate_user_handle_active_user() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": ResponseFailure.PARAMETERS_ERROR,
+        "code": StatusCode.failure,
         "message": "User is already activated",
     }
 

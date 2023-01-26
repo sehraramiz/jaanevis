@@ -33,6 +33,7 @@ def test_register_handle_bad_request_invalid_email() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.invalid_email,
         "message": "email: Invalid email",
     }
 
@@ -52,6 +53,7 @@ def test_register_handle_existing_email() -> None:
     repo.get_user_by_username.assert_called_with(username="a@a.com")
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
+        "code": res.StatusCode.user_exists,
         "message": "User with this email already exists",
     }
 
@@ -67,6 +69,7 @@ def test_register_handle_bad_request_invalid_password() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.invalid_password,
         "message": "password: minimum password length must be 8 characters",
     }
 

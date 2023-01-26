@@ -65,6 +65,7 @@ def test_add_note_handles_generic_error(new_note: n.Note) -> None:
     assert bool(response_obj) is False
     assert response_obj.value == {
         "type": res.ResponseFailure.SYSTEM_ERROR,
+        "code": res.StatusCode.failure,
         "message": "Exception: An error message",
     }
 
@@ -80,5 +81,6 @@ def test_add_note_handles_bad_request() -> None:
     assert bool(request_obj) is False
     assert response_obj.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "body: Invalid note type",
     }

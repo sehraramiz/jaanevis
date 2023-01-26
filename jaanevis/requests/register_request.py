@@ -1,6 +1,7 @@
 import re
 
 from jaanevis.requests import InvalidRequestObject, RequestObject
+from jaanevis.responses import response as res
 
 
 class RegisterRequest:
@@ -16,12 +17,15 @@ class RegisterRequest:
 
         email_re = "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
         if not re.search(email_re, email):
+            invalid_req.error_code = res.StatusCode.invalid_email
             invalid_req.add_error("email", "Invalid email")
             return invalid_req
         if not password:
+            invalid_req.error_code = res.StatusCode.invalid_password
             invalid_req.add_error("password", "Password can not be empty")
             return invalid_req
         if len(password) < 8:
+            invalid_req.error_code = res.StatusCode.invalid_password
             invalid_req.add_error(
                 "password", "minimum password length must be 8 characters"
             )

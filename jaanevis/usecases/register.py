@@ -6,7 +6,12 @@ from jaanevis.config import settings
 from jaanevis.domain import user as u
 from jaanevis.repository.base import Repository
 from jaanevis.requests.register_request import RegisterRequest
-from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+    StatusCode,
+)
 from jaanevis.utils import security
 
 
@@ -28,7 +33,8 @@ class RegisterUseCase:
         user = self.repo.get_user_by_username(username=request.email)
         if user:
             return ResponseFailure.build_resource_error(
-                "User with this email already exists"
+                "User with this email already exists",
+                code=StatusCode.user_exists,
             )
         hashed_password = security.hash_password(request.password)
         created_user = self.repo.create_user(

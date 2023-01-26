@@ -23,10 +23,11 @@ def test_response_success_is_true() -> None:
     assert bool(res.ResponseSuccess(response_value)) is True
 
 
-def test_response_success_has_type_and_value(response_value) -> None:
+def test_response_success_has_type_value_status_code(response_value) -> None:
     response = res.ResponseSuccess(response_value)
 
     assert response.type == res.ResponseSuccess.SUCCESS
+    assert response.code == res.StatusCode.success
     assert response.value == response_value
 
 
@@ -36,12 +37,13 @@ def test_response_failure_is_false(response_type, response_message) -> None:
     assert bool(response) is False
 
 
-def test_response_failure_has_type_and_message(
+def test_response_failure_has_type_message_status_code(
     response_type, response_message
 ) -> None:
     response = res.ResponseFailure(response_type, response_message)
 
     assert response.type == response_type
+    assert response.code == res.StatusCode.failure
     assert response.message == response_message
 
 
@@ -52,6 +54,7 @@ def test_response_failure_contains_value(
 
     assert response.value == {
         "type": response_type,
+        "code": res.StatusCode.failure,
         "message": response_message,
     }
 
@@ -63,6 +66,7 @@ def test_response_failure_initialisation_with_exception(response_type) -> None:
 
     assert bool(response) is False
     assert response.type == response_type
+    assert response.type == response_type
     assert response.message == "Exception: An error message"
 
 
@@ -73,6 +77,7 @@ def test_response_failure_from_empty_invalid_request_object() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.code == res.StatusCode.failure
 
 
 def test_response_failure_from_invalid_request_object_with_errors() -> None:
@@ -86,6 +91,7 @@ def test_response_failure_from_invalid_request_object_with_errors() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.code == res.StatusCode.failure
     assert response.message == "url: Is mandatory\nurl: Can't be blank"
 
 
@@ -94,6 +100,7 @@ def test_response_failure_build_resource_error() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.RESOURCE_ERROR
+    assert response.code == res.StatusCode.failure
     assert response.message == "test message"
 
 
@@ -102,6 +109,7 @@ def test_response_failure_build_parameters_error() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.code == res.StatusCode.failure
     assert response.message == "test message"
 
 
@@ -110,4 +118,37 @@ def test_response_failure_build_system_error() -> None:
 
     assert bool(response) is False
     assert response.type == res.ResponseFailure.SYSTEM_ERROR
+    assert response.message == "test message"
+
+
+def test_response_failure_build_resource_error_with_code() -> None:
+    response = res.ResponseFailure.build_resource_error(
+        "test message", code=res.StatusCode.invalid_username_or_password
+    )
+
+    assert bool(response) is False
+    assert response.type == res.ResponseFailure.RESOURCE_ERROR
+    assert response.code == res.StatusCode.invalid_username_or_password
+    assert response.message == "test message"
+
+
+def test_response_failure_build_parameters_error_with_code() -> None:
+    response = res.ResponseFailure.build_parameters_error(
+        "test message", code=res.StatusCode.invalid_username_or_password
+    )
+
+    assert bool(response) is False
+    assert response.type == res.ResponseFailure.PARAMETERS_ERROR
+    assert response.code == res.StatusCode.invalid_username_or_password
+    assert response.message == "test message"
+
+
+def test_response_failure_build_system_error_with_code() -> None:
+    response = res.ResponseFailure.build_system_error(
+        "test message", code=res.StatusCode.invalid_username_or_password
+    )
+
+    assert bool(response) is False
+    assert response.type == res.ResponseFailure.SYSTEM_ERROR
+    assert response.code == res.StatusCode.invalid_username_or_password
     assert response.message == "test message"

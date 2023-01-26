@@ -1,4 +1,5 @@
 from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestObject
+from jaanevis.responses import response as res
 
 
 class AuthenticateRequest(ValidRequestObject):
@@ -12,7 +13,12 @@ class AuthenticateRequest(ValidRequestObject):
         invalid_req = InvalidRequestObject()
 
         if not session:
-            invalid_req.add_error("session", "Invalid session")
+            invalid_req.error_code = res.StatusCode.invalid_session
+            invalid_req.add_error(
+                "session",
+                "Invalid session",
+                code=res.StatusCode.invalid_session,
+            )
             return invalid_req
 
         return cls(session=session)

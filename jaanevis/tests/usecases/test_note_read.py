@@ -35,6 +35,7 @@ def test_note_read_handles_bad_request() -> None:
     assert bool(response_obj) is False
     assert response_obj.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.failure,
         "message": "code: Invalid code value",
     }
 
@@ -65,5 +66,6 @@ def test_read_note_by_code_handles_nonexistent_code() -> None:
     assert bool(response) is False
     assert response.value == {
         "type": res.ResponseFailure.RESOURCE_ERROR,
+        "code": res.StatusCode.failure,
         "message": "note with code 'nocode' not found",
     }

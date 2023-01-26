@@ -39,14 +39,20 @@ def test_login(mock_usecase, request_mock) -> None:
 def test_login_invalid_credentials(mock_usecase, request_mock) -> None:
     body = {"username": "username", "password": "wrong_password"}
     mock_usecase().execute.return_value = (
-        res.ResponseFailure.build_parameters_error("auth error")
+        res.ResponseFailure.build_parameters_error(
+            "auth error", code=res.StatusCode.invalid_username_or_password
+        )
     )
 
     response = client.post(PREFIX + "/user/login", json=body)
 
     assert response.status_code == 401
     mock_usecase().execute.assert_called()
-    assert response.json() == {"detail": "auth error"}
+    assert response.json() == {
+        "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.invalid_username_or_password,
+        "message": "auth error",
+    }
 
 
 @mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")
