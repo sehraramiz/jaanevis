@@ -397,7 +397,7 @@ createApp({
       });
     },
     hashtagText: function (text) {
-      var repl = text.replace(/#(\w+)/g, '<a href="#/notes?tag=$1">#$1</a>');
+      var repl = text.replace(/#([^\d&%$-]\S{2,49})/g, '<a href="#/notes?tag=$1">#$1</a>');
       return repl;
     }
   },

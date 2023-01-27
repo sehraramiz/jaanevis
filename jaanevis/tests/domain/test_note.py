@@ -35,6 +35,18 @@ def test_note_model_init_with_tags() -> None:
     assert note.tags == ["text", "for_test"]
 
 
+def test_note_model_init_with_farsi_tags() -> None:
+    note = n.Note(
+        creator="default",
+        url="http://example.com",
+        text="some #text #تگ_فارسی",
+        lat=LAT,
+        long=LONG,
+    )
+
+    assert note.tags == ["text", "تگ_فارسی"]
+
+
 def test_note_model_from_dict() -> None:
     note = n.Note.from_dict(
         {
