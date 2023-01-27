@@ -32,7 +32,9 @@ createApp({
     }
   },
   watch:{
-    '$route': async function (to, from){
+    '$route.query': async function (to, from){
+      if (JSON.stringify(from) == JSON.stringify(to))
+        return;
       if (this.$route.path == "/notes"){
         this.handleNotesPath();
       }
@@ -383,11 +385,11 @@ createApp({
     handleNotesPath: async function () {
       this.filters = {...this.filters, ...this.$route.query};
       var notes = await this.readNotes(this.filters);
+      this.$root.showNotesOnMap(notes);
       this.$router.replace({
         path: this.$route.path,
         query: this.filters
       });
-      this.$root.showNotesOnMap(notes);
     },
     removeFilter(filter) {
       delete this.filters[filter];
