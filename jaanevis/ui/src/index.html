@@ -94,14 +94,11 @@
                 <a @click="showLogin" href="#"
                     v-if="!authenticated && !(panelView.match('auth|register'))">Login to create/modify notes</a>
                 <button @click="logout" v-else-if="authenticated">Logout</button>
-                <div>
-                  <p v-if="errors.length">
-                    <b>Please correct the following error(s):</b>
+                <p v-if="errors.length">
                     <ul>
-                      <li v-for="error in errors">{{ error }}</li>
+                    <li v-for="error in errors" style="color: red">{{ error }}</li>
                     </ul>
-                  </p>
-                </div>
+                </p>
             </div>
         </div>
     </div>

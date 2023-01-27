@@ -246,10 +246,10 @@ createApp({
       this.errors = [];
     },
     checkLoginForm: function (e) {
+      this.errors = []
+
       if (this.username && this.password)
         return true;
-
-      this.errors = [];
 
       if (!this.username)
         this.errors.push('Username is mandatory.');
@@ -258,7 +258,6 @@ createApp({
         this.errors.push('Password is mandatory.');
     },
     checkRegisterForm: function (e) {
-
       this.errors = [];
 
       if (!this.username)
@@ -294,10 +293,11 @@ createApp({
         },
         body: JSON.stringify(loginData)
       })
-      .then(response => {
-        if (!response.ok)
-          return Promise.reject(response);
-        return response.json();
+      .then(async response => {
+        if (response.ok)
+          return response.json();
+        const js = await response.json();
+        return Promise.reject(js);
       })
       .then(data => {
         this.authUser.username = loginData.username;
@@ -307,6 +307,7 @@ createApp({
       })
       .catch(error => {
         console.log("Login error", error);
+        this.errors.push(error.message)
         return;
       });
     },
@@ -351,10 +352,11 @@ createApp({
         },
         body: JSON.stringify(registerData)
       })
-      .then(response => {
-        if (!response.ok)
-          return Promise.reject(response);
-        return response.json();
+      .then(async response => {
+        if (response.ok)
+          return response.json();
+        const js = await response.json();
+        return Promise.reject(js);
       })
       .then(data => {
         this.panelView = 'create';
@@ -362,6 +364,7 @@ createApp({
       })
       .catch(error => {
         console.log("Register error", error);
+        this.errors.push(error.message);
         return;
       });
     },
