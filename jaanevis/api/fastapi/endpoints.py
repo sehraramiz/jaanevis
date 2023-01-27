@@ -237,6 +237,11 @@ def register(
     )
     response = register_usecase.execute(request)
 
+    if not response:
+        return JSONResponse(
+            response.value,
+            status_code=400,
+        )
     return response.value
 
 

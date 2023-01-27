@@ -4,6 +4,7 @@ from unittest import mock
 
 from fastapi.testclient import TestClient
 
+from jaanevis import requests as req
 from jaanevis.api.fastapi.main import app
 from jaanevis.config import settings
 from jaanevis.responses import response as res
@@ -108,8 +109,29 @@ def test_register_with_invalid_email() -> None:
     pass
 
 
-def test_register_with_invalid_password() -> None:
-    pass
+@mock.patch("jaanevis.requests.register_request.RegisterRequest")
+@mock.patch("jaanevis.usecases.register.RegisterUseCase")
+def test_register_with_invalid_password(mock_usecase, mock_request) -> None:
+    body = {"email": "a@a.com", "password": "1234"}
+    invalid_request = req.InvalidRequestObject(
+        error_code=res.StatusCode.invalid_password
+    )
+    invalid_request.add_error(
+        "password", "invalid password", code=res.StatusCode.invalid_password
+    )
+    mock_usecase().execute.return_value = (
+        res.ResponseFailure.build_from_invalid_request_object(invalid_request)
+    )
+
+    response = client.post(PREFIX + "/user/register", json=body)
+
+    assert response.status_code == 400
+    mock_usecase().execute.assert_called()
+    assert response.json() == {
+        "type": res.ResponseFailure.PARAMETERS_ERROR,
+        "code": res.StatusCode.invalid_password,
+        "message": "password: invalid password",
+    }
 
 
 @mock.patch("jaanevis.requests.activate_user_request.ActivateUserRequest")
