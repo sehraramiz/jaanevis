@@ -121,3 +121,19 @@ def test_login_fails_on_inactive_user(pass_verify_mock) -> None:
         "code": res.StatusCode.inactive_user,
         "message": "User is not active",
     }
+
+
+def test_login_handles_generic_error() -> None:
+    repo = mock.Mock()
+    repo.get_user_by_username.side_effect = Exception("An error message")
+
+    login_usecase = uc.LoginUseCase(repo)
+    login_request = req.LoginRequest(username="username", password="password")
+    response = login_usecase.execute(login_request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": res.ResponseFailure.SYSTEM_ERROR,
+        "code": res.StatusCode.failure,
+        "message": "Exception: An error message",
+    }

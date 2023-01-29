@@ -125,3 +125,26 @@ def test_note_update_handles_wrong_user(note: n.Note) -> None:
         "code": res.StatusCode.failure,
         "message": "permission denied",
     }
+
+
+def test_update_note_handles_generic_error(note: n.Note) -> None:
+    repo = mock.Mock()
+    repo.get_by_code.side_effect = Exception("An error message")
+    user = u.User(username="username", password="password")
+
+    newurl = "https://newurl.com"
+    note_update = n.NoteUpdateApi(url=newurl)
+
+    update_note_usecase = uc.UpdateNoteUseCase(repo)
+    update_note_request = req.UpdateNoteRequest.build(
+        code=str(note.code), note=note_update, user=user
+    )
+
+    response = update_note_usecase.execute(update_note_request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": res.ResponseFailure.SYSTEM_ERROR,
+        "code": res.StatusCode.failure,
+        "message": "Exception: An error message",
+    }

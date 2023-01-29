@@ -107,3 +107,19 @@ def test_delete_session_after_user_activation() -> None:
 
     assert bool(response) is True
     repo.delete_session_by_session_id.assert_called_with(session_id="token")
+
+
+def test_activate_user_handles_generic_error() -> None:
+    repo = mock.Mock()
+    repo.get_user_by_username.side_effect = Exception("An error message")
+
+    usecase = uc.ActivateUserUseCase(repo)
+    request = req.ActivateUserRequest.build(username="username", token="token")
+    response = usecase.execute(request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": ResponseFailure.SYSTEM_ERROR,
+        "code": StatusCode.failure,
+        "message": "Exception: An error message",
+    }

@@ -69,3 +69,20 @@ def test_read_note_by_code_handles_nonexistent_code() -> None:
         "code": res.StatusCode.failure,
         "message": "note with code 'nocode' not found",
     }
+
+
+def test_read_note_by_code_handles_generic_error() -> None:
+    repo = mock.Mock()
+    repo.get_by_code.side_effect = Exception("An error message")
+
+    note_read_usecase = uc.ReadNoteUseCase(repo)
+    request = req.ReadNoteRequest.build(code=notes[0].code)
+
+    response = note_read_usecase.execute(request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": res.ResponseFailure.SYSTEM_ERROR,
+        "code": res.StatusCode.failure,
+        "message": "Exception: An error message",
+    }

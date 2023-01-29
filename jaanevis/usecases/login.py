@@ -19,35 +19,40 @@ class LoginUseCase:
         self.repo = repo
 
     def execute(self, request: LoginRequest) -> ResponseObject:
-        user = self.repo.get_user_by_username(username=request.username)
-        if not user:
+        try:
+            user = self.repo.get_user_by_username(username=request.username)
             if not user:
+                if not user:
+                    return ResponseFailure.build_parameters_error(
+                        "Wrong username or password",
+                        code=StatusCode.invalid_username_or_password,
+                    )
+            if not user.is_active:
+                return ResponseFailure.build_parameters_error(
+                    "User is not active", code=StatusCode.inactive_user
+                )
+
+            password_valid = security.verify_password(
+                hashed_password=user.password, password=request.password
+            )
+            if not password_valid:
                 return ResponseFailure.build_parameters_error(
                     "Wrong username or password",
                     code=StatusCode.invalid_username_or_password,
                 )
-        if not user.is_active:
-            return ResponseFailure.build_parameters_error(
-                "User is not active", code=StatusCode.inactive_user
-            )
 
-        password_valid = security.verify_password(
-            hashed_password=user.password, password=request.password
-        )
-        if not password_valid:
-            return ResponseFailure.build_parameters_error(
-                "Wrong username or password",
-                code=StatusCode.invalid_username_or_password,
+            new_session_id = str(uuid.uuid4())
+            tomorrow = datetime.now() + timedelta(days=1)
+            expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
+            self.repo.create_or_update_session(
+                username=user.username,
+                session_id=new_session_id,
+                expire_time=tomorrow.timestamp(),
             )
-
-        new_session_id = str(uuid.uuid4())
-        tomorrow = datetime.now() + timedelta(days=1)
-        expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
-        self.repo.create_or_update_session(
-            username=user.username,
-            session_id=new_session_id,
-            expire_time=tomorrow.timestamp(),
-        )
-        return ResponseSuccess(
-            {"session": new_session_id, "expires": expire_tomorrow}
-        )
+            return ResponseSuccess(
+                {"session": new_session_id, "expires": expire_tomorrow}
+            )
+        except Exception as exc:
+            return ResponseFailure.build_system_error(
+                "{}: {}".format(exc.__class__.__name__, "{}".format(exc))
+            )

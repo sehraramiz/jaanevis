@@ -187,3 +187,42 @@ def test_authenticte_handles_deactive_user() -> None:
         "code": res.StatusCode.inactive_user,
         "message": "User is not active",
     }
+
+
+def test_authenticate_handles_generic_error() -> None:
+    session = uuid.uuid4()
+    repo = mock.Mock()
+    repo.get_user_by_username.return_value = u.User(
+        username="username", password="password", is_active=True
+    )
+    repo.get_session_by_session_id.side_effect = Exception("An error message")
+
+    usecase = uc.AuthenticateUseCase(repo)
+    request_obj = req.AuthenticateRequest.build(session=str(session))
+
+    response_obj = usecase.execute(request_obj)
+
+    assert bool(response_obj) is False
+    assert response_obj.value == {
+        "type": res.ResponseFailure.SYSTEM_ERROR,
+        "code": res.StatusCode.failure,
+        "message": "Exception: An error message",
+    }
+
+
+def test_logout_handles_generic_error() -> None:
+    session = uuid.uuid4()
+    repo = mock.Mock()
+    repo.get_session_by_session_id.side_effect = Exception("An error message")
+
+    usecase = logout_uc.LogoutUseCase(repo)
+    request_obj = logout_req.LogoutRequest.build(session=str(session))
+
+    response_obj = usecase.execute(request_obj)
+
+    assert bool(response_obj) is False
+    assert response_obj.value == {
+        "type": res.ResponseFailure.SYSTEM_ERROR,
+        "code": res.StatusCode.failure,
+        "message": "Exception: An error message",
+    }
