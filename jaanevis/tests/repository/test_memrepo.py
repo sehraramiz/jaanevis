@@ -462,3 +462,29 @@ def test_update_user_change_active_status(mock_open, note_dicts) -> None:
 
     assert repo.data["users"][0]["is_active"] is True
     assert result == updated_user
+
+
+@mock.patch("jaanevis.repository.memrepo.open")
+def test_delete_user(mock_open, note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    users = [u.User.from_dict(data) for data in note_dicts["users"]]
+    username = str(users[0].username)
+
+    repo.delete_user(username=username)
+
+    assert not any(u["username"] == username for u in repo.data["users"])
+
+
+@mock.patch("pathlib.Path")
+def test_write_db_to_file_after_user_delete(path, note_dicts) -> None:
+    username = "a@a.com"
+    data = {"notes": [], "users": [], "sessions": []}
+    read_data = json.dumps(data, cls=ser.NoteJsonEncoder)
+    mock_open = mock.mock_open(read_data=read_data)
+
+    with mock.patch("jaanevis.repository.memrepo.open", mock_open):
+        repo = memrepo.MemRepo()
+        repo.delete_user(username=username)
+
+    mock_open.assert_called_with(DB_PATH, "w")

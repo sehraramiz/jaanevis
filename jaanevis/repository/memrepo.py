@@ -110,7 +110,7 @@ class MemRepo:
         self._write_data_to_file()
         return user
 
-    def update_user(self, obj: u.User, data: str) -> n.Note:
+    def update_user(self, obj: u.User, data: str) -> u.User:
         updated_user = obj
         for _index, user in enumerate(self.data["users"]):
             if user["username"] == str(obj.username):
@@ -120,6 +120,14 @@ class MemRepo:
                 break
         self._write_data_to_file()
         return updated_user
+
+    def delete_user(self, username: str) -> bool:
+        for index, user in enumerate(self.data["users"]):
+            if user["username"] == username:
+                del self.data["users"][index]
+                break
+        self._write_data_to_file()
+        return True
 
     def get_session_by_session_id(self, session_id: str) -> s.Session:
         for session in self.data["sessions"]:
