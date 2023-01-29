@@ -145,3 +145,25 @@ def test_register_send_activation_email(mock_secrets) -> None:
     email_handler.send_email.assert_called_with(
         email_to=email, text=mail_text, subject=mail_subject
     )
+
+
+@mock.patch("jaanevis.utils.security.hash_password")
+def test_register_deletes_created_user_on_exception(mock_hash) -> None:
+    repo = mock.Mock()
+    email_handler = mock.Mock()
+    email, password = "a@a.com", "22334455"
+    user = u.User(username=email, password=password)
+    hashed_password = "hashedpassword"
+
+    repo.get_user_by_username.return_value = None
+    repo.create_user.return_value = user
+    mock_hash.return_value = hashed_password
+    repo.create_session.side_effect = Exception("some error")
+
+    request = req.RegisterRequest.build(email=email, password=password)
+    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    response = register_usecase.execute(request)
+
+    assert bool(response) is False
+    repo.create_user.assert_called()
+    repo.delete_user.assert_called_with(username=email)

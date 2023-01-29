@@ -30,35 +30,43 @@ class RegisterUseCase:
     def execute(self, request: RegisterRequest) -> ResponseObject:
         if not request:
             return ResponseFailure.build_from_invalid_request_object(request)
-        user = self.repo.get_user_by_username(username=request.email)
-        if user:
-            return ResponseFailure.build_resource_error(
-                "User with this email already exists",
-                code=StatusCode.user_exists,
+
+        try:
+            user = self.repo.get_user_by_username(username=request.email)
+            if user:
+                return ResponseFailure.build_resource_error(
+                    "User with this email already exists",
+                    code=StatusCode.user_exists,
+                )
+            hashed_password = security.hash_password(request.password)
+            created_user = self.repo.create_user(
+                username=request.email, password=hashed_password
             )
-        hashed_password = security.hash_password(request.password)
-        created_user = self.repo.create_user(
-            username=request.email, password=hashed_password
-        )
 
-        activation_token = secrets.token_urlsafe(40)
-        expire_time = (datetime.now() + timedelta(days=2)).timestamp()
-        self.repo.create_session(
-            session_id=activation_token,
-            username=request.email,
-            expire_time=expire_time,
-        )
+            activation_token = secrets.token_urlsafe(40)
+            expire_time = (datetime.now() + timedelta(days=2)).timestamp()
+            self.repo.create_session(
+                session_id=activation_token,
+                username=request.email,
+                expire_time=expire_time,
+            )
 
-        activation_url = f"{settings.PROJECT_URL}{settings.API_V1_STR}/user/activate?username={request.email}&token={activation_token}"
-        mail_text = (
-            f"visit this link to activate your account {activation_url}"
-        )
-        mail_subject = "Jaanevis Account Activation"
-        self.email_handler.send_email(
-            email_to=request.email, text=mail_text, subject=mail_subject
-        )
-        new_user = u.UserRead(
-            username=created_user.username, is_active=created_user.is_active
-        )
+            activation_url = f"{settings.PROJECT_URL}{settings.API_V1_STR}/user/activate?username={request.email}&token={activation_token}"
+            mail_text = (
+                f"visit this link to activate your account {activation_url}"
+            )
+            mail_subject = "Jaanevis Account Activation"
+            self.email_handler.send_email(
+                email_to=request.email, text=mail_text, subject=mail_subject
+            )
+            new_user = u.UserRead(
+                username=created_user.username,
+                is_active=created_user.is_active,
+            )
 
-        return ResponseSuccess(new_user)
+            return ResponseSuccess(new_user)
+        except Exception as exc:
+            self.repo.delete_user(username=request.email)
+            return ResponseFailure.build_system_error(
+                "{}: {}".format(exc.__class__.__name__, "{}".format(exc))
+            )
