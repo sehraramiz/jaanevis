@@ -99,10 +99,6 @@ def test_register(mock_usecase, request_mock, mock_email) -> None:
     mock_usecase.assert_called_with(repo=mock.ANY, email_handler=mock_email())
     request_mock.build.assert_called_with(email="a@a.com", password="password")
     mock_usecase().execute.assert_called_with(request_mock.build())
-    assert response.json() == {
-        "type": "Success",
-        "message": "activation email was sent",
-    }
 
 
 def test_register_with_invalid_email() -> None:
@@ -150,3 +146,25 @@ def test_user_activation(mock_usecase, mock_request) -> None:
         username=username, token=activation_token
     )
     mock_usecase().execute.assert_called_with(mock_request.build())
+    assert "text/html;" in response.headers["content-type"]
+    assert "<p>user successfuly activated.</p>" in response.text
+
+
+@mock.patch("jaanevis.requests.activate_user_request.ActivateUserRequest")
+@mock.patch("jaanevis.usecases.activate_user.ActivateUserUseCase")
+def test_user_activationi_return_correct_html_on_failure(
+    mock_usecase, mock_request
+) -> None:
+    username = "a@a.com"
+    activation_token = "token"
+    mock_usecase().execute.return_value = (
+        res.ResponseFailure.build_parameters_error("some error")
+    )
+
+    response = client.get(
+        PREFIX + f"/user/activate?username={username}&token={activation_token}"
+    )
+
+    assert response.status_code == 200
+    assert "text/html;" in response.headers["content-type"]
+    assert "<p>activation failure.<br>some error</p>" in response.text

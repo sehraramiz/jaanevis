@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from fastapi import APIRouter, Cookie, Depends, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
@@ -242,10 +242,11 @@ def register(
             response.value,
             status_code=400,
         )
+
     return response.value
 
 
-@router.get("/user/activate")
+@router.get("/user/activate", response_class=HTMLResponse)
 def activate(
     username: str,
     token: str,
@@ -259,4 +260,23 @@ def activate(
     activate_user_usecase = activate_user_uc.ActivateUserUseCase(repo=repo)
     response = activate_user_usecase.execute(request)
 
-    return response
+    success_html = """
+    <html>
+        <body>
+            <p>user successfuly activated.</p>
+        </body>
+    </html>
+    """
+    if response:
+        return HTMLResponse(content=success_html, status_code=200)
+
+    failure_html = """
+    <html>
+        <body>
+            <p>activation failure.<br>{}</p>
+        </body>
+    </html>
+    """.format(
+        response.value["message"]
+    )
+    return HTMLResponse(content=failure_html, status_code=200)
