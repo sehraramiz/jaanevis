@@ -268,6 +268,12 @@ createApp({
       if (!this.password)
         this.errors.push('Password is mandatory.');
 
+      if (!this.password2)
+        this.errors.push('Password confirmation is mandatory.');
+
+      if (this.password != this.password2)
+        this.errors.push('Passwords do not match');
+
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       var emailValid = re.test(this.username);
       if (!emailValid)
