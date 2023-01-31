@@ -51,7 +51,12 @@ class RegisterUseCase:
                 expire_time=expire_time,
             )
 
-            activation_url = f"{settings.PROJECT_URL}{settings.API_V1_STR}/user/activate?username={request.email}&token={activation_token}"
+            activation_params = (
+                f"username={request.email}&token={activation_token}"
+            )
+            activation_url = "{}{}/user/activate?{}".format(
+                settings.PROJECT_URL, settings.API_V1_STR, activation_params
+            )
             mail_text = (
                 f"visit this link to activate your account {activation_url}"
             )
