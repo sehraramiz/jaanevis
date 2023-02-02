@@ -29,6 +29,7 @@ createApp({
       authenticated: false,
       editing: false,
       authUser: {username: ""},
+      filters: {},
     }
   },
   watch:{

@@ -21,7 +21,7 @@
             <div id="panel">
                 <router-view></router-view>
                 <div>
-                    <p>Filters:</p>
+                    <p v-if="Object.keys(filters).length !== 0">Filters:</p>
                     <div v-for="(value, filter) in filters">
                         <span>{{ filter }}[{{ value }}]</span>
                         <button class="destroy" @click="removeFilter(filter)">X</button>
