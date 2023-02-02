@@ -46,11 +46,20 @@ createApp({
       const initLat = 29.6147
       const initLong = 52.5043
       this.map = L.map('map').setView([initLat, initLong], 5);
+
+      var southWest = L.latLng(-89.98155760646617, -180),
+          northEast = L.latLng(89.99346179538875, 180);
+      var bounds = L.latLngBounds(southWest, northEast);
+
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 10,
+          maxBounds: bounds,
+          maxBoundsViscosity: 1.0,
+          maxZoom: 8,
+          minZoom: 2,
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(this.map);
       this.map.on('click', this.showNoteCreateForm);
+      this.map.setMaxBounds(bounds);
     },
     onEachFeature: function (feature, layer) {
       var creator = feature.properties.creator;
