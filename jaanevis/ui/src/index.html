@@ -94,7 +94,7 @@
                 </div>
                 <br>
                 <a @click="showLogin" href="#"
-                    v-if="!authenticated && !(panelView.match('auth|register'))">Login to create/modify notes</a>
+                    v-if="!authenticated && !(panelView.match('auth'))">Login to create/modify notes</a>
                 <button @click="logout" v-else-if="authenticated">Logout</button>
                 <p v-if="errors.length">
                     <ul>
