@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <p>Url: <a target="_blank" :href="note.url">{{ note.url }}</a></p>
+                        <p>Url: <a target="_blank" :href="note.url">{{ urlText(note.url) }}</a></p>
                         <p v-html="hashtagText(note.text)"></p>
                         <p>Latitude: {{ note.lat }}</p>
                         <p>Longitude: {{ note.long }}</p>

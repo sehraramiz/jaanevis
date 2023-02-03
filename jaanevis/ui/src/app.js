@@ -63,11 +63,11 @@ createApp({
     onEachFeature: function (feature, layer) {
       var creator = feature.properties.creator;
       var country = feature.properties.country;
+      var urlTextShort = this.urlText(feature.properties.url)
       var content = `
           <p><b>creator</b>: <a href="#/notes?creator=${creator}">${creator}</a></p>
-          <p><b>country</b>: <a href="#/notes?country=${country}">${country}</a></p>
           <span><b>link</b>: </span>
-          <a target="_blank" href="${feature.properties.url}">${feature.properties.url}</a>
+          <a target="_blank" href="${feature.properties.url}">${urlTextShort}</a>
       `;
       layer.on('click', this.showNoteDetailsForm);
       if (feature.properties && feature.properties.creator) {
@@ -416,6 +416,10 @@ createApp({
     hashtagText: function (text) {
       var repl = text.replace(/#([^\d&%$-]\S{2,49})/g, '<a href="#/notes?tag=$1">#$1</a>');
       return repl;
+    },
+    urlText: function (text, maxLength = 50) {
+      var shortText = text.slice(0, maxLength);
+      return shortText + ((shortText.length == text.length) ? "" : "...")
     }
   },
   mounted() {
