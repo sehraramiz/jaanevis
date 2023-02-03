@@ -43,8 +43,8 @@ createApp({
   },
   methods: {
     initMap: function () {
-      const initLat = 29.6147
-      const initLong = 52.5043
+      const initLat = 32.0
+      const initLong = 52.0
       this.map = L.map('map').setView([initLat, initLong], 5);
 
       var southWest = L.latLng(-89.98155760646617, -180),
@@ -52,7 +52,6 @@ createApp({
       var bounds = L.latLngBounds(southWest, northEast);
 
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxBounds: bounds,
           maxBoundsViscosity: 1.0,
           maxZoom: 8,
           minZoom: 2,
