@@ -1,11 +1,19 @@
 const { createApp } = Vue;
 import './main.css';
+import fa from "./locales/fa.json";
+import en from "./locales/en.json";
 
 var routes = [];
 
 const router = VueRouter.createRouter({
   history: VueRouter.createWebHashHistory(),
   routes,
+})
+
+const i18n = VueI18n.createI18n({
+  locale: 'fa',
+  fallbackLocale: 'en',
+  messages: {fa, en},
 })
 
 createApp({
@@ -30,6 +38,7 @@ createApp({
       editing: false,
       authUser: {username: ""},
       filters: {},
+      supportedLocales: process.env.SUPPORTED_LOCALES.split(",")
     }
   },
   watch:{
@@ -40,6 +49,14 @@ createApp({
         this.handleNotesPath();
       }
     },
+    '$i18n.locale': function (newLocale){
+      document.querySelector("html").setAttribute("lang", newLocale)
+    }
+  },
+  computed: {
+    direction () {
+      return this.$i18n.locale !== 'fa' ? 'ltr' : 'rtl'
+    }
   },
   methods: {
     initMap: function () {
@@ -420,12 +437,16 @@ createApp({
     urlText: function (text, maxLength = 50) {
       var shortText = text.slice(0, maxLength);
       return shortText + ((shortText.length == text.length) ? "" : "...")
-    }
+    },
   },
   mounted() {
     this.$cookies = window.$cookies;
     this.initAuth();
     this.initMap();
     this.showNotesOnMap();
+    if (!this.supportedLocales)
+      this.supportedLocales = this.$i18n.availableLocales;
   },
-}).use(router).mount('#app')
+}).use(router)
+  .use(i18n)
+  .mount('#app')

@@ -1,0 +1,29 @@
+{
+  "locale": {
+    "en": "English",
+    "fa": "Farsi"
+  },
+  "createNote": "Create new note",
+  "url": "Url",
+  "text": "Text",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "create": "Create",
+  "code": "Code",
+  "creator": "Creator",
+  "country": "Country",
+  "tag": "Tag",
+  "update": "Update",
+  "delete": "Delete",
+  "edit": "Edit",
+  "cancelEdit": "Cancel Edit",
+  "username": "Username",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "login": "Login",
+  "logout": "Logout",
+  "register": "Register",
+  "loginToCreate": "Login to create/modify notes",
+  "filters": "Filters"
+}

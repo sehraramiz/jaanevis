@@ -1,0 +1,29 @@
+{
+    "locale": {
+      "en": "انگایسی",
+      "fa": "فارسی"
+    },
+    "createNote": "نوشته‌ی جدید",
+    "url": "لینک",
+    "text": "متن",
+    "latitude": "عرض جغرافیایی",
+    "longitude": "طول جغرافیایی",
+    "create": "ارسال",
+    "code": "شناسه",
+    "creator": "سازنده",
+    "country": "کشور",
+    "tag": "تگ",
+    "update": "اعمال تغییرات",
+    "delete": "پاک کردن",
+    "edit": "ویرایش",
+    "cancelEdit": "لغو ویرایش",
+    "username": "نام کاربری",
+    "email": "ایمیل",
+    "password": "کلمه عبور",
+    "confirmPassword": "تایید کلمه عبور",
+    "login": "ورود",
+    "logout": "خروج",
+    "register": "ثبت‌نام",
+    "loginToCreate": "برای ساخت یا ویرایش نوشته‌ها وارد شوید",
+    "filters": "فیلترها"
+}

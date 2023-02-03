@@ -12,90 +12,94 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js"></script>
     <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://unpkg.com/vue-i18n@9"></script>
 </head>
 <body>
 
     <div id="app">
         <div id="main">
             <div id="map"></div>
-            <div id="panel">
+            <div id="panel" :dir="direction">
+                <select v-model="$i18n.locale">
+                    <option v-for="(lang, i) in supportedLocales" :key="`Lang${i}`" :value="lang">
+                    {{ lang }}
+                  </option>
+                </select>
+                &nbsp;<a @click="showLogin" href="#"
+                    v-if="!authenticated && !(panelView.match('auth'))">{{ $t("loginToCreate") }}</a>
+                <button @click="logout" v-else-if="authenticated">{{ $t("logout") }}</button>
+                <hr>
                 <router-view></router-view>
                 <div>
-                    <p v-if="Object.keys(filters).length !== 0">Filters:</p>
+                    <p v-if="Object.keys(filters).length !== 0">{{ $t("filters") }}:</p>
                     <div v-for="(value, filter) in filters">
-                        <span>{{ filter }}[{{ value }}]</span>
+                        <span>{{ $t(filter) }}[{{ value }}]</span>
                         <button class="destroy" @click="removeFilter(filter)">X</button>
                     </div>
                 </div>
                 <div class="note-form" v-if="panelView == 'create'" id="create-note">
-                    <p>Create new note</p>
-                    <label for="url">Url:</label>
+                    <label for="url">{{ $t("url") }}:</label>
                     <input type="text" id="url" name="url" v-model="note.url">
-                    <label for="text">Text:</label>
+                    <label for="text">{{ $t("text") }}:</label>
                     <input type="text" id="text" name="text" v-model="note.text">
-                    <label for="lat">Latitude:</label>
+                    <label for="lat">{{ $t("latitude") }}:</label>
                     <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
-                    <label for="long">Longitude:</label>
+                    <label for="long">{{ $t("longitude") }}:</label>
                     <input type="number" step="any" id="long" name="long" v-model="note.long">
-                    <button @click="createNewNote" v-if="authenticated">Create</button>
+                    <button @click="createNewNote" v-if="authenticated">{{ $t("create") }}</button>
                 </div>
                 <div class="note-form" v-if="panelView == 'details'" id="note-detail">
-                    <p>Code: {{ note.code }}</p>
-                    <p>Creator: <a :href="`#/notes?creator=${note.creator}`">{{ note.creator }}</a></p>
-                    <p>Country: <a :href="`#/notes?country=${note.country}`">{{ note.country }}</a></p>
+                    <p>{{ $t("code") }}: {{ note.code }}</p>
+                    <p>{{ $t("creator") }}: <a :href="`#/notes?creator=${note.creator}`">{{ note.creator }}</a></p>
+                    <p>{{ $t("country") }}: <a :href="`#/notes?country=${note.country}`">{{ note.country }}</a></p>
                     <div v-if="authUser.username == note.creator && editing">
-                        <label for="url">Url:</label>
+                        <label for="url">{{ $t("url") }}:</label>
                         <input type="text" id="url" name="url" v-model="note.url">
-                        <label for="text">Text:</label>
+                        <label for="text">{{ $t("text") }}:</label>
                         <input type="text" id="text" name="text" v-model="note.text">
-                        <label for="lat">Latitude:</label>
+                        <label for="lat">{{ $t("latitude") }}:</label>
                         <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
-                        <label for="long">Longitude:</label>
+                        <label for="long">{{ $t("longitude") }}:</label>
                         <input type="number" step="any" id="long" name="long" v-model="note.long">
                         <div class="btn-group">
-                            <button @click="updateNote">Update</button><button @click="deleteNote">Delete</button>
-                            <button @click="editing = !editing">Cancel Edit</button>
+                            <button @click="updateNote">{{ $t("update") }}</button><button @click="deleteNote">{{ $t("delete") }}</button>
+                            <button @click="editing = !editing">{{ $t("cancelEdit") }}</button>
                         </div>
                     </div>
                     <div v-else>
-                        <p>Url: <a target="_blank" :href="note.url">{{ urlText(note.url) }}</a></p>
-                        <p v-html="hashtagText(note.text)"></p>
-                        <p>Latitude: {{ note.lat }}</p>
-                        <p>Longitude: {{ note.long }}</p>
+                        <p>{{ $t("url") }}: <a target="_blank" :href="note.url">{{ urlText(note.url) }}</a></p>
+                        <p>{{ $t("text") }}:</p><p v-html="hashtagText(note.text)"></p>
+                        <p>{{ $t("latitude") }}: {{ note.lat }}</p>
+                        <p>{{ $t("longitude") }}: {{ note.long }}</p>
                         <button v-if="authUser.username == note.creator"
-                            @click="editing = !editing">Edit</button>
+                            @click="editing = !editing">{{ $t("edit") }}</button>
                     </div>
                 </div>
                 <div id="auth" v-if="panelView == 'auth'" >
                     <div id="profile" v-if="authenticated == true">
-                        <p>Username: {{ this.authUser.username }}</p>
+                        <p>{{ $t("username") }}: {{ this.authUser.username }}</p>
                     </div>
                     <div class="note-form" v-else id="login">
-                        <p>Login</p>
-                        <label for="username">Username:</label>
+                        <label for="username">{{ $t("username") }}:</label>
                         <input type="text" id="username" name="username" v-model="username">
-                        <label for="password">Password:</label>
+                        <label for="password">{{ $t("password") }}:</label>
                         <input type="password" id="password" name="password" v-model="password">
-                        <button @click="login">Login</button>
-                        <p>or <a @click="showRegister" href="#">Register</a></p>
+                        <button @click="login">{{ $t("login") }}</button>
+                        <a @click="showRegister" href="#">{{ $t("register") }}</a>
                     </div>
                 </div>
                 <div id="register" v-if="panelView == 'register'" >
                     <div class="note-form" id="register">
-                        <p>Register</p>
-                        <label for="email">Email:</label>
+                        <label for="email">{{ $t("email") }}:</label>
                         <input type="email" id="email" name="email" v-model="username">
-                        <label for="password">Password:</label>
+                        <label for="password">{{ $t("password") }}:</label>
                         <input type="password" id="password" name="password" v-model="password">
-                        <label for="password2">Confirm Password:</label>
+                        <label for="password2">{{ $t("confirmPassword") }}:</label>
                         <input type="password" id="password2" name="password2" v-model="password2">
-                        <button @click="register">Register</button>
+                        <button @click="register">{{ $t("register") }}</button>
                     </div>
                 </div>
                 <br>
-                <a @click="showLogin" href="#"
-                    v-if="!authenticated && !(panelView.match('auth'))">Login to create/modify notes</a>
-                <button @click="logout" v-else-if="authenticated">Logout</button>
                 <p v-if="errors.length">
                     <ul>
                     <li v-for="error in errors" style="color: red">{{ error }}</li>
@@ -106,6 +110,5 @@
     </div>
 
     <script src="main.js" type="module"></script>
-
 </body>
 </html>
