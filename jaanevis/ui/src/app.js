@@ -64,7 +64,7 @@ createApp({
       const initLong = 52.0
       this.map = L.map('map').setView([initLat, initLong], 5);
 
-      var southWest = L.latLng(-89.98155760646617, -180),
+      var southWest = L.latLng(-100.98155760646617, -180),
           northEast = L.latLng(89.99346179538875, 180);
       var bounds = L.latLngBounds(southWest, northEast);
 
@@ -130,7 +130,16 @@ createApp({
         params = new URLSearchParams(filters).toString();
       }
       let url = this.baseUrl + '/note/geojson?' + params;
-      const response = await fetch(url);
+      const response = await fetch(
+        url,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Language': this.$i18n.locale
+          }
+        }
+      );
       return await response.json();
     },
     createNewNote: async function () {
@@ -148,7 +157,8 @@ createApp({
         credentials: "include",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept-Language': this.$i18n.locale
         },
         body: JSON.stringify(note)
       });
@@ -162,6 +172,7 @@ createApp({
         credentials: "include",
         headers: {
           'Accept': 'application/json',
+          'Accept-Language': this.$i18n.locale
         },
       })
       .then(response => {
@@ -194,7 +205,8 @@ createApp({
         credentials: "include",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept-Language': this.$i18n.locale
         },
         body: JSON.stringify(note)
       })
@@ -323,7 +335,8 @@ createApp({
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept-Language': this.$i18n.locale
         },
         body: JSON.stringify(loginData)
       })
@@ -351,7 +364,8 @@ createApp({
         credentials: 'include',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept-Language': this.$i18n.locale
         },
       })
       .then(response => {
@@ -382,7 +396,8 @@ createApp({
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept-Language': this.$i18n.locale
         },
         body: JSON.stringify(registerData)
       })
