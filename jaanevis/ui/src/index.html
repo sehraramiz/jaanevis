@@ -62,8 +62,8 @@
                         <label for="long">{{ $t("longitude") }}:</label>
                         <input type="number" step="any" id="long" name="long" v-model="note.long">
                         <div class="btn-group">
-                            <button @click="updateNote">{{ $t("update") }}</button><button @click="deleteNote">{{ $t("delete") }}</button>
-                            <button @click="editing = !editing">{{ $t("cancelEdit") }}</button>
+                            <button @click="updateNote">{{ $t("update") }}</button><button @click="deleteNote" style="background: #d32f2f">{{ $t("delete") }}</button>
+                            <button @click="editing = !editing" style="background: #f57c00">{{ $t("cancelEdit") }}</button>
                         </div>
                     </div>
                     <div v-else>
