@@ -35,6 +35,7 @@ async def get_user(session: str = Cookie(default=None)) -> u.User:
     """dependency function to authenticate user with session"""
 
     repo = repository()
+
     auth_usecase = authenticate.AuthenticateUseCase(repo)
     auth_request = authenticate.AuthenticateRequest.build(session=session)
     auth_res = auth_usecase.execute(auth_request)

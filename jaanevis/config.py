@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     BASE_DIR = pathlib.PurePath(jaanevis.__file__).parent
     DATA_BASE_DIR = pathlib.PurePath(jaanevis.__file__).parent.parent
     CORS_ORIGINS: list[AnyHttpUrl] | str = []
+    LANGUAGE_CODE: str = "en"
 
     @validator("CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
