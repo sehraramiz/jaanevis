@@ -278,10 +278,10 @@ createApp({
         this.errors.push(urlError);
 
       if (!validLat)
-        this.errors.push('Latitude is not valid.');
+        this.errors.push(this.$t('invalidLat'));
 
       if (!validLong)
-        this.errors.push('Longitude is not valid.');
+        this.errors.push(this.$t('invalidLong'));
     },
     clearErrors: function () {
       this.errors = [];
@@ -293,30 +293,30 @@ createApp({
         return true;
 
       if (!this.username)
-        this.errors.push('Username is mandatory.');
+        this.errors.push(this.$t('requiredUsername'));
 
       if (!this.password)
-        this.errors.push('Password is mandatory.');
+        this.errors.push(this.$t('requiredPassword'));
     },
     checkRegisterForm: function (e) {
       this.errors = [];
 
       if (!this.username)
-        this.errors.push('Username is mandatory.');
+        this.errors.push(this.$t('requiredUsername'));
 
       if (!this.password)
-        this.errors.push('Password is mandatory.');
+        this.errors.push(this.$t('requiredPassword'));
 
       if (!this.password2)
-        this.errors.push('Password confirmation is mandatory.');
+        this.errors.push(this.$t('requiredConfirmPassword'));
 
       if (this.password != this.password2)
-        this.errors.push('Passwords do not match');
+        this.errors.push(this.$t('passwordsNotMatch'));
 
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       var emailValid = re.test(this.username);
       if (!emailValid)
-        this.errors.push('Invalid email address.');
+        this.errors.push(this.$t('invalidEmail'));
 
       if (this.errors.length){
         return false;

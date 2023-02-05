@@ -25,5 +25,12 @@
   "logout": "Logout",
   "register": "Register",
   "loginToCreate": "Login to create/modify notes",
-  "filters": "Filters"
+  "filters": "Filters",
+  "invalidLat": "Invalid Latitude",
+  "invalidLong": "Invalid Longitude",
+  "invalidEmail": "Invalid Email",
+  "requiredUsername": "Username field required",
+  "requiredPassword": "Password field required",
+  "requiredConfirmPassword": "Confirm password field is required",
+  "passwordsNotMatch": "Passwords do not match"
 }

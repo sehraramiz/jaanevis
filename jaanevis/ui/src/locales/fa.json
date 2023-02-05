@@ -25,5 +25,12 @@
     "logout": "خروج",
     "register": "ثبت‌نام",
     "loginToCreate": "برای ساخت یا ویرایش نوشته‌ها وارد شوید",
-    "filters": "فیلترها"
+    "filters": "فیلترها",
+    "invalidLat": "مقدار عرض جغرافیایی نامعتبر است",
+    "invalidLong": "مقدار طول جغرافیایی نامعتبر است",
+    "invalidEmail": "ایمیل نامعتبر است",
+    "requiredUsername": "نام کاربری ضروری است",
+    "requiredPassword": "کلمه عبور ضروری است",
+    "requiredConfirmPassword": "تکرار کلمه عبور ضروری است",
+    "passwordsNotMatch": "کلمه عبور با تایید کلمه عبور برابر نیست"
 }
