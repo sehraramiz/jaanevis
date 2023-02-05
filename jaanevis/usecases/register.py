@@ -35,7 +35,7 @@ class RegisterUseCase:
             user = self.repo.get_user_by_username(username=request.email)
             if user:
                 return ResponseFailure.build_resource_error(
-                    "User with this email already exists",
+                    _("User with this email already exists"),
                     code=StatusCode.user_exists,
                 )
             hashed_password = security.hash_password(request.password)

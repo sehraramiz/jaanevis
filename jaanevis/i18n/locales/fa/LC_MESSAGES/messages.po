@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-05 13:18+0330\n"
+"POT-Creation-Date: 2023-02-06 01:47+0330\n"
 "PO-Revision-Date: 2023-02-04 19:28+0330\n"
 "Last-Translator:  <mohsenbarzegar@disroot.org>\n"
 "Language-Team: Persian <translation-team-fa@lists.sourceforge.net>\n"
@@ -103,6 +103,11 @@ msgstr "نام کاربری یا رمز عبور اشتباه است"
 #: jaanevis/usecases/update_note.py:24 jaanevis/usecases/delete_note.py:23
 msgid "permission denied"
 msgstr "دسترسی غیر مجاز"
+
+#: jaanevis/usecases/register.py:38
+#, fuzzy
+msgid "User with this email already exists"
+msgstr "کاربر با این نام کاربری در سیستم موجود است"
 
 #: jaanevis/usecases/register.py:63
 msgid "Jaanevis Account Activation"
