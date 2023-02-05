@@ -51,7 +51,8 @@ createApp({
     },
     '$i18n.locale': function (newLocale){
       document.querySelector("html").setAttribute("lang", newLocale)
-    }
+    },
+    'panelView': function (){this.errors = []}
   },
   computed: {
     direction () {
