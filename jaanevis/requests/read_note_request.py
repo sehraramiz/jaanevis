@@ -12,7 +12,7 @@ class ReadNoteRequest(ValidRequestObject):
         invalid_req = InvalidRequestObject()
 
         if not code:
-            invalid_req.add_error("code", "Invalid code value")
+            invalid_req.add_error("code", _("Invalid code value"))
             return invalid_req
 
         return cls(code=code)

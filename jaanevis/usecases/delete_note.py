@@ -20,7 +20,7 @@ class DeleteNoteUseCase:
                 )
             if note.creator != request.user.username:
                 return ResponseFailure.build_parameters_error(
-                    "permission denied"
+                    _("permission denied")
                 )
             self.repo.delete_by_code(code=request.code)
             return ResponseSuccess(note)

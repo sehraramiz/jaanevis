@@ -13,10 +13,10 @@ class ActivateUserRequest(ValidRequestObject):
         invalid_req = InvalidRequestObject()
 
         if not username:
-            invalid_req.add_error("username", "Username can not be empty")
+            invalid_req.add_error("username", _("Username can not be empty"))
             return invalid_req
         if not token:
-            invalid_req.add_error("token", "Token can not be empty")
+            invalid_req.add_error("token", _("Token can not be empty"))
             return invalid_req
 
         return cls(username=username, token=token)

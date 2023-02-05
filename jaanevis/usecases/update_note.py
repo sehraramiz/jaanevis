@@ -21,7 +21,7 @@ class UpdateNoteUseCase:
                 )
             if note.creator != request.user.username:
                 return ResponseFailure.build_parameters_error(
-                    "permission denied"
+                    _("permission denied")
                 )
 
             data = request.note.dict(exclude_unset=True)

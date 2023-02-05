@@ -24,12 +24,12 @@ class LoginUseCase:
             if not user:
                 if not user:
                     return ResponseFailure.build_parameters_error(
-                        "Wrong username or password",
+                        _("Wrong username or password"),
                         code=StatusCode.invalid_username_or_password,
                     )
             if not user.is_active:
                 return ResponseFailure.build_parameters_error(
-                    "User is not active", code=StatusCode.inactive_user
+                    _("User is not active"), code=StatusCode.inactive_user
                 )
 
             password_valid = security.verify_password(
@@ -37,7 +37,7 @@ class LoginUseCase:
             )
             if not password_valid:
                 return ResponseFailure.build_parameters_error(
-                    "Wrong username or password",
+                    _("Wrong username or password"),
                     code=StatusCode.invalid_username_or_password,
                 )
 

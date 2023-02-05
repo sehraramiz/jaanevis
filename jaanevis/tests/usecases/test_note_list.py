@@ -130,7 +130,7 @@ def test_note_list_handles_bad_request() -> None:
     assert response_obj.value == {
         "type": res.ResponseFailure.PARAMETERS_ERROR,
         "code": res.StatusCode.failure,
-        "message": "filters: Is not iterable",
+        "message": "filters: Invalid filters type",
     }
 
 

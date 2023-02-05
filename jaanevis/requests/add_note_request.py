@@ -16,11 +16,11 @@ class AddNoteRequest(ValidRequestObject):
         invalid_req = InvalidRequestObject()
 
         if not isinstance(note, Note):
-            invalid_req.add_error("body", "Invalid note type")
+            invalid_req.add_error("body", _("Invalid note type"))
             return invalid_req
 
         if not user or not isinstance(user, User):
-            invalid_req.add_error("user", "Invalid user")
+            invalid_req.add_error("user", _("Invalid user"))
             return invalid_req
 
         return cls(note=note, user=user)

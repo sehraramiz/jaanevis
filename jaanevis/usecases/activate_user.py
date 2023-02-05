@@ -25,7 +25,7 @@ class ActivateUserUseCase:
             )
             if not session:
                 return ResponseFailure.build_parameters_error(
-                    "Invalid activation token",
+                    _("Invalid activation token"),
                     code=StatusCode.invalid_activation_token,
                 )
 
@@ -34,7 +34,7 @@ class ActivateUserUseCase:
                 return ResponseFailure.build_resource_error("User not found")
             if user.is_active:
                 return ResponseFailure.build_parameters_error(
-                    "User is already activated"
+                    _("User is already activated")
                 )
             updated_user = self.repo.update_user(
                 obj=user, data={"is_active": True}

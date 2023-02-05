@@ -26,7 +26,7 @@ class AuthenticateUseCase:
             )
             if not session:
                 return ResponseFailure.build_resource_error(
-                    "Session not found", code=StatusCode.invalid_session
+                    _("Session not found"), code=StatusCode.invalid_session
                 )
 
             user = self.repo.get_user_by_username(username=session.username)
@@ -35,7 +35,7 @@ class AuthenticateUseCase:
 
             if not user.is_active:
                 return ResponseFailure.build_parameters_error(
-                    "User is not active", code=StatusCode.inactive_user
+                    _("User is not active"), code=StatusCode.inactive_user
                 )
 
             if session.expire_time < datetime.now().timestamp():
@@ -43,7 +43,7 @@ class AuthenticateUseCase:
                     session_id=str(session.session_id)
                 )
                 return ResponseFailure.build_parameters_error(
-                    "Session expired", code=StatusCode.expired_session
+                    _("Session expired"), code=StatusCode.expired_session
                 )
 
             return ResponseSuccess(user)

@@ -25,7 +25,7 @@ class NoteListRequest(ValidRequestObject):
 
         if "filters" in data:
             if not isinstance(data["filters"], Mapping):
-                invalid_req.add_error("filters", "Is not iterable")
+                invalid_req.add_error("filters", _("Invalid filters type"))
                 return invalid_req
 
             filters_copy = data["filters"].copy()

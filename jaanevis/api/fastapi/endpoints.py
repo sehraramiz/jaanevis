@@ -264,20 +264,21 @@ def activate(
     success_html = """
     <html>
         <body>
-            <p>user successfuly activated.</p>
+            <p>{}.</p>
         </body>
     </html>
-    """
+    """.format(_("user successfuly activated"))
     if response:
         return HTMLResponse(content=success_html, status_code=200)
 
     failure_html = """
     <html>
         <body>
-            <p>activation failure.<br>{}</p>
+            <p>{}.<br>{}</p>
         </body>
     </html>
     """.format(
+        _("activation failure"),
         response.value["message"]
     )
     return HTMLResponse(content=failure_html, status_code=200)

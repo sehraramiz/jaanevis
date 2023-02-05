@@ -60,7 +60,7 @@ class RegisterUseCase:
             mail_text = (
                 f"visit this link to activate your account {activation_url}"
             )
-            mail_subject = "Jaanevis Account Activation"
+            mail_subject = _("Jaanevis Account Activation")
             self.email_handler.send_email(
                 email_to=request.email, text=mail_text, subject=mail_subject
             )

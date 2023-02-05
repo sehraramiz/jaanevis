@@ -18,12 +18,12 @@ class UpdateNoteRequest(ValidRequestObject):
         invalid_req = InvalidRequestObject()
 
         if not isinstance(note, NoteUpdateApi):
-            invalid_req.add_error("body", "Invalid note type")
+            invalid_req.add_error("body", _("Invalid note type"))
             return invalid_req
         if not code:
-            invalid_req.add_error("code", "Invalid code")
+            invalid_req.add_error("code", _("Invalid code"))
             return invalid_req
         if not user:
-            invalid_req.add_error("user", "Invalid user")
+            invalid_req.add_error("user", _("Invalid user"))
             return invalid_req
         return cls(code=code, note=note, user=user)

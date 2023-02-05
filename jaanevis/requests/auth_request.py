@@ -16,7 +16,7 @@ class AuthenticateRequest(ValidRequestObject):
             invalid_req.error_code = res.StatusCode.invalid_session
             invalid_req.add_error(
                 "session",
-                "Invalid session",
+                _("Invalid session"),
                 code=res.StatusCode.invalid_session,
             )
             return invalid_req

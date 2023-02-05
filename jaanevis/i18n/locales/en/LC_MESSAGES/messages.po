@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-05 02:45+0330\n"
+"POT-Creation-Date: 2023-02-05 13:18+0330\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,94 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: jaanevis/i18n/__init__.py:42
+#: jaanevis/i18n/__init__.py:44
 msgid "test"
 msgstr "test2"
+
+#: jaanevis/api/fastapi/endpoints.py:270
+msgid "user successfuly activated"
+msgstr ""
+
+#: jaanevis/api/fastapi/endpoints.py:281
+msgid "activation failure"
+msgstr ""
+
+#: jaanevis/requests/delete_note_request.py:17
+#: jaanevis/requests/read_note_request.py:15
+msgid "Invalid code value"
+msgstr ""
+
+#: jaanevis/requests/delete_note_request.py:21
+#: jaanevis/requests/update_note_request.py:27
+#: jaanevis/requests/add_note_request.py:23
+msgid "Invalid user"
+msgstr ""
+
+#: jaanevis/requests/update_note_request.py:21
+#: jaanevis/requests/add_note_request.py:19
+msgid "Invalid note type"
+msgstr ""
+
+#: jaanevis/requests/update_note_request.py:24
+msgid "Invalid code"
+msgstr ""
+
+#: jaanevis/requests/activate_user_request.py:16
+msgid "Username can not be empty"
+msgstr ""
+
+#: jaanevis/requests/activate_user_request.py:19
+msgid "Token can not be empty"
+msgstr ""
+
+#: jaanevis/requests/auth_request.py:19
+msgid "Invalid session"
+msgstr ""
+
+#: jaanevis/requests/register_request.py:21
+msgid "Invalid email"
+msgstr ""
+
+#: jaanevis/requests/register_request.py:25
+msgid "Password can not be empty"
+msgstr ""
+
+#: jaanevis/requests/register_request.py:30
+msgid "minimum password length must be 8 characters"
+msgstr ""
+
+#: jaanevis/requests/note_list_request.py:28
+msgid "Invalid filters type"
+msgstr ""
+
+#: jaanevis/usecases/activate_user.py:28
+msgid "Invalid activation token"
+msgstr ""
+
+#: jaanevis/usecases/activate_user.py:37
+msgid "User is already activated"
+msgstr ""
+
+#: jaanevis/usecases/authenticate.py:29
+msgid "Session not found"
+msgstr ""
+
+#: jaanevis/usecases/authenticate.py:38 jaanevis/usecases/login.py:32
+msgid "User is not active"
+msgstr ""
+
+#: jaanevis/usecases/authenticate.py:46
+msgid "Session expired"
+msgstr ""
+
+#: jaanevis/usecases/login.py:27 jaanevis/usecases/login.py:40
+msgid "Wrong username or password"
+msgstr ""
+
+#: jaanevis/usecases/update_note.py:24 jaanevis/usecases/delete_note.py:23
+msgid "permission denied"
+msgstr ""
+
+#: jaanevis/usecases/register.py:63
+msgid "Jaanevis Account Activation"
+msgstr ""

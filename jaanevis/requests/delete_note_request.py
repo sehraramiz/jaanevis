@@ -14,11 +14,11 @@ class DeleteNoteRequest(ValidRequestObject):
         invalid_req = InvalidRequestObject()
 
         if not code:
-            invalid_req.add_error("code", "Invalid code value")
+            invalid_req.add_error("code", _("Invalid code value"))
             return invalid_req
 
         if not user:
-            invalid_req.add_error("user", "Invalid user")
+            invalid_req.add_error("user", _("Invalid user"))
             return invalid_req
 
         return cls(code=code, user=user)
