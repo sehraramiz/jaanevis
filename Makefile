@@ -11,6 +11,9 @@ build-api:
 build-ui: install-ui
 	npm run build --prefix jaanevis/ui
 
+build-surge: install-ui
+	npm run build-surge --prefix jaanevis/ui
+
 install-ui:
 	npm install --prefix jaanevis/ui
 
