@@ -1,6 +1,6 @@
 Some related notes on some related locations around the world
 
-این پروژه از طراحی و توضیحات [این کتاب](Clean%20Architectures%20in%20Python) برای تست و تمرین معماری تمیز الگو گرفته.
+این پروژه از طراحی و توضیحات [این کتاب](https://leanpub.com/clean-architectures-in-python) برای تست و تمرین معماری تمیز الگو گرفته.
 
 همه‌ی اجزا مبتنی بر کتاب اصلی معماری تمیز نیست یه سری چیزها کم و زیاد هست. ولی اصولا [اجزای مهم معماری تمیز](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) مثلا رعایت مرزبندی‌ها رو سعی میکنم به هم نزنم.
 
