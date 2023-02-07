@@ -63,7 +63,11 @@ createApp({
     initMap: function () {
       const initLat = 32.0
       const initLong = 52.0
-      this.map = L.map('map').setView([initLat, initLong], 5);
+      this.map = L.map(
+        'map', {
+          zoomControl: false,
+        }
+      ).setView([initLat, initLong], 5);
 
       var southWest = L.latLng(-100.98155760646617, -180),
           northEast = L.latLng(89.99346179538875, 180);
@@ -74,6 +78,9 @@ createApp({
           maxZoom: 8,
           minZoom: 2,
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(this.map);
+      L.control.zoom({
+          position: 'topright'
       }).addTo(this.map);
       this.map.on('click', this.showNoteCreateForm);
       this.map.setMaxBounds(bounds);
@@ -454,6 +461,10 @@ createApp({
       var shortText = text.slice(0, maxLength);
       return shortText + ((shortText.length == text.length) ? "" : "...")
     },
+    togglePanel: function () {
+      const panel = document.querySelector('.panel');
+      panel.classList.toggle('panel_small');
+    }
   },
   mounted() {
     this.$cookies = window.$cookies;

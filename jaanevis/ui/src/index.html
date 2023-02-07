@@ -19,7 +19,9 @@
     <div id="app">
         <div id="main">
             <div id="map"></div>
-            <div id="panel" :dir="direction">
+            <div id="panel" class="panel" :dir="direction">
+                <router-view></router-view>
+                <button id="toggle" @click="togglePanel"><</button>
                 <select v-model="$i18n.locale">
                     <option v-for="(lang, i) in supportedLocales" :key="`Lang${i}`" :value="lang">
                     {{ lang }}
@@ -29,7 +31,6 @@
                     v-if="!authenticated && !(panelView.match('auth'))">{{ $t("loginToCreate") }}</a>
                 <button @click="logout" v-else-if="authenticated">{{ $t("logout") }}</button>
                 <hr>
-                <router-view></router-view>
                 <div>
                     <p v-if="Object.keys(filters).length !== 0">{{ $t("filters") }}:</p>
                     <div v-for="(value, filter) in filters">
