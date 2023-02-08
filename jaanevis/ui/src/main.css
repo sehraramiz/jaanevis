@@ -85,7 +85,27 @@ html, body{
 }
 
 @media (max-width: 800px) {
-  #map, #panel {
-    flex: 100%;
+  #main {
+    position: relative;
+    overflow: hidden;
+  }
+  #map {
+    position: relative;
+  }
+  .panel {
+    position: absolute;
+    bottom: 0;
+    top: unset;
+    height: auto;
+    width: 100vw;
+  }
+  #toggle {
+    border-radius: 50px 50px 0px 0px;
+    position: absolute;
+    top: -44px;
+    right: 15%;
+  }
+  .panel_small {
+    height: 0;
   }
 }

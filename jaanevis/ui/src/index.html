@@ -21,7 +21,7 @@
             <div id="map"></div>
             <div id="panel" class="panel" :dir="direction">
                 <router-view></router-view>
-                <button id="toggle" @click="togglePanel"><</button>
+                <button id="toggle" @click="togglePanel">X</button>
                 <select v-model="$i18n.locale">
                     <option v-for="(lang, i) in supportedLocales" :key="`Lang${i}`" :value="lang">
                     {{ lang }}
