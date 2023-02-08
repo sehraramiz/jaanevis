@@ -74,7 +74,7 @@ createApp({
       var bounds = L.latLngBounds(southWest, northEast);
 
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxBoundsViscosity: 1.0,
+          //maxBoundsViscosity: 1.0,
           maxZoom: 8,
           minZoom: 2,
           attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -83,7 +83,7 @@ createApp({
           position: 'topright'
       }).addTo(this.map);
       this.map.on('click', this.showNoteCreateForm);
-      this.map.setMaxBounds(bounds);
+      //this.map.setMaxBounds(bounds);
     },
     onEachFeature: function (feature, layer) {
       var creator = feature.properties.creator;
