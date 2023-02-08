@@ -234,6 +234,7 @@ createApp({
     },
     showNoteDetailsForm: function (e) {
       this.panelView = 'details';
+      this.openPanel();
       var properties = e.target.feature.properties;
       this.note = {
         code: properties.code,
@@ -252,6 +253,7 @@ createApp({
       this.showPointer(lat, long);
 
       this.panelView = 'create';
+      this.openPanel();
       this.note = {
         code: "",
         creator: "",
@@ -464,6 +466,11 @@ createApp({
     togglePanel: function () {
       const panel = document.querySelector('.panel');
       panel.classList.toggle('panel_small');
+    },
+    openPanel: function () {
+      const panel = document.querySelector('.panel');
+      if (panel.classList.contains("panel_small"))
+        panel.classList.toggle('panel_small');
     }
   },
   mounted() {
