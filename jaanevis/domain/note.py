@@ -1,12 +1,20 @@
 import re
 import uuid
 from dataclasses import asdict, field
+from datetime import datetime
 from typing import Any, Optional
 
 from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses
+from pytz import timezone
 
+from jaanevis.config import settings
 from jaanevis.domain.geojson import GeoJsonFeature
 from jaanevis.utils import geo
+
+
+def datetime_with_tz():
+    TZ = timezone(settings.TZ)
+    return datetime.now(TZ)
 
 
 @dataclasses.dataclass
@@ -21,6 +29,7 @@ class Note:
     tags: list[str] = field(default_factory=list)
     code: str | UUID4 = field(default_factory=uuid.uuid4)
     creator: Optional[str] = None
+    created: datetime = field(default_factory=datetime_with_tz)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Note":
@@ -30,6 +39,7 @@ class Note:
         data = asdict(self)
         data["code"] = str(self.code)
         data["url"] = str(self.url)
+        data["created"] = self.created.isoformat()
         return data
 
     def __post_init__(self):

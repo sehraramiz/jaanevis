@@ -13,6 +13,7 @@ httpx = "*"
 argon2-cffi = "*"
 reverse_geocode = "*"
 emails = "*"
+pytz = "^2022.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest="*"

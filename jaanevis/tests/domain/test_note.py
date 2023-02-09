@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from jaanevis.domain import note as n
 
@@ -68,7 +69,9 @@ def test_note_model_from_dict() -> None:
 
 
 def test_note_model_to_dict() -> None:
+    created = datetime.now()
     note = n.Note(
+        created=created,
         creator="default",
         url="http://example.com",
         text="some text",
@@ -77,6 +80,7 @@ def test_note_model_to_dict() -> None:
     )
 
     assert note.to_dict() == {
+        "created": created.isoformat(),
         "code": str(note.code),
         "creator": "default",
         "url": "http://example.com",
@@ -89,7 +93,9 @@ def test_note_model_to_dict() -> None:
 
 
 def test_note_model_to_dict_with_tags() -> None:
+    created = datetime.now()
     note = n.Note(
+        created=created,
         creator="default",
         url="http://example.com",
         text="some #text",
@@ -98,6 +104,7 @@ def test_note_model_to_dict_with_tags() -> None:
     )
 
     assert note.to_dict() == {
+        "created": created.isoformat(),
         "code": str(note.code),
         "creator": "default",
         "url": "http://example.com",
@@ -124,3 +131,23 @@ def test_note_geojson_properties_init() -> None:
     assert note_properties.url == "http://exp.com"
     assert note_properties.country == COUNTRY
     assert note_properties.text == "some text"
+
+
+def test_note_model_init_with_created() -> None:
+    created = datetime.now()
+    note = n.Note(
+        created=created,
+        creator="default",
+        url="http://example.com",
+        text="",
+        lat=LAT,
+        long=LONG,
+    )
+
+    assert str(note.code)
+    assert note.created == created
+    assert note.creator == "default"
+    assert note.url == "http://example.com"
+    assert note.text == ""
+    assert note.lat == LAT
+    assert note.long == LONG

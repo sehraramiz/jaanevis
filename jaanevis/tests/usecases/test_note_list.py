@@ -1,7 +1,9 @@
 import uuid
+from datetime import datetime
 from unittest import mock
 
 import pytest
+from pytz import timezone
 
 from jaanevis.domain import geojson as geo
 from jaanevis.domain import note as n
@@ -12,9 +14,11 @@ from jaanevis.usecases import note_list as uc
 DEFAULT_CREATOR = "default"
 LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
+CREATED = datetime.now(timezone("Asia/Tehran"))
 
 notes = [
     n.Note(
+        created=CREATED,
         code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/1",
@@ -23,6 +27,7 @@ notes = [
         long=LONG,
     ),
     n.Note(
+        created=CREATED,
         code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/2",
@@ -31,6 +36,7 @@ notes = [
         long=LONG + 1,
     ),
     n.Note(
+        created=CREATED,
         code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/3",
@@ -39,6 +45,7 @@ notes = [
         long=LONG + 2,
     ),
     n.Note(
+        created=CREATED,
         code=str(uuid.uuid4()),
         creator=DEFAULT_CREATOR,
         url="https://example.com/4",

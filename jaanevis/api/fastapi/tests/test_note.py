@@ -1,7 +1,9 @@
 import uuid
+from datetime import datetime
 from unittest import mock
 
 from fastapi.testclient import TestClient
+from pytz import timezone
 
 from jaanevis.api.fastapi.main import app
 from jaanevis.config import settings
@@ -11,6 +13,7 @@ from jaanevis.responses import response as res
 LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
 PREFIX = settings.API_V1_STR
+CREATED = datetime.now(timezone("Asia/Tehran"))
 client = TestClient(app)
 note = NoteCreateApi(
     url="http://example.com",
@@ -20,6 +23,7 @@ note = NoteCreateApi(
 )
 
 note_complete = Note(
+    created=CREATED,
     code=str(uuid.uuid4()),
     creator="default",
     text="some text",
@@ -166,6 +170,7 @@ def test_delete_note(mock_usecase, auth_usecase) -> None:
 @mock.patch("jaanevis.usecases.add_note.AddNoteUseCase")
 def test_create_note(mock_usecase, auth_usecase) -> None:
     new_note = note.dict()
+    new_note["created"] = datetime.now().isoformat()
     new_note["creator"] = "username"
     new_note.pop("code", None)
     mock_usecase().execute.return_value = res.ResponseSuccess(new_note)

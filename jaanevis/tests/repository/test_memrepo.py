@@ -5,6 +5,7 @@ from typing import Any
 from unittest import mock
 
 import pytest
+from pytz import timezone
 
 from jaanevis.config import settings
 from jaanevis.domain import note as n
@@ -17,6 +18,7 @@ uuid_session = "554f8c37-b3a1-4846-a1b6-02cc4d158646"
 LAT, LONG = 30.0, 50.0
 COUNTRY = "IR"
 DB_PATH = settings.DATA_BASE_DIR / "data/db.json"
+CREATED = datetime.now(timezone("Asia/Tehran"))
 
 
 @pytest.fixture
@@ -24,6 +26,7 @@ def note_dicts() -> dict[str, list[Any]]:
     return {
         "notes": [
             {
+                "created": str(CREATED),
                 "code": str(uuid.uuid4()),
                 "creator": "default",
                 "url": "http://example.com/1",
@@ -33,6 +36,7 @@ def note_dicts() -> dict[str, list[Any]]:
                 "long": LONG,
             },
             {
+                "created": str(CREATED),
                 "code": str(uuid.uuid4()),
                 "creator": "default2",
                 "url": "http://example.com/2",
@@ -199,7 +203,10 @@ def test_repository_update(note_dicts) -> None:
         "long": notes[0].long,
     }
     new_note = n.Note(
-        code=notes[0].code, creator=notes[0].creator, **update_data
+        created=CREATED,
+        code=notes[0].code,
+        creator=notes[0].creator,
+        **update_data
     )
 
     updated_note = repo.update(obj=notes[0], data=update_data)

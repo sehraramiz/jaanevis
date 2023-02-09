@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest import mock
 
 import pytest
@@ -8,12 +9,18 @@ from jaanevis.requests import add_note_request as req
 from jaanevis.responses import response as res
 from jaanevis.usecases import add_note as uc
 
-DEFAULT_CREATOR = "default"
+CREATED = datetime.strptime("2023-01-01 00:00:01", "%Y-%m-%d %H:%M:%S")
 
 
 @pytest.fixture
 def new_note() -> n.Note:
-    return n.Note(url="http://example.com", text="some text", lat=1, long=1)
+    return n.Note(
+        created=CREATED,
+        url="http://example.com",
+        text="some text",
+        lat=1,
+        long=1,
+    )
 
 
 def test_add_note(new_note: n.Note) -> None:
@@ -25,6 +32,7 @@ def test_add_note(new_note: n.Note) -> None:
 
     response = add_note_usecase.execute(add_note_request)
     expected_note = n.Note(
+        created=CREATED,
         code=new_note.code,
         url=new_note.url,
         lat=new_note.lat,
