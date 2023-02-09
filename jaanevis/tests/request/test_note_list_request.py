@@ -98,3 +98,11 @@ def test_build_note_list_request_rejected_filters(key) -> None:
     assert request.has_errors()
     assert request.errors[0]["parameter"] == "filters"
     assert bool(request) is False
+
+
+def test_build_note_list_request_from_dict_with_limit_skip() -> None:
+    request = req.NoteListRequest.from_dict({"limit": 10, "skip": 5})
+
+    assert bool(request) is True
+    assert request.limit == 10
+    assert request.skip == 5

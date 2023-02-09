@@ -82,8 +82,36 @@ def test_note_list_without_parameters(domain_notes) -> None:
     response = note_list_usecase.execute(request)
 
     assert bool(response) is True
-    repo.list.assert_called_with(filters=None)
+    repo.list.assert_called_with(filters=None, limit=None, skip=0)
     assert response.value == domain_notes
+
+
+def test_note_list_without_parameters_with_limit(domain_notes) -> None:
+    repo = mock.Mock()
+    repo.list.return_value = domain_notes[:2]
+
+    note_list_usecase = uc.NoteListUseCase(repo)
+    request = req.NoteListRequest.from_dict({"limit": 2, "skip": 0})
+
+    response = note_list_usecase.execute(request)
+
+    assert bool(response) is True
+    repo.list.assert_called_with(filters=None, limit=2, skip=0)
+    assert response.value == domain_notes[:2]
+
+
+def test_note_list_without_parameters_with_skip(domain_notes) -> None:
+    repo = mock.Mock()
+    repo.list.return_value = domain_notes[1:]
+
+    note_list_usecase = uc.NoteListUseCase(repo)
+    request = req.NoteListRequest.from_dict({"limit": 100, "skip": 1})
+
+    response = note_list_usecase.execute(request)
+
+    assert bool(response) is True
+    repo.list.assert_called_with(filters=None, limit=100, skip=1)
+    assert response.value == domain_notes[1:]
 
 
 def test_note_list_with_filters(domain_notes) -> None:
@@ -97,7 +125,7 @@ def test_note_list_with_filters(domain_notes) -> None:
     response_obj = note_list_usecase.execute(request_obj)
 
     assert bool(response_obj) is True
-    repo.list.assert_called_with(filters=qry_filters)
+    repo.list.assert_called_with(filters=qry_filters, limit=None, skip=0)
     assert response_obj.value == domain_notes
 
 
@@ -144,5 +172,21 @@ def test_geojson_note_list(domain_notes, domain_notes_geojson) -> None:
     response = geojson_note_list_usecase.execute(request)
 
     assert bool(response) is True
-    repo.list.assert_called_with(filters=None)
+    repo.list.assert_called_with(filters=None, limit=None, skip=0)
     assert response.value == domain_notes_geojson
+
+
+def test_geojson_note_list_with_limit_skip(
+    domain_notes, domain_notes_geojson
+) -> None:
+    repo = mock.Mock()
+    repo.list.return_value = domain_notes[1:3]
+
+    geojson_note_list_usecase = uc.GeoJsonNoteListUseCase(repo)
+    request = req.NoteListRequest.from_dict({"limit": 2, "skip": 1})
+
+    response = geojson_note_list_usecase.execute(request)
+
+    assert bool(response) is True
+    repo.list.assert_called_with(filters=None, limit=2, skip=1)
+    assert response.value == domain_notes_geojson[1:3]

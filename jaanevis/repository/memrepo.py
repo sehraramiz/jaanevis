@@ -31,11 +31,15 @@ class MemRepo:
         with open(self.db_path, "w") as db:
             db.write(json.dumps(self.data))
 
-    def list(self, filters: dict = None) -> list[n.Note]:
+    def list(
+        self, filters: dict = None, limit: int = None, skip: int = 0
+    ) -> list[n.Note]:
         result = [n.Note.from_dict(d) for d in self.data["notes"]]
 
         if filters is None:
-            return result
+            if limit:
+                return result[skip : limit + skip]
+            return result[skip:]
 
         if "code__eq" in filters:
             result = [r for r in result if str(r.code) == filters["code__eq"]]
@@ -62,7 +66,9 @@ class MemRepo:
         if "long__eq" in filters:
             result = [r for r in result if r.long == filters["long__eq"]]
 
-        return result
+        if limit:
+            return result[skip : limit + skip]
+        return result[skip:]
 
     def add(self, note: n.Note) -> None:
         self.data["notes"].append(note.to_dict())

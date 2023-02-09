@@ -9,7 +9,9 @@ from jaanevis.repository import memrepo as mr
 class Repository(Protocol):
     """base data repository protocol"""
 
-    def list(self, filters: Optional[dict] = None) -> list[n.Note]:
+    def list(
+        self, filters: Optional[dict] = None, limit: int = None, skip: int = 0
+    ) -> list[n.Note]:
         ...
 
     def add(self, note: n.Note) -> None:

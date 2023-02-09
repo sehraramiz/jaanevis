@@ -16,8 +16,15 @@ class NoteListRequest(ValidRequestObject):
         "tag__eq",
     ]
 
-    def __init__(self, filters: Optional[dict[str, Any]] = None) -> None:
+    def __init__(
+        self,
+        filters: Optional[dict[str, Any]] = None,
+        limit: int = None,
+        skip: int = 0,
+    ) -> None:
         self.filters = filters
+        self.limit = limit
+        self.skip = skip
 
     @classmethod
     def from_dict(cls, data: dict) -> RequestObject:
@@ -41,4 +48,8 @@ class NoteListRequest(ValidRequestObject):
         if invalid_req.has_errors():
             return invalid_req
 
-        return cls(filters=data.get("filters", None))
+        return cls(
+            filters=data.get("filters", None),
+            limit=data.get("limit"),
+            skip=data.get("skip", 0),
+        )

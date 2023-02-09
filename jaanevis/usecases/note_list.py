@@ -12,7 +12,9 @@ class NoteListUseCase:
         if not request:
             return ResponseFailure.build_from_invalid_request_object(request)
         try:
-            notes = self.repo.list(filters=request.filters)
+            notes = self.repo.list(
+                filters=request.filters, limit=request.limit, skip=request.skip
+            )
             return ResponseSuccess(notes)
         except Exception as exc:
             return ResponseFailure.build_system_error(
@@ -28,7 +30,9 @@ class GeoJsonNoteListUseCase:
 
     def execute(self, request: NoteListRequest) -> ResponseObject:
         note_list_usecase = NoteListUseCase(self.repo)
-        request_obj = NoteListRequest(filters=request.filters)
+        request_obj = NoteListRequest(
+            filters=request.filters, limit=request.limit, skip=request.skip
+        )
         response = note_list_usecase.execute(request_obj)
 
         if not response:

@@ -69,6 +69,15 @@ def test_repository_list_without_parameters(note_dicts) -> None:
     assert repo.list() == notes
 
 
+def test_repository_list_with_limit_skip(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    result = repo.list(limit=1, skip=1)
+
+    assert result == notes[1:2]
+
+
 def test_repository_list_with_code_equal_filter(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 

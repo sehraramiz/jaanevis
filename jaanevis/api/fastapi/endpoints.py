@@ -56,6 +56,8 @@ def read_notes(
     creator: Optional[str] = None,
     country: Optional[str] = None,
     tag: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
     repo: Repository = Depends(get_repository),
 ) -> list[n.Note]:
     """read notes"""
@@ -67,7 +69,9 @@ def read_notes(
                 "creator__eq": creator,
                 "country__eq": country,
                 "tag__eq": tag,
-            }
+            },
+            "limit": limit,
+            "skip": skip,
         }
     )
     response = note_list_usecase.execute(request_obj)
@@ -80,6 +84,8 @@ def read_notes_geojson(
     creator: Optional[str] = None,
     country: Optional[str] = None,
     tag: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
     repo: Repository = Depends(get_repository),
 ) -> list[n.NoteGeoJsonFeature]:
     """read notes as geojson feature objects"""
@@ -91,7 +97,9 @@ def read_notes_geojson(
                 "creator__eq": creator,
                 "country__eq": country,
                 "tag__eq": tag,
-            }
+            },
+            "skip": skip,
+            "limit": limit,
         }
     )
     response = note_list_usecase.execute(request_obj)
@@ -267,7 +275,9 @@ def activate(
             <p>{}.</p>
         </body>
     </html>
-    """.format(_("user successfuly activated"))
+    """.format(
+        _("user successfuly activated")
+    )
     if response:
         return HTMLResponse(content=success_html, status_code=200)
 
@@ -278,7 +288,6 @@ def activate(
         </body>
     </html>
     """.format(
-        _("activation failure"),
-        response.value["message"]
+        _("activation failure"), response.value["message"]
     )
     return HTMLResponse(content=failure_html, status_code=200)

@@ -55,7 +55,9 @@ def test_read_notes_with_creator_filter(mock_usecase, mock_request) -> None:
                 "creator__eq": creator,
                 "country__eq": None,
                 "tag__eq": None,
-            }
+            },
+            "limit": 100,
+            "skip": 0,
         }
     )
     mock_usecase().execute.assert_called()
@@ -77,7 +79,9 @@ def test_read_notes_with_country_filter(mock_usecase, mock_request) -> None:
                 "country__eq": country,
                 "creator__eq": None,
                 "tag__eq": None,
-            }
+            },
+            "limit": 100,
+            "skip": 0,
         }
     )
     mock_usecase().execute.assert_called()
@@ -99,12 +103,36 @@ def test_read_notes_with_tag_filter(mock_usecase, mock_request) -> None:
                 "tag__eq": tag,
                 "country__eq": None,
                 "creator__eq": None,
-            }
+            },
+            "limit": 100,
+            "skip": 0,
         }
     )
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
     assert response.json() == [note_complete.to_dict()]
+
+
+@mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
+@mock.patch("jaanevis.usecases.note_list.NoteListUseCase")
+def test_read_notes_with_limit_skip(mock_usecase, mock_request) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
+
+    response = client.get(PREFIX + "/note?limit=10&skip=5")
+
+    mock_request.from_dict.assert_called_with(
+        data={
+            "filters": {
+                "tag__eq": None,
+                "country__eq": None,
+                "creator__eq": None,
+            },
+            "limit": 10,
+            "skip": 5,
+        }
+    )
+    mock_usecase().execute.assert_called()
+    assert response.status_code == 200
 
 
 @mock.patch("jaanevis.usecases.read_note.ReadNoteUseCase")
@@ -228,7 +256,9 @@ def test_read_notes_geojson_data_with_creator_filter(
                 "creator__eq": creator,
                 "country__eq": None,
                 "tag__eq": None,
-            }
+            },
+            "limit": 100,
+            "skip": 0,
         }
     )
 
@@ -259,7 +289,9 @@ def test_read_notes_geojson_data_with_country_filter(
                 "country__eq": COUNTRY,
                 "creator__eq": None,
                 "tag__eq": None,
-            }
+            },
+            "limit": 100,
+            "skip": 0,
         }
     )
 
@@ -290,7 +322,33 @@ def test_read_notes_geojson_data_with_tag_filter(
                 "tag__eq": "text",
                 "country__eq": None,
                 "creator__eq": None,
-            }
+            },
+            "limit": 100,
+            "skip": 0,
+        }
+    )
+
+
+@mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
+@mock.patch("jaanevis.usecases.note_list.NoteListUseCase")
+def test_read_notes_geojson_data_with_limit_skip(
+    mock_usecase, mock_request
+) -> None:
+    mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
+
+    response = client.get(PREFIX + "/note/geojson?limit=10&skip=5")
+
+    assert response.status_code == 200
+    mock_usecase().execute.assert_called()
+    mock_request.from_dict.assert_called_with(
+        data={
+            "filters": {
+                "tag__eq": None,
+                "country__eq": None,
+                "creator__eq": None,
+            },
+            "limit": 10,
+            "skip": 5,
         }
     )
 
