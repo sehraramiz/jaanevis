@@ -28,8 +28,9 @@
                   </option>
                 </select>
                 &nbsp;<a @click="showLogin" href="#"
-                    v-if="!authenticated && !(panelView.match('auth'))">{{ $t("loginToCreate") }}</a>
+                    v-if="!authenticated && !(panelView.match('auth'))">{{ $t("login") }}</a>
                 <button @click="logout" v-else-if="authenticated">{{ $t("logout") }}</button>
+                &nbsp;<a @click="showRegister" v-else href="#">{{ $t("register") }}</a>
                 <hr>
                 <div>
                     <p v-if="Object.keys(filters).length !== 0">{{ $t("filters") }}:</p>
@@ -86,7 +87,6 @@
                         <label for="password">{{ $t("password") }}:</label>
                         <input type="password" id="password" name="password" v-model="password">
                         <button @click="login">{{ $t("login") }}</button>
-                        <a @click="showRegister" href="#">{{ $t("register") }}</a>
                     </div>
                 </div>
                 <div id="register" v-if="panelView == 'register'" >

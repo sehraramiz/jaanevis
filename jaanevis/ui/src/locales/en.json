@@ -24,7 +24,6 @@
   "login": "Login",
   "logout": "Logout",
   "register": "Register",
-  "loginToCreate": "Login to create/modify notes",
   "filters": "Filters",
   "invalidLat": "Invalid Latitude",
   "invalidLong": "Invalid Longitude",
