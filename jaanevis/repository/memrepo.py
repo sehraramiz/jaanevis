@@ -37,9 +37,10 @@ class MemRepo:
         result = [n.Note.from_dict(d) for d in self.data["notes"]]
 
         if filters is None:
+            sorted_notes = sorted(result, key=lambda n: n.created)[::-1]
             if limit:
-                return result[skip : limit + skip]
-            return result[skip:]
+                return sorted_notes[skip: limit + skip]
+            return sorted_notes[skip:]
 
         if "code__eq" in filters:
             result = [r for r in result if str(r.code) == filters["code__eq"]]
@@ -66,9 +67,10 @@ class MemRepo:
         if "long__eq" in filters:
             result = [r for r in result if r.long == filters["long__eq"]]
 
+        sorted_notes = sorted(result, key=lambda n: n.created)[::-1]
         if limit:
-            return result[skip : limit + skip]
-        return result[skip:]
+            return sorted_notes[skip : limit + skip]
+        return sorted_notes[skip:]
 
     def add(self, note: n.Note) -> None:
         self.data["notes"].append(note.to_dict())

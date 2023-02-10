@@ -36,7 +36,7 @@ def note_dicts() -> dict[str, list[Any]]:
                 "long": LONG,
             },
             {
-                "created": str(CREATED),
+                "created": str(CREATED + timedelta(days=1)),
                 "code": str(uuid.uuid4()),
                 "creator": "default2",
                 "url": "http://example.com/2",
@@ -69,17 +69,30 @@ def test_repository_list_without_parameters(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
     notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    sorted_notes = sorted(notes, key=lambda n: n.created)[::-1]
 
-    assert repo.list() == notes
+    assert repo.list() == sorted_notes
 
 
 def test_repository_list_with_limit_skip(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
 
     notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    sorted_notes = sorted(notes, key=lambda n: n.created)[::-1]
     result = repo.list(limit=1, skip=1)
 
-    assert result == notes[1:2]
+    assert result == sorted_notes[1:2]
+
+
+def test_repository_list_default_sort_by_created(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    notes = [n.Note.from_dict(data) for data in note_dicts["notes"]]
+    sorted_notes = sorted(notes, key=lambda n: n.created)[::-1]
+
+    result = repo.list()
+
+    assert result == sorted_notes
 
 
 def test_repository_list_with_code_equal_filter(note_dicts) -> None:
