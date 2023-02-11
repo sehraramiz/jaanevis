@@ -2,6 +2,8 @@ const { createApp } = Vue;
 import './main.css';
 import fa from "./locales/fa.json";
 import en from "./locales/en.json";
+import NoteItem from './components/NoteItem.js'
+
 
 var routes = [];
 
@@ -35,7 +37,6 @@ createApp({
       },
       errors: [],
       authenticated: false,
-      editing: false,
       authUser: {username: ""},
       filters: {},
       supportedLocales: process.env.SUPPORTED_LOCALES.split(",")
@@ -58,6 +59,9 @@ createApp({
     direction () {
       return this.$i18n.locale !== 'fa' ? 'ltr' : 'rtl'
     }
+  },
+  components: {
+    NoteItem
   },
   methods: {
     initMap: function () {
@@ -454,10 +458,6 @@ createApp({
         path: this.$route.path,
         query: this.filters
       });
-    },
-    hashtagText: function (text) {
-      var repl = text.replace(/#([^\d&%$-]\S{2,49})/g, '<a href="#/notes?tag=$1">#$1</a>');
-      return repl;
     },
     urlText: function (text, maxLength = 50) {
       var shortText = text.slice(0, maxLength);
