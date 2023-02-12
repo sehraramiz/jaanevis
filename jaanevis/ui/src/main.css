@@ -25,6 +25,7 @@ html, body{
 
 .panel {
   position: relative;
+  padding: 15px;
   background: #ddd;
   top: 0;
   right: 0;
@@ -35,7 +36,11 @@ html, body{
 }
 
 .panel_small {
-  width: 0;
+  width: 5px;
+}
+
+.panel_small .panel-content {
+  display: none;
 }
 
 #toggle {
@@ -98,7 +103,7 @@ html, body{
     top: unset;
     height: auto;
     max-height: 60%;
-    width: 100vw;
+    width: auto;
   }
   #toggle {
     border-radius: 50px 50px 0px 0px;
@@ -107,6 +112,7 @@ html, body{
     right: 15%;
   }
   .panel_small {
-    height: 0;
+    height: 5px;
+    width: 100%;
   }
 }
