@@ -29,7 +29,7 @@ export default {
       <label for="url">{{ $t("url") }}:</label>
       <input type="text" id="url" name="url" v-model="note.url">
       <label for="text">{{ $t("text") }}:</label>
-      <input type="text" id="text" name="text" v-model="note.text">
+      <textarea rows="2" cols="50" name="text" v-model="note.text"/>
       <label for="lat">{{ $t("latitude") }}:</label>
       <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
       <label for="long">{{ $t("longitude") }}:</label>
