@@ -17,7 +17,7 @@ html, body{
 }
 
 #map {
-  height: 100vw;
+  height: 100%;
   width: 100vw;
   position: absolute;
   z-index: 1;
@@ -54,17 +54,17 @@ html, body{
 }
 
 .note-form {
-  margin: 0 10px 0 10px;
+  margin: 0 5px 0 5px;
 }
 
 .note-form input, textarea {
   width: 100%;
-  padding: 12px 20px;
+  padding: 5px 5px;
   box-sizing:border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-top: 6px;
-  margin-bottom: 16px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   resize: vertical;
 }
 
@@ -74,19 +74,19 @@ html, body{
 
 .note-form button {
   width: 100%;
-  padding: 12px 20px;
+  padding: 5px 5px;
   background-color: #04AA6D;
   border: none;
   border-radius: 4px;
   color: white;
   text-decoration: none;
-  margin: 4px 2px;
+  margin: 2px 2px;
   cursor: pointer;
 }
 
 @media (max-width: 800px) {
   #main {
-    position: relative;
+    position: absolute;
     overflow: hidden;
   }
   #map {
@@ -97,6 +97,7 @@ html, body{
     bottom: 0;
     top: unset;
     height: auto;
+    max-height: 60%;
     width: 100vw;
   }
   #toggle {
