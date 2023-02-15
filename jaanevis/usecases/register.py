@@ -1,8 +1,6 @@
 import secrets
 from datetime import datetime, timedelta
-from typing import Protocol
 
-from jaanevis.config import settings
 from jaanevis.domain import user as u
 from jaanevis.repository.base import Repository
 from jaanevis.requests.register_request import RegisterRequest
@@ -12,20 +10,14 @@ from jaanevis.responses import (
     ResponseSuccess,
     StatusCode,
 )
-from jaanevis.utils import security
-
-
-class EmailHandler(Protocol):
-    def send_email(email_to: str, text: str, subject: str) -> None:
-        ...
+from jaanevis.utils import event, security
 
 
 class RegisterUseCase:
     """usecase for user registration"""
 
-    def __init__(self, repo: Repository, email_handler: EmailHandler) -> None:
+    def __init__(self, repo: Repository) -> None:
         self.repo = repo
-        self.email_handler = email_handler
 
     def execute(self, request: RegisterRequest) -> ResponseObject:
         if not request:
@@ -51,18 +43,9 @@ class RegisterUseCase:
                 expire_time=expire_time,
             )
 
-            activation_params = (
-                f"username={request.email}&token={activation_token}"
-            )
-            activation_url = "{}{}/user/activate?{}".format(
-                settings.PROJECT_URL, settings.API_V1_STR, activation_params
-            )
-            mail_text = (
-                f"visit this link to activate your account {activation_url}"
-            )
-            mail_subject = _("Jaanevis Account Activation")
-            self.email_handler.send_email(
-                email_to=request.email, text=mail_text, subject=mail_subject
+            event.post_event(
+                "user_registered",
+                {"email": request.email, "activation_token": activation_token},
             )
             new_user = u.UserRead(
                 username=created_user.username,

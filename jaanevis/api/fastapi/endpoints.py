@@ -26,7 +26,6 @@ from jaanevis.usecases import logout as logout_uc
 from jaanevis.usecases import note_list, read_note
 from jaanevis.usecases import register as register_uc
 from jaanevis.usecases import update_note
-from jaanevis.utils import mail
 
 router = APIRouter()
 
@@ -237,10 +236,7 @@ def register(
 ) -> None:
     """user registeration"""
 
-    email_handler = mail.EmailHandler()
-    register_usecase = register_uc.RegisterUseCase(
-        repo=repo, email_handler=email_handler
-    )
+    register_usecase = register_uc.RegisterUseCase(repo=repo)
     request = register_request.RegisterRequest.build(
         email=register_data.email, password=register_data.password
     )

@@ -39,7 +39,7 @@ class MemRepo:
         if filters is None:
             sorted_notes = sorted(result, key=lambda n: n.created)[::-1]
             if limit:
-                return sorted_notes[skip: limit + skip]
+                return sorted_notes[skip : limit + skip]
             return sorted_notes[skip:]
 
         if "code__eq" in filters:

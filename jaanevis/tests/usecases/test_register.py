@@ -3,7 +3,6 @@ from unittest import mock
 
 from freezegun import freeze_time
 
-from jaanevis.config import settings
 from jaanevis.domain import user as u
 from jaanevis.requests import register_request as req
 from jaanevis.responses import response as res
@@ -12,22 +11,17 @@ from jaanevis.usecases import register as uc
 
 def test_register_usecase_init() -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
 
-    register_usecase = uc.RegisterUseCase(
-        repo=repo, email_handler=email_handler
-    )
+    register_usecase = uc.RegisterUseCase(repo=repo)
 
     assert register_usecase.repo == repo
-    assert register_usecase.email_handler == email_handler
 
 
 def test_register_handle_bad_request_invalid_email() -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
 
     request = req.RegisterRequest.build(email="", password="")
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is False
@@ -43,10 +37,9 @@ def test_register_handle_existing_email() -> None:
     repo.get_user_by_username.return_value = u.User(
         username="a@a.com", password="22334455", is_active=True
     )
-    email_handler = mock.Mock()
 
     request = req.RegisterRequest.build(email="a@a.com", password="12345678")
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is False
@@ -60,10 +53,9 @@ def test_register_handle_existing_email() -> None:
 
 def test_register_handle_bad_request_invalid_password() -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
 
     request = req.RegisterRequest.build(email="a@a.com", password="1234")
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is False
@@ -77,7 +69,6 @@ def test_register_handle_bad_request_invalid_password() -> None:
 @mock.patch("jaanevis.utils.security.hash_password")
 def test_register_creates_user(mock_hash) -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
     hashed_password = "hashedpassword"
@@ -88,7 +79,7 @@ def test_register_creates_user(mock_hash) -> None:
     mock_hash.return_value = hashed_password
 
     request = req.RegisterRequest.build(email=email, password=password)
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is True
@@ -102,7 +93,6 @@ def test_register_creates_user(mock_hash) -> None:
 @mock.patch("secrets.token_urlsafe")
 def test_register_creates_user_activation_session(mock_secrets) -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
     secret_session = "secret_session"
@@ -113,7 +103,7 @@ def test_register_creates_user_activation_session(mock_secrets) -> None:
     mock_secrets.return_value = secret_session
 
     request = req.RegisterRequest.build(email=email, password=password)
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is True
@@ -122,35 +112,32 @@ def test_register_creates_user_activation_session(mock_secrets) -> None:
     )
 
 
+@mock.patch("jaanevis.utils.event.post_event")
 @mock.patch("secrets.token_urlsafe")
-def test_register_send_activation_email(mock_secrets) -> None:
+def test_register_send_user_registered_event(mock_secrets, event_mock) -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
     activation_token = "token"
-    activation_url = f"{settings.PROJECT_URL}{settings.API_V1_STR}/user/activate?username={email}&token={activation_token}"
-    mail_text = f"visit this link to activate your account {activation_url}"
-    mail_subject = "Jaanevis Account Activation"
 
     repo.get_user_by_username.return_value = None
     repo.create_user.return_value = user
     mock_secrets.return_value = activation_token
 
     request = req.RegisterRequest.build(email=email, password=password)
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is True
-    email_handler.send_email.assert_called_with(
-        email_to=email, text=mail_text, subject=mail_subject
+    event_mock.assert_called_with(
+        "user_registered",
+        {"activation_token": activation_token, "email": email},
     )
 
 
 @mock.patch("jaanevis.utils.security.hash_password")
 def test_register_deletes_created_user_on_exception(mock_hash) -> None:
     repo = mock.Mock()
-    email_handler = mock.Mock()
     email, password = "a@a.com", "22334455"
     user = u.User(username=email, password=password)
     hashed_password = "hashedpassword"
@@ -161,7 +148,7 @@ def test_register_deletes_created_user_on_exception(mock_hash) -> None:
     repo.create_session.side_effect = Exception("some error")
 
     request = req.RegisterRequest.build(email=email, password=password)
-    register_usecase = uc.RegisterUseCase(repo, email_handler=email_handler)
+    register_usecase = uc.RegisterUseCase(repo)
     response = register_usecase.execute(request)
 
     assert bool(response) is False

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from jaanevis.config import settings
 from jaanevis.i18n import translate
+from jaanevis.utils import email_listener
 
 from .endpoints import router
 
@@ -26,3 +27,8 @@ async def set_locale(request: Request, call_next):
         response = await call_next(request)
         response.headers["Content-Language"] = lang
         return response
+
+
+@app.on_event("startup")
+async def startup_event():
+    email_listener.setup_email_event_handlers()
