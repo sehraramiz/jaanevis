@@ -1,6 +1,7 @@
 from jaanevis.repository.base import Repository
 from jaanevis.requests.add_note_request import AddNoteRequest
 from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.utils import event
 
 
 class AddNoteUseCase:
@@ -13,6 +14,7 @@ class AddNoteUseCase:
         try:
             request.note.creator = request.user.username
             self.repo.add(request.note)
+            event.post_event("note_added", request.note)
             return ResponseSuccess(request.note)
         except Exception as exc:
             return ResponseFailure.build_system_error(

@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: Optional[EmailStr] = None
     EMAILS_FROM_NAME: Optional[str] = None
 
+    TELEGRAM_BOT_TOKEN: str
+    TELEGRAM_CHANNEL_ID: str
+
     class Config:
         case_sensitive = True
         env_file = ".env"

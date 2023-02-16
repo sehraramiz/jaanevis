@@ -47,6 +47,29 @@ def test_add_note(new_note: n.Note) -> None:
     assert response.value == expected_note
 
 
+@mock.patch("jaanevis.utils.event.post_event")
+def test_add_note_send_note_add_event(event_mock, new_note: n.Note) -> None:
+    repo = mock.Mock()
+    user = u.User(username="username", password="password")
+    expected_note = n.Note(
+        created=CREATED,
+        code=new_note.code,
+        url=new_note.url,
+        lat=new_note.lat,
+        long=new_note.long,
+        creator="username",
+        text="some text",
+    )
+
+    add_note_usecase = uc.AddNoteUseCase(repo)
+    add_note_request = req.AddNoteRequest(note=new_note, user=user)
+
+    response = add_note_usecase.execute(add_note_request)
+
+    assert bool(response) is True
+    event_mock.assert_called_with("note_added", expected_note)
+
+
 def test_add_note_handles_non_existant_user(new_note: n.Note) -> None:
     repo = mock.Mock()
     user = None

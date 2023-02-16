@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from jaanevis.config import settings
 from jaanevis.i18n import translate
-from jaanevis.utils import email_listener
+from jaanevis.utils import email_listener, telegram_listener
 
 from .endpoints import router
 
@@ -32,3 +32,4 @@ async def set_locale(request: Request, call_next):
 @app.on_event("startup")
 async def startup_event():
     email_listener.setup_email_event_handlers()
+    telegram_listener.setup_note_add_event_handlers()
