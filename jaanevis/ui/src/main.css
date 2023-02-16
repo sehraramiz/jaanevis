@@ -43,6 +43,10 @@ html, body{
   display: none;
 }
 
+.panel_small .panel-header {
+  display: none;
+}
+
 #toggle {
   font-size: 16px;
   color: black;
@@ -94,23 +98,32 @@ html, body{
     position: absolute;
     overflow: hidden;
   }
+
   #map {
     position: relative;
   }
+
   .panel {
     position: absolute;
     bottom: 0;
     top: unset;
-    height: auto;
+    height: 100%;
     max-height: 60%;
     width: auto;
   }
+
+  .panel-content {
+    overflow-y: scroll;
+    height: 100%;
+  }
+
   #toggle {
     border-radius: 50px 50px 0px 0px;
     position: absolute;
     top: -44px;
     right: 15%;
   }
+
   .panel_small {
     height: 5px;
     width: 100%;

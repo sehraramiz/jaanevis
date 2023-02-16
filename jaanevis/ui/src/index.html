@@ -22,7 +22,7 @@
             <div id="panel" class="panel" :dir="direction">
                 <router-view></router-view>
                 <button id="toggle" @click="togglePanel">X</button>
-                <div class="panel-content">
+                <div class="panel-header">
                     <select v-model="$i18n.locale">
                         <option v-for="(lang, i) in supportedLocales" :key="`Lang${i}`" :value="lang">
                         {{ lang }}
@@ -33,6 +33,8 @@
                     <button @click="logout" v-else-if="authenticated">{{ $t("logout") }}</button>
                     &nbsp;<a @click="showRegister" v-else href="#">{{ $t("register") }}</a>
                     <hr>
+                </div>
+                <div class="panel-content">
                     <div>
                         <p v-if="Object.keys(filters).length !== 0">{{ $t("filters") }}:</p>
                         <div v-for="(value, filter) in filters">
