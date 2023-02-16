@@ -7,12 +7,12 @@ body {
 html, body{
   height: 100%;
   width: 100vw;
+  overflow-y: clip;
 }
 
 #main {
   width: 100%;
-  height: 100%;
-  margin: auto;
+  height: 100vh;
   position: relative;
 }
 
@@ -27,12 +27,15 @@ html, body{
   position: relative;
   padding: 15px;
   background: #ddd;
-  top: 0;
-  right: 0;
-  height: 100vw;
+  height: 100%;
   width: 30%;
   z-index: 5;
   transition: 0.5s ease;
+}
+
+.panel-content {
+  overflow: scroll;
+  height: 100%
 }
 
 .panel_small {
