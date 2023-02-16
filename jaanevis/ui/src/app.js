@@ -53,11 +53,21 @@ createApp({
     '$i18n.locale': function (newLocale){
       document.querySelector("html").setAttribute("lang", newLocale)
     },
-    'panelView': function (){this.errors = []}
+    'panelView': function (){this.errors = []},
+    'latLng': function (){
+      // set this offset to set map center a little lower on smaller screens
+      // to show map marker in top section of viewport (above the bottom panel)
+      const offset = 100 / this.map.getZoom() ** 2
+      this.map.panTo(new L.LatLng(this.note.lat - offset, this.note.long), 5);
+      this.showPointer(this.note.lat, this.note.long);
+    }
   },
   computed: {
     direction () {
       return this.$i18n.locale !== 'fa' ? 'ltr' : 'rtl'
+    },
+    latLng () {
+      return this.note.lat + this.note.long;
     }
   },
   components: {
@@ -253,8 +263,6 @@ createApp({
     showNoteCreateForm: function (e) {
       let lat = e.latlng.lat;
       let long = e.latlng.lng;
-
-      this.showPointer(lat, long);
 
       this.panelView = 'create';
       this.openPanel();
