@@ -80,6 +80,7 @@ createApp({
       this.map = L.map(
         'map', {
           zoomControl: false,
+          attributionControl: false
         }
       ).setView([initLat, initLong], 5);
 
@@ -87,11 +88,18 @@ createApp({
           northEast = L.latLng(89.99346179538875, 180);
       var bounds = L.latLngBounds(southWest, northEast);
 
+      var mapWatermark = `
+          <a href="https://t.me/jaanevis">Telegram</a> |
+          &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>
+        `
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
           //maxBoundsViscosity: 1.0,
           maxZoom: 8,
           minZoom: 2,
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          attribution: mapWatermark
+      }).addTo(this.map);
+      L.control.attribution({
+        position: 'topright'
       }).addTo(this.map);
       L.control.zoom({
           position: 'topright'
