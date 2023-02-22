@@ -1,7 +1,7 @@
 import pathlib
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, validator
+from pydantic import AnyHttpUrl, BaseSettings, EmailStr, RedisDsn, validator
 
 import jaanevis
 
@@ -34,6 +34,8 @@ class Settings(BaseSettings):
 
     TELEGRAM_BOT_TOKEN: str
     TELEGRAM_CHANNEL_ID: str
+
+    REDIS_DSN: RedisDsn = "redis://user:pass@localhost:6379/0"
 
     class Config:
         case_sensitive = True

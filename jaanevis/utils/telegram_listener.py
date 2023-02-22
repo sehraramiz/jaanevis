@@ -1,3 +1,5 @@
+from jaanevis.tasks.core import q
+
 from .event import subscribe
 from .telegram import send_message_to_channel
 
@@ -19,7 +21,8 @@ def handle_new_note_add_event(note):
         lat=note.lat,
         long=note.long,
     )
-    send_message_to_channel(msg)
+
+    q.enqueue(send_message_to_channel, msg)
 
 
 def setup_note_add_event_handlers():

@@ -1,4 +1,5 @@
 from jaanevis.config import settings
+from jaanevis.tasks.core import q
 
 from .event import subscribe
 from .mail import send_email
@@ -14,7 +15,12 @@ def handle_user_registered_event(data):
     )
     mail_text = f"visit this link to activate your account {activation_url}"
     mail_subject = _("Jaanevis Account Activation")
-    send_email(email_to=email, text=mail_text, subject=mail_subject)
+    q.enqueue(
+        send_email,
+        email_to=settings.SMTP_USER,
+        text=mail_text,
+        subject=mail_subject,
+    )
 
 
 def setup_email_event_handlers():
