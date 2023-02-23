@@ -28,3 +28,4 @@ def send_test_email() -> None:
 
 if __name__ == "__main__":
     run_worker()
+    #send_test_email()
