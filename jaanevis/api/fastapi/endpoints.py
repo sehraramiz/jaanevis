@@ -19,18 +19,19 @@ from jaanevis.requests import (
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.requests.read_note_request import ReadNoteRequest
 from jaanevis.requests.update_note_request import UpdateNoteRequest
+from jaanevis.requests.update_own_user_request import UpdateOwnUserRequest
 from jaanevis.usecases import activate_user as activate_user_uc
 from jaanevis.usecases import add_note, authenticate, delete_note
 from jaanevis.usecases import login as login_uc
 from jaanevis.usecases import logout as logout_uc
 from jaanevis.usecases import note_list, read_note
 from jaanevis.usecases import register as register_uc
-from jaanevis.usecases import update_note
+from jaanevis.usecases import update_note, update_own_user
 
 router = APIRouter()
 
 
-async def get_user(session: str = Cookie(default=None)) -> u.User:
+async def get_user(session: str = Cookie(default=None)) -> u.UserRead:
     """dependency function to authenticate user with session"""
 
     repo = repository()
@@ -287,3 +288,20 @@ def activate(
         _("activation failure"), response.value["message"]
     )
     return HTMLResponse(content=failure_html, status_code=200)
+
+
+@router.put("/user/own")
+def update_own_user_api(
+    user_in: u.UserUpdateApi,
+    user: u.User = Depends(get_user),
+    repo: Repository = Depends(get_repository),
+) -> u.UserRead:
+    """update own user"""
+
+    update_user_usecase = update_own_user.UpdateOwnUserUseCase(repo)
+    request_obj = UpdateOwnUserRequest.build(update_user=user_in, user=user)
+    response = update_user_usecase.execute(request_obj)
+
+    if not response:
+        raise HTTPException(status_code=403, detail=response.value["message"])
+    return response.value

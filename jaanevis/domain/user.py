@@ -26,3 +26,9 @@ class UserRead(BaseModel):
 
     username: str
     is_active: bool = False
+
+
+class UserUpdateApi(BaseModel):
+    """schema for updatig a user via api"""
+
+    username: str | None = None
