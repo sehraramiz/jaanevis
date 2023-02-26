@@ -14,7 +14,7 @@ def default_expire_time() -> float:
 class Session:
     """Model for session."""
 
-    username: str
+    email: str
     expire_time: float = field(default_factory=default_expire_time)
     session_id: str | UUID4 = field(default_factory=uuid.uuid4)
 

@@ -14,14 +14,14 @@ from jaanevis.usecases import logout as logout_uc
 def test_authenticte_finds_correct_user() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = u.User(
+    repo.get_user_by_email.return_value = u.User(
         email="a@a.com",
         username="username",
         password="password",
         is_active=True,
     )
     repo.get_session_by_session_id.return_value = s.Session(
-        username="username", session_id=session
+        email="a@a.com", session_id=session
     )
 
     auth_usecase = uc.AuthenticateUseCase(repo)
@@ -30,7 +30,7 @@ def test_authenticte_finds_correct_user() -> None:
     response = auth_usecase.execute(request_obj)
 
     repo.get_session_by_session_id.assert_called_with(session_id=str(session))
-    repo.get_user_by_username.assert_called_with(username="username")
+    repo.get_user_by_email.assert_called_with(email="a@a.com")
     assert response.value.username == "username"
 
 
@@ -71,7 +71,7 @@ def test_authenticte_response_unauthorized_on_empty_session() -> None:
 
 def test_authenticte_handles_non_existant_user() -> None:
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = None
+    repo.get_user_by_email.return_value = None
     session = uuid.uuid4()
 
     auth_usecase = uc.AuthenticateUseCase(repo)
@@ -89,9 +89,9 @@ def test_authenticte_handles_non_existant_user() -> None:
 
 def test_authenticte_handles_expired_session() -> None:
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = None
+    repo.get_user_by_email.return_value = None
     session = uuid.uuid4()
-    repo.get_user_by_username.return_value = u.User(
+    repo.get_user_by_email.return_value = u.User(
         email="a@a.com",
         username="username",
         password="password",
@@ -100,7 +100,7 @@ def test_authenticte_handles_expired_session() -> None:
     expire_time = (datetime.now() - timedelta(hours=1)).timestamp()
 
     repo.get_session_by_session_id.return_value = s.Session(
-        username="username", session_id=session, expire_time=expire_time
+        email="a@a.com", session_id=session, expire_time=expire_time
     )
 
     auth_usecase = uc.AuthenticateUseCase(repo)
@@ -122,14 +122,14 @@ def test_authenticte_handles_expired_session() -> None:
 def test_logout_removes_existant_user_session() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = u.User(
+    repo.get_user_by_email.return_value = u.User(
         email="a@a.com",
         username="username",
         password="password",
         is_active=True,
     )
     repo.get_session_by_session_id.return_value = s.Session(
-        username="username", session_id=session
+        email="a@a.com", session_id=session
     )
 
     logout_usecase = logout_uc.LogoutUseCase(repo)
@@ -146,7 +146,7 @@ def test_logout_removes_existant_user_session() -> None:
 def test_logout_success_non_existent_session() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = u.User(
+    repo.get_user_by_email.return_value = u.User(
         email="a@a.com",
         username="username",
         password="password",
@@ -165,9 +165,9 @@ def test_logout_success_non_existent_session() -> None:
 def test_logout_success_non_existent_user() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = None
+    repo.get_user_by_email.return_value = None
     repo.get_session_by_session_id.return_value = s.Session(
-        username="username", session_id=session
+        email="a@a.com", session_id=session
     )
 
     logout_usecase = logout_uc.LogoutUseCase(repo)
@@ -180,7 +180,7 @@ def test_logout_success_non_existent_user() -> None:
 
 def test_authenticte_handles_deactive_user() -> None:
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = u.User(
+    repo.get_user_by_email.return_value = u.User(
         email="a@a.com",
         username="username",
         password="password",
@@ -188,7 +188,7 @@ def test_authenticte_handles_deactive_user() -> None:
     )
     session = uuid.uuid4()
     repo.get_session_by_session_id.return_value = s.Session(
-        username="username", session_id=session
+        email="a@a.com", session_id=session
     )
 
     auth_usecase = uc.AuthenticateUseCase(repo)
@@ -207,7 +207,7 @@ def test_authenticte_handles_deactive_user() -> None:
 def test_authenticate_handles_generic_error() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
-    repo.get_user_by_username.return_value = u.User(
+    repo.get_user_by_email.return_value = u.User(
         email="a@a.com",
         username="username",
         password="password",

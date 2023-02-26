@@ -11,28 +11,28 @@ def expire_time() -> float:
 
 
 def test_session_model_init(expire_time) -> None:
-    session = s.Session(username="username", expire_time=expire_time)
+    session = s.Session(email="a@a.com", expire_time=expire_time)
 
     assert str(session.session_id)
-    assert session.username == "username"
+    assert session.email == "a@a.com"
     assert session.expire_time == expire_time
 
 
 def test_session_model_from_dict(expire_time) -> None:
     session = s.Session.from_dict(
-        {"username": "username", "expire_time": expire_time}
+        {"email": "a@a.com", "expire_time": expire_time}
     )
 
     assert str(session.session_id)
-    assert session.username == "username"
+    assert session.email == "a@a.com"
     assert session.expire_time == expire_time
 
 
 def test_session_model_to_dict(expire_time) -> None:
-    session = s.Session(username="username", expire_time=expire_time)
+    session = s.Session(email="a@a.com", expire_time=expire_time)
 
     assert session.to_dict() == {
         "session_id": str(session.session_id),
-        "username": "username",
+        "email": "a@a.com",
         "expire_time": expire_time,
     }

@@ -37,7 +37,7 @@ def test_login_create_session_on_success() -> None:
         assert bool(response) is True
         repo.get_user_by_username.assert_called_with(username="username")
         repo.create_or_update_session.assert_called_with(
-            username="username",
+            email="a@a.com",
             session_id=str(session_id),
             expire_time=tomorrow.timestamp(),
         )
@@ -71,7 +71,7 @@ def test_login_create_session_with_correct_expire_time() -> None:
 
         assert bool(response) is True
         repo.create_or_update_session.assert_called_with(
-            username="username",
+            email="a@a.com",
             session_id=str(session_id),
             expire_time=tomorrow.timestamp(),
         )

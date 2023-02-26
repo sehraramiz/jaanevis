@@ -20,8 +20,8 @@ class ActivateUserUseCase:
             return ResponseFailure.build_from_invalid_request_object(request)
 
         try:
-            session = self.repo.get_session_by_session_id_and_username(
-                session_id=request.token, username=request.username
+            session = self.repo.get_session_by_session_id_and_email(
+                session_id=request.token, email=request.email
             )
             if not session:
                 return ResponseFailure.build_parameters_error(
@@ -29,7 +29,7 @@ class ActivateUserUseCase:
                     code=StatusCode.invalid_activation_token,
                 )
 
-            user = self.repo.get_user_by_username(username=request.username)
+            user = self.repo.get_user_by_email(email=request.email)
             if not user:
                 return ResponseFailure.build_resource_error("User not found")
             if user.is_active:

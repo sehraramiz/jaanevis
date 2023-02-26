@@ -152,13 +152,13 @@ class MemRepo:
                 return s.Session.from_dict(session)
         return None
 
-    def get_session_by_session_id_and_username(
-        self, session_id: str, username: str
+    def get_session_by_session_id_and_email(
+        self, session_id: str, email: str
     ) -> s.Session:
         for session in self.data["sessions"]:
             if (
                 session["session_id"] == session_id
-                and session["username"] == username
+                and session["email"] == email
             ):
                 return s.Session.from_dict(session)
         return None
@@ -172,13 +172,13 @@ class MemRepo:
         return True
 
     def create_or_update_session(
-        self, username: str, session_id: str, expire_time: float
+        self, email: str, session_id: str, expire_time: float
     ) -> s.Session:
         new_session = s.Session(
-            username=username, session_id=session_id, expire_time=expire_time
+            email=email, session_id=session_id, expire_time=expire_time
         )
         for session in self.data["sessions"]:
-            if session["username"] == username:
+            if session["email"] == email:
                 session["session_id"] = session_id
                 break
         else:
@@ -187,10 +187,10 @@ class MemRepo:
         return new_session
 
     def create_session(
-        self, username: str, session_id: str, expire_time: float
+        self, email: str, session_id: str, expire_time: float
     ) -> s.Session:
         new_session = s.Session(
-            username=username, session_id=session_id, expire_time=expire_time
+            email=email, session_id=session_id, expire_time=expire_time
         )
         self.data["sessions"].append(new_session.to_dict())
         self._write_data_to_file()

@@ -45,7 +45,7 @@ class LoginUseCase:
             tomorrow = datetime.now() + timedelta(days=1)
             expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
             self.repo.create_or_update_session(
-                username=user.username,
+                email=user.email,
                 session_id=new_session_id,
                 expire_time=tomorrow.timestamp(),
             )

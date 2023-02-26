@@ -29,7 +29,7 @@ class AuthenticateUseCase:
                     _("Session not found"), code=StatusCode.invalid_session
                 )
 
-            user = self.repo.get_user_by_username(username=session.username)
+            user = self.repo.get_user_by_email(email=session.email)
             if not user:
                 return ResponseFailure.build_resource_error("User not found")
 
