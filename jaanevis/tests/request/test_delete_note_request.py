@@ -5,7 +5,7 @@ from jaanevis.requests import delete_note_request as req
 
 
 def test_build_note_delete_from_empty_code() -> None:
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
     request = req.DeleteNoteRequest.build(code="", user=user)
 
     assert bool(request) is False
@@ -15,7 +15,7 @@ def test_build_note_delete_from_empty_code() -> None:
 
 def test_build_note_delete_request() -> None:
     code = str(uuid.uuid4())
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
     request = req.DeleteNoteRequest.build(code=code, user=user)
 
     assert bool(request) is True

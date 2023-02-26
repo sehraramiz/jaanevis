@@ -21,7 +21,10 @@ def test_login_create_session_on_success() -> None:
     with mock.patch("uuid.uuid4") as uuid_mock:
         uuid_mock.return_value = session_id
         repo.get_user_by_username.return_value = u.User(
-            username="username", password=hashed_password, is_active=True
+            email="a@a.com",
+            username="username",
+            password=hashed_password,
+            is_active=True,
         )
         tomorrow = datetime.now() + timedelta(days=1)
 
@@ -51,7 +54,10 @@ def test_login_create_session_with_correct_expire_time() -> None:
     with mock.patch("uuid.uuid4") as uuid_mock:
         uuid_mock.return_value = session_id
         repo.get_user_by_username.return_value = u.User(
-            username="username", password=hashed_password, is_active=True
+            email="a@a.com",
+            username="username",
+            password=hashed_password,
+            is_active=True,
         )
 
         tomorrow = datetime.now() + timedelta(days=1)
@@ -88,7 +94,12 @@ def test_login_fails_on_non_existant_user() -> None:
 
 def test_login_fails_on_wrong_password() -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password", is_active=True)
+    user = u.User(
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
+    )
 
     repo.get_user_by_username.return_value = user
 
@@ -106,7 +117,12 @@ def test_login_fails_on_wrong_password() -> None:
 @mock.patch("jaanevis.utils.security.verify_password")
 def test_login_fails_on_inactive_user(pass_verify_mock) -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password", is_active=False)
+    user = u.User(
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=False,
+    )
 
     repo.get_user_by_username.return_value = user
 

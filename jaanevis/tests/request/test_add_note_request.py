@@ -11,7 +11,7 @@ def test_build_note_add_request() -> None:
         lat=1,
         long=1,
     )
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
     request = req.AddNoteRequest(note=note, user=user)
 
     assert request.note == note

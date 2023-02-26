@@ -8,6 +8,7 @@ from pydantic import BaseModel, dataclasses
 class User:
     """Model for user."""
 
+    email: str
     username: str
     password: str
     is_active: bool = False

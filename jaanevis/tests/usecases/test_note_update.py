@@ -14,10 +14,14 @@ def note() -> n.Note:
     return n.Note(creator="username", url="http://example.com", lat=1, long=1)
 
 
-def test_update_note(note: n.Note) -> None:
+@pytest.fixture
+def user() -> u.User:
+    return u.User(email="a@a.com", username="username", password="password")
+
+
+def test_update_note(note: n.Note, user: u.User) -> None:
     repo = mock.Mock()
     repo.get_by_code.return_value = note
-    user = u.User(username="username", password="password")
 
     newurl = "https://newurl.com"
     note_update = n.NoteUpdateApi(url=newurl)
@@ -38,9 +42,8 @@ def test_update_note(note: n.Note) -> None:
     assert response.value == updated_note
 
 
-def test_note_update_handles_invalid_code(note: n.Note) -> None:
+def test_note_update_handles_invalid_code(note: n.Note, user: u.User) -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password")
     newurl = "https://newurl.com"
     note_update = n.NoteUpdateApi(url=newurl)
 
@@ -59,9 +62,8 @@ def test_note_update_handles_invalid_code(note: n.Note) -> None:
     }
 
 
-def test_note_update_handles_invalid_note(note: n.Note) -> None:
+def test_note_update_handles_invalid_note(note: n.Note, user: u.User) -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password")
 
     update_note_usecase = uc.UpdateNoteUseCase(repo)
     update_note_request = req.UpdateNoteRequest.build(
@@ -78,10 +80,11 @@ def test_note_update_handles_invalid_note(note: n.Note) -> None:
     }
 
 
-def test_note_update_handles_nonexistent_note(note: n.Note) -> None:
+def test_note_update_handles_nonexistent_note(
+    note: n.Note, user: u.User
+) -> None:
     repo = mock.Mock()
     repo.get_by_code.return_value = None
-    user = u.User(username="username", password="password")
     newurl = "https://newurl.com"
     note_update = n.NoteUpdateApi(url=newurl)
 
@@ -103,7 +106,9 @@ def test_note_update_handles_nonexistent_note(note: n.Note) -> None:
 def test_note_update_handles_wrong_user(note: n.Note) -> None:
     repo = mock.Mock()
     repo.get_by_code.return_value = note
-    wrong_user = u.User(username="wrong_user", password="password")
+    wrong_user = u.User(
+        email="a@a.com", username="wrong_user", password="password"
+    )
 
     newurl = "https://newurl.com"
     note_update = n.NoteUpdateApi(url=newurl)
@@ -127,10 +132,9 @@ def test_note_update_handles_wrong_user(note: n.Note) -> None:
     }
 
 
-def test_update_note_handles_generic_error(note: n.Note) -> None:
+def test_update_note_handles_generic_error(note: n.Note, user: u.User) -> None:
     repo = mock.Mock()
     repo.get_by_code.side_effect = Exception("An error message")
-    user = u.User(username="username", password="password")
 
     newurl = "https://newurl.com"
     note_update = n.NoteUpdateApi(url=newurl)

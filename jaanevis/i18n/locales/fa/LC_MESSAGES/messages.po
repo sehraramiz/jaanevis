@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-06 01:47+0330\n"
+"POT-Creation-Date: 2023-02-26 14:34+0330\n"
 "PO-Revision-Date: 2023-02-04 19:28+0330\n"
 "Last-Translator:  <mohsenbarzegar@disroot.org>\n"
 "Language-Team: Persian <translation-team-fa@lists.sourceforge.net>\n"
@@ -20,13 +20,17 @@ msgstr ""
 msgid "test"
 msgstr "تست"
 
-#: jaanevis/api/fastapi/endpoints.py:270
+#: jaanevis/api/fastapi/endpoints.py:278
 msgid "user successfuly activated"
 msgstr "کاربر با موفقیت فعال شد"
 
-#: jaanevis/api/fastapi/endpoints.py:281
+#: jaanevis/api/fastapi/endpoints.py:290
 msgid "activation failure"
 msgstr "فعال‌سازی ناموفق"
+
+#: jaanevis/utils/email_listener.py:17
+msgid "Jaanevis Account Activation"
+msgstr "فعال‌سازی اکانت جانویس"
 
 #: jaanevis/requests/delete_note_request.py:17
 #: jaanevis/requests/read_note_request.py:15
@@ -35,6 +39,7 @@ msgstr "code نامعتبر"
 
 #: jaanevis/requests/delete_note_request.py:21
 #: jaanevis/requests/update_note_request.py:27
+#: jaanevis/requests/update_own_user_request.py:20
 #: jaanevis/requests/add_note_request.py:23
 msgid "Invalid user"
 msgstr "کاربر نامعتبر"
@@ -56,23 +61,32 @@ msgstr "نام کاربری نباید خالی باشد"
 msgid "Token can not be empty"
 msgstr "توکن نباید خالی باشد"
 
+#: jaanevis/requests/update_own_user_request.py:17
+#, fuzzy
+msgid "Invalid user type"
+msgstr "کاربر نامعتبر"
+
 #: jaanevis/requests/auth_request.py:19
 msgid "Invalid session"
 msgstr "سشن نامعتبر"
 
-#: jaanevis/requests/register_request.py:21
+#: jaanevis/requests/register_request.py:22
 msgid "Invalid email"
 msgstr "ایمیل نامعتبر"
 
-#: jaanevis/requests/register_request.py:25
+#: jaanevis/requests/register_request.py:29
+msgid "Invalid username, only use letters, numbers, underscores and periods."
+msgstr "نام کاربری غیر معتبر، فقط از حروف، اعداد، آندرلاین و نقطه استفاده کنید."
+
+#: jaanevis/requests/register_request.py:39
 msgid "Password can not be empty"
 msgstr "پسورد نباید خالی باشد"
 
-#: jaanevis/requests/register_request.py:30
+#: jaanevis/requests/register_request.py:44
 msgid "minimum password length must be 8 characters"
 msgstr "حداقل طول رمز عبور باید ۸ کاراکتر باشد"
 
-#: jaanevis/requests/note_list_request.py:28
+#: jaanevis/requests/note_list_request.py:35
 msgid "Invalid filters type"
 msgstr "فیلتر نامعتبر"
 
@@ -104,11 +118,12 @@ msgstr "نام کاربری یا رمز عبور اشتباه است"
 msgid "permission denied"
 msgstr "دسترسی غیر مجاز"
 
-#: jaanevis/usecases/register.py:38
+#: jaanevis/usecases/register.py:30
+#, fuzzy
+msgid "User with this username already exists"
+msgstr "کاربر با این نام کاربری در سیستم موجود است"
+
+#: jaanevis/usecases/register.py:36
 #, fuzzy
 msgid "User with this email already exists"
 msgstr "کاربر با این نام کاربری در سیستم موجود است"
-
-#: jaanevis/usecases/register.py:63
-msgid "Jaanevis Account Activation"
-msgstr "فعال‌سازی اکانت جانویس"

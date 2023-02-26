@@ -25,7 +25,7 @@ def new_note() -> n.Note:
 
 def test_add_note(new_note: n.Note) -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
 
     add_note_usecase = uc.AddNoteUseCase(repo)
     add_note_request = req.AddNoteRequest(note=new_note, user=user)
@@ -50,7 +50,7 @@ def test_add_note(new_note: n.Note) -> None:
 @mock.patch("jaanevis.utils.event.post_event")
 def test_add_note_send_note_add_event(event_mock, new_note: n.Note) -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
     expected_note = n.Note(
         created=CREATED,
         code=new_note.code,
@@ -86,7 +86,7 @@ def test_add_note_handles_non_existant_user(new_note: n.Note) -> None:
 def test_add_note_handles_generic_error(new_note: n.Note) -> None:
     repo = mock.Mock()
     repo.add.side_effect = Exception("An error message")
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
 
     add_note_usecase = uc.AddNoteUseCase(repo)
     request_obj = req.AddNoteRequest(note=new_note, user=user)

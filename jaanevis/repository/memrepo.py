@@ -108,11 +108,20 @@ class MemRepo:
                 return u.User.from_dict(user)
         return None
 
+    def get_user_by_email(self, email: str) -> u.User:
+        for user in self.data["users"]:
+            if user["email"] == email:
+                return u.User.from_dict(user)
+        return None
+
     def create_user(
-        self, username: str, password: str, is_active: bool = False
+        self, email: str, username: str, password: str, is_active: bool = False
     ) -> u.User:
         user = u.User(
-            username=username, password=password, is_active=is_active
+            email=email,
+            username=username,
+            password=password,
+            is_active=is_active,
         )
         self.data["users"].append(user.to_dict())
         self._write_data_to_file()

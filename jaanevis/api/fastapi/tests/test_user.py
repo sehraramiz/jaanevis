@@ -10,7 +10,12 @@ from jaanevis.responses import response as res
 
 client = TestClient(app)
 PREFIX = settings.API_V1_STR
-user = User(username="a@example.com", password="password", is_active=True)
+user = User(
+    email="a@example.com",
+    username="username",
+    password="password",
+    is_active=True,
+)
 
 
 @mock.patch("jaanevis.usecases.authenticate.AuthenticateUseCase")

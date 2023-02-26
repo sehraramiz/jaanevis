@@ -48,7 +48,8 @@ def note_dicts() -> dict[str, list[Any]]:
         ],
         "users": [
             {
-                "username": "test@test.com",
+                "email": "test@test.com",
+                "username": "username",
                 "password": "password",
                 "is_active": False,
             }
@@ -305,14 +306,27 @@ def test_get_user_by_username(note_dicts) -> None:
     assert repo.get_user_by_username(username=users[0].username) == users[0]
 
 
+def test_get_user_by_email(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    users = [u.User.from_dict(data) for data in note_dicts["users"]]
+
+    assert repo.get_user_by_email(email=users[0].email) == users[0]
+
+
 def test_create_user(note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
     repo._write_data_to_file = mock.Mock()
     with mock.patch("jaanevis.repository.memrepo.open"):
-        username, password = "a@a.com", "22334455"
-        user = u.User(username=username, password=password, is_active=False)
+        username, email, password = "username", "a@a.com", "22334455"
+        user = u.User(
+            email=email, username=username, password=password, is_active=False
+        )
 
-        assert repo.create_user(username=username, password=password) == user
+        assert (
+            repo.create_user(email=email, username=username, password=password)
+            == user
+        )
         assert len(repo.data["users"]) == 2
         assert any(u == user.to_dict() for u in repo.data["users"])
 
@@ -474,7 +488,9 @@ def test_write_db_to_file_after_user_create(path, note_dicts) -> None:
 
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
-        repo.create_user(username="username", password="22334455")
+        repo.create_user(
+            email="a@a.com", username="username", password="22334455"
+        )
 
     mock_open.assert_called_with(DB_PATH, "w")
 
@@ -484,7 +500,10 @@ def test_update_user_change_active_status(mock_open, note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
     users = [u.User.from_dict(data) for data in note_dicts["users"]]
     updated_user = u.User(
-        username=users[0].username, password=users[0].password, is_active=True
+        email=users[0].email,
+        username=users[0].username,
+        password=users[0].password,
+        is_active=True,
     )
 
     result = repo.update_user(obj=users[0], data={"is_active": True})

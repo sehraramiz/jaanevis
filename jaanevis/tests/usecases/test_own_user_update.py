@@ -10,13 +10,18 @@ from jaanevis.usecases import update_own_user as uc
 
 @pytest.fixture
 def user() -> u.User:
-    return u.User(username="username", password="password", is_active=True)
+    return u.User(
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
+    )
 
 
 def test_update_own_user() -> None:
     repo = mock.Mock()
     repo.get_user_by_username.return_value = None
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
     new_username = "new_username"
     user_read = u.UserRead(username=new_username, is_active=True)
 
@@ -34,14 +39,16 @@ def test_update_own_user() -> None:
     response = update_user_usecase.execute(update_user_request)
 
     assert bool(response) is True
-    repo.update_user.assert_called_with(obj=user, data={"username": new_username})
+    repo.update_user.assert_called_with(
+        obj=user, data={"username": new_username}
+    )
     assert response.type == res.ResponseSuccess.SUCCESS
     assert response.value == user_read
 
 
 def test_own_user_update_handles_invalid_user(user: u.User) -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
 
     update_user_usecase = uc.UpdateOwnUserUseCase(repo)
     update_user_request = req.UpdateOwnUserRequest.build(
@@ -61,7 +68,7 @@ def test_own_user_update_handles_invalid_user(user: u.User) -> None:
 def test_update_user_handles_generic_error(user: u.User) -> None:
     repo = mock.Mock()
     repo.get_user_by_username.side_effect = Exception("An error message")
-    user = u.User(username="username", password="password")
+    user = u.User(email="a@a.com", username="username", password="password")
 
     new_username = "new_username"
     user_update = u.UserUpdateApi(username=new_username)

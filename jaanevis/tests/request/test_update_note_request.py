@@ -2,7 +2,7 @@ from jaanevis.domain import note as n
 from jaanevis.domain import user as u
 from jaanevis.requests import update_note_request as req
 
-user = u.User(username="username", password="password")
+user = u.User(email="a@a.com", username="username", password="password")
 
 
 def test_build_note_update_request() -> None:

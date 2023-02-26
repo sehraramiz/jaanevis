@@ -56,7 +56,10 @@ def test_activate_user_handle_non_existent_user() -> None:
 def test_activate_user_handle_active_user() -> None:
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
 
     usecase = uc.ActivateUserUseCase(repo)
@@ -73,9 +76,17 @@ def test_activate_user_handle_active_user() -> None:
 
 def test_activate_user() -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password", is_active=False)
+    user = u.User(
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=False,
+    )
     updated_user = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
     user_result = u.UserRead(username="username", is_active=True)
 
@@ -93,9 +104,17 @@ def test_activate_user() -> None:
 
 def test_delete_session_after_user_activation() -> None:
     repo = mock.Mock()
-    user = u.User(username="username", password="password", is_active=False)
+    user = u.User(
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=False,
+    )
     updated_user = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
 
     repo.get_user_by_username.return_value = user

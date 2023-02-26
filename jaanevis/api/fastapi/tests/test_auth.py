@@ -87,7 +87,7 @@ def test_logout_with_invalid_session(
 @mock.patch("jaanevis.requests.register_request.RegisterRequest")
 @mock.patch("jaanevis.usecases.register.RegisterUseCase")
 def test_register(mock_usecase, request_mock) -> None:
-    body = {"email": "a@a.com", "password": "password"}
+    body = {"email": "a@a.com", "username": "username", "password": "password"}
     mock_usecase().execute.return_value = res.ResponseSuccess(
         {"type": "Success", "message": "activation email was sent"}
     )
@@ -96,7 +96,9 @@ def test_register(mock_usecase, request_mock) -> None:
 
     assert response.status_code == 200
     mock_usecase.assert_called_with(repo=mock.ANY)
-    request_mock.build.assert_called_with(email="a@a.com", password="password")
+    request_mock.build.assert_called_with(
+        email="a@a.com", username="username", password="password"
+    )
     mock_usecase().execute.assert_called_with(request_mock.build())
 
 
@@ -107,7 +109,7 @@ def test_register_with_invalid_email() -> None:
 @mock.patch("jaanevis.requests.register_request.RegisterRequest")
 @mock.patch("jaanevis.usecases.register.RegisterUseCase")
 def test_register_with_invalid_password(mock_usecase, mock_request) -> None:
-    body = {"email": "a@a.com", "password": "1234"}
+    body = {"email": "a@a.com", "username": "username", "password": "1234"}
     invalid_request = req.InvalidRequestObject(
         error_code=res.StatusCode.invalid_password
     )

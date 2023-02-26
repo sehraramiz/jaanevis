@@ -29,6 +29,9 @@ class Repository(Protocol):
     def get_user_by_username(self, username: str) -> u.User:
         ...
 
+    def get_user_by_email(self, email: str) -> u.User:
+        ...
+
     def create_user(self, username: str, password: str) -> u.User:
         ...
 

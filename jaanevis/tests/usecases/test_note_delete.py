@@ -16,7 +16,7 @@ notes = [
         long=1,
     ),
 ]
-user = u.User(username="username", password="password")
+user = u.User(email="a@a.com", username="username", password="password")
 
 
 def test_note_delete_handles_invalid_code() -> None:
@@ -69,7 +69,9 @@ def test_delete_note_by_code() -> None:
 
 def test_delete_note_by_code_wrong_user() -> None:
     repo = mock.Mock()
-    wrong_user = u.User(username="wrong_user", password="password")
+    wrong_user = u.User(
+        email="a@a.com", username="wrong_user", password="password"
+    )
     repo.get_by_code.return_value = notes[0]
 
     note_delete_usecase = uc.DeleteNoteUseCase(repo)

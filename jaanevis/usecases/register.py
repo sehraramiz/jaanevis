@@ -24,7 +24,13 @@ class RegisterUseCase:
             return ResponseFailure.build_from_invalid_request_object(request)
 
         try:
-            user = self.repo.get_user_by_username(username=request.email)
+            user = self.repo.get_user_by_username(username=request.username)
+            if user:
+                return ResponseFailure.build_resource_error(
+                    _("User with this username already exists"),
+                    code=StatusCode.user_exists,
+                )
+            user = self.repo.get_user_by_email(email=request.email)
             if user:
                 return ResponseFailure.build_resource_error(
                     _("User with this email already exists"),
@@ -32,7 +38,9 @@ class RegisterUseCase:
                 )
             hashed_password = security.hash_password(request.password)
             created_user = self.repo.create_user(
-                username=request.email, password=hashed_password
+                email=request.email,
+                username=request.username,
+                password=hashed_password,
             )
 
             activation_token = secrets.token_urlsafe(40)

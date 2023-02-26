@@ -15,7 +15,10 @@ def test_authenticte_finds_correct_user() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
     repo.get_session_by_session_id.return_value = s.Session(
         username="username", session_id=session
@@ -89,7 +92,10 @@ def test_authenticte_handles_expired_session() -> None:
     repo.get_user_by_username.return_value = None
     session = uuid.uuid4()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
     expire_time = (datetime.now() - timedelta(hours=1)).timestamp()
 
@@ -117,7 +123,10 @@ def test_logout_removes_existant_user_session() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
     repo.get_session_by_session_id.return_value = s.Session(
         username="username", session_id=session
@@ -138,7 +147,10 @@ def test_logout_success_non_existent_session() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
     repo.get_session_by_session_id.return_value = None
 
@@ -169,7 +181,10 @@ def test_logout_success_non_existent_user() -> None:
 def test_authenticte_handles_deactive_user() -> None:
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=False
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=False,
     )
     session = uuid.uuid4()
     repo.get_session_by_session_id.return_value = s.Session(
@@ -193,7 +208,10 @@ def test_authenticate_handles_generic_error() -> None:
     session = uuid.uuid4()
     repo = mock.Mock()
     repo.get_user_by_username.return_value = u.User(
-        username="username", password="password", is_active=True
+        email="a@a.com",
+        username="username",
+        password="password",
+        is_active=True,
     )
     repo.get_session_by_session_id.side_effect = Exception("An error message")
 

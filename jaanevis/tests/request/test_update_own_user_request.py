@@ -1,11 +1,16 @@
 from jaanevis.domain import user as u
 from jaanevis.requests import update_own_user_request as req
 
-user = u.User(username="username", password="password")
+user = u.User(email="a@a.com", username="username", password="password")
 
 
 def test_build_user_update_request() -> None:
-    user = u.User(username="default", password="password", is_active=True)
+    user = u.User(
+        email="a@a.com",
+        username="default",
+        password="password",
+        is_active=True,
+    )
     update_user = u.UserUpdateApi(username="username")
     request = req.UpdateOwnUserRequest.build(
         update_user=update_user, user=user

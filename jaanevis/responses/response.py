@@ -12,6 +12,7 @@ class StatusCode:
     invalid_email = 7
     invalid_password = 8
     user_exists = 9
+    invalid_username = 10
 
 
 class ResponseSuccess:

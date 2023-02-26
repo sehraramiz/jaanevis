@@ -239,7 +239,9 @@ def register(
 
     register_usecase = register_uc.RegisterUseCase(repo=repo)
     request = register_request.RegisterRequest.build(
-        email=register_data.email, password=register_data.password
+        email=register_data.email,
+        username=register_data.username,
+        password=register_data.password,
     )
     response = register_usecase.execute(request)
 

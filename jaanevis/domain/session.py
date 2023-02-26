@@ -39,4 +39,5 @@ class RegisterInputApi(BaseModel):
     """schema for user registeration via api"""
 
     email: EmailStr
+    username: str
     password: str
