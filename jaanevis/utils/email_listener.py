@@ -17,7 +17,7 @@ def handle_user_registered_event(data):
     mail_subject = _("Jaanevis Account Activation")
     q.enqueue(
         send_email,
-        email_to=settings.SMTP_USER,
+        email_to=email,
         text=mail_text,
         subject=mail_subject,
     )
