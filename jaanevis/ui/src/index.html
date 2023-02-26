@@ -28,10 +28,13 @@
                         {{ lang }}
                       </option>
                     </select>
-                    &nbsp;<a @click="showLogin" href="#"
+                    &nbsp;<a @click="panelView='auth'" href="#"
                         v-if="!authenticated && !(panelView.match('auth'))">{{ $t("login") }}</a>
-                    <button @click="logout" v-else-if="authenticated">{{ $t("logout") }}</button>
-                    &nbsp;<a @click="showRegister" v-else href="#">{{ $t("register") }}</a>
+                    <div v-else-if="authenticated">
+                        <a href="#" @click="panelView='account'">{{ $t("account") }}</a>
+                        &nbsp;<a href="#" @click="logout">{{ $t("logout") }}</a>
+                    </div>
+                    &nbsp;<a @click="panelView='register'" v-else href="#">{{ $t("register") }}</a>
                     <hr>
                 </div>
                 <div class="panel-content">
@@ -77,6 +80,14 @@
                             <label for="password2">{{ $t("confirmPassword") }}:</label>
                             <input type="password" id="password2" name="password2" v-model="password2">
                             <button @click="register">{{ $t("register") }}</button>
+                        </div>
+                    </div>
+                    <div id="account" v-if="panelView == 'account'" >
+                        <div class="note-form" v-else id="profile">
+                            <div id="profile" v-if="authenticated == true">
+                                <input dir="ltr" type="text" id="username" name="username" v-model="authUser.username" value="ssss">
+                                <button @click="updateAccount">{{ $t("updateAccount") }}</button>
+                            </div>
                         </div>
                     </div>
                     <br>

@@ -31,5 +31,7 @@
     "requiredUsername": "نام کاربری ضروری است",
     "requiredPassword": "کلمه عبور ضروری است",
     "requiredConfirmPassword": "تکرار کلمه عبور ضروری است",
-    "passwordsNotMatch": "کلمه عبور با تایید کلمه عبور برابر نیست"
+    "passwordsNotMatch": "کلمه عبور با تایید کلمه عبور برابر نیست",
+    "account": "حساب کاربری",
+    "updateAccount": "ثبت تغییرات"
 }

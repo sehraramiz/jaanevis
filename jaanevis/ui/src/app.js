@@ -447,17 +447,36 @@ createApp({
         return;
       });
     },
+    updateAccount: async function () {
+      const response = await fetch(this.baseUrl + `/user/own`, {
+        method: 'PUT',
+        credentials: "include",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Accept-Language': this.$i18n.locale
+        },
+        body: JSON.stringify({"username": this.authUser.username})
+      })
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(response);
+        return response.json();
+      })
+      .then(data => {
+        this.showNotesOnMap();
+        alert("Account updated!");
+      })
+      .catch(error => {
+        console.log("Acccount update error", error);
+        return;
+      });
+    },
     initAuth: function () {
       if (this.$cookies.get("username")) {
         this.authenticated = true;
         this.authUser.username = this.$cookies.get("username");
       }
-    },
-    showLogin: function () {
-      this.panelView = 'auth';
-    },
-    showRegister: function () {
-      this.panelView = 'register';
     },
     handleNotesPath: async function () {
       this.filters = {...this.filters, ...this.$route.query};

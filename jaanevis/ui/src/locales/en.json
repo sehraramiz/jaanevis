@@ -31,5 +31,7 @@
   "requiredUsername": "Username field required",
   "requiredPassword": "Password field required",
   "requiredConfirmPassword": "Confirm password field is required",
-  "passwordsNotMatch": "Passwords do not match"
+  "passwordsNotMatch": "Passwords do not match",
+  "account": "Account",
+  "updateAccount": "Update Account"
 }
