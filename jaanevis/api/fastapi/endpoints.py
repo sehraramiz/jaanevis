@@ -51,7 +51,7 @@ async def get_repository() -> Repository:
     return repository()
 
 
-@router.get("/note", response_model=list[n.Note])
+@router.get("/note")
 def read_notes(
     creator: Optional[str] = None,
     country: Optional[str] = None,
@@ -59,7 +59,7 @@ def read_notes(
     skip: int = 0,
     limit: int = 100,
     repo: Repository = Depends(get_repository),
-) -> list[n.Note]:
+) -> list[n.NoteRead]:
     """read notes"""
 
     note_list_usecase = note_list.NoteListUseCase(repo)
@@ -107,10 +107,10 @@ def read_notes_geojson(
     return response.value
 
 
-@router.get("/note/{code}", response_model=n.Note)
+@router.get("/note/{code}")
 def read_note_by_code(
     code: str, repo: Repository = Depends(get_repository)
-) -> n.Note:
+) -> n.NoteRead:
     """read note by code"""
 
     read_note_usecase = read_note.ReadNoteUseCase(repo)

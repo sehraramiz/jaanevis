@@ -11,7 +11,13 @@ from jaanevis.usecases import update_note as uc
 
 @pytest.fixture
 def note() -> n.Note:
-    return n.Note(creator="username", url="http://example.com", lat=1, long=1)
+    return n.Note(
+        creator_id="a@a.com",
+        creator="username",
+        url="http://example.com",
+        lat=1,
+        long=1,
+    )
 
 
 @pytest.fixture
@@ -107,7 +113,7 @@ def test_note_update_handles_wrong_user(note: n.Note) -> None:
     repo = mock.Mock()
     repo.get_by_code.return_value = note
     wrong_user = u.User(
-        email="a@a.com", username="wrong_user", password="password"
+        email="b@b.com", username="wrong_user", password="password"
     )
 
     newurl = "https://newurl.com"

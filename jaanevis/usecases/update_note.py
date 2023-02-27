@@ -19,7 +19,7 @@ class UpdateNoteUseCase:
                 return ResponseFailure.build_resource_error(
                     f"note with code '{request.code}' not found"
                 )
-            if note.creator != request.user.username:
+            if note.creator_id != request.user.email:
                 return ResponseFailure.build_parameters_error(
                     _("permission denied")
                 )

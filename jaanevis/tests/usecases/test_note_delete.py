@@ -10,6 +10,7 @@ from jaanevis.usecases import delete_note as uc
 notes = [
     n.Note(
         code=str(uuid.uuid4()),
+        creator_id="a@a.com",
         creator="username",
         url="https://example.com/1",
         lat=1,
@@ -70,7 +71,7 @@ def test_delete_note_by_code() -> None:
 def test_delete_note_by_code_wrong_user() -> None:
     repo = mock.Mock()
     wrong_user = u.User(
-        email="a@a.com", username="wrong_user", password="password"
+        email="b@b.com", username="wrong_user", password="password"
     )
     repo.get_by_code.return_value = notes[0]
 

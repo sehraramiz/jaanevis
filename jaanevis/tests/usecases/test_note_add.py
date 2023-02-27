@@ -37,6 +37,7 @@ def test_add_note(new_note: n.Note) -> None:
         url=new_note.url,
         lat=new_note.lat,
         long=new_note.long,
+        creator_id="a@a.com",
         creator="username",
         text="some text",
     )
@@ -57,6 +58,7 @@ def test_add_note_send_note_add_event(event_mock, new_note: n.Note) -> None:
         url=new_note.url,
         lat=new_note.lat,
         long=new_note.long,
+        creator_id="a@a.com",
         creator="username",
         text="some text",
     )

@@ -7,7 +7,7 @@ from pytz import timezone
 
 from jaanevis.api.fastapi.main import app
 from jaanevis.config import settings
-from jaanevis.domain.note import Note, NoteCreateApi, NoteUpdateApi
+from jaanevis.domain.note import Note, NoteCreateApi, NoteRead, NoteUpdateApi
 from jaanevis.responses import response as res
 
 LAT, LONG = 30.0, 50.0
@@ -25,12 +25,14 @@ note = NoteCreateApi(
 note_complete = Note(
     created=CREATED,
     code=str(uuid.uuid4()),
+    creator_id="a@a.com",
     creator="default",
     text="some text",
     url="http://example.com",
     lat=LAT,
     long=LONG,
 )
+note_complete_read = NoteRead(**note_complete.to_dict())
 note_list = [note_complete]
 
 
@@ -39,10 +41,12 @@ def test_read_notes(mock_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_list)
 
     response = client.get(PREFIX + "/note")
+    result = response.json()
 
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
-    assert response.json() == [note_complete.to_dict()]
+    assert result == [note_complete_read.dict()]
+    assert "creator_id" not in result[0]
 
 
 @mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
@@ -66,7 +70,7 @@ def test_read_notes_with_creator_filter(mock_usecase, mock_request) -> None:
     )
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
-    assert response.json() == [note_complete.to_dict()]
+    assert response.json() == [note_complete_read.dict()]
 
 
 @mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
@@ -90,7 +94,7 @@ def test_read_notes_with_country_filter(mock_usecase, mock_request) -> None:
     )
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
-    assert response.json() == [note_complete.to_dict()]
+    assert response.json() == [note_complete_read.dict()]
 
 
 @mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
@@ -114,7 +118,7 @@ def test_read_notes_with_tag_filter(mock_usecase, mock_request) -> None:
     )
     mock_usecase().execute.assert_called()
     assert response.status_code == 200
-    assert response.json() == [note_complete.to_dict()]
+    assert response.json() == [note_complete_read.dict()]
 
 
 @mock.patch("jaanevis.requests.note_list_request.NoteListRequest")
@@ -144,9 +148,11 @@ def test_read_note_by_code(mock_usecase) -> None:
     mock_usecase().execute.return_value = res.ResponseSuccess(note_complete)
 
     response = client.get(PREFIX + f"/note/{note_complete.code}")
+    result = response.json()
 
     assert response.status_code == 200
-    assert response.json() == note_complete.to_dict()
+    assert result == note_complete_read.dict()
+    assert "creator_id" not in result
     mock_usecase().execute.assert_called()
 
 
@@ -171,6 +177,7 @@ def test_delete_note(mock_usecase, auth_usecase) -> None:
 def test_create_note(mock_usecase, auth_usecase) -> None:
     new_note = note.dict()
     new_note["created"] = datetime.now().isoformat()
+    new_note["creator_id"] = "a@a.com"
     new_note["creator"] = "username"
     new_note.pop("code", None)
     mock_usecase().execute.return_value = res.ResponseSuccess(new_note)
@@ -230,6 +237,7 @@ def test_read_notes_geojson_data(mock_usecase) -> None:
     }
     assert result[0]["properties"]["url"] == note.url
     assert result[0]["properties"]["creator"] == "default"
+    assert "creator_id" not in result[0]["properties"]
     assert len(result[0]["properties"]["code"])
     mock_usecase().execute.assert_called()
 

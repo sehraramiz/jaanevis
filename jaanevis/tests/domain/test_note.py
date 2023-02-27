@@ -9,6 +9,7 @@ COUNTRY = "IR"
 
 def test_note_model_init() -> None:
     note = n.Note(
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="some text",
@@ -17,6 +18,7 @@ def test_note_model_init() -> None:
     )
 
     assert str(note.code)
+    assert note.creator_id == "a@a.com"
     assert note.creator == "default"
     assert note.url == "http://example.com"
     assert note.text == "some text"
@@ -26,6 +28,7 @@ def test_note_model_init() -> None:
 
 def test_note_model_init_with_tags() -> None:
     note = n.Note(
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="some #text #for_test",
@@ -38,6 +41,7 @@ def test_note_model_init_with_tags() -> None:
 
 def test_note_model_init_with_farsi_tags() -> None:
     note = n.Note(
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="some #text #تگ_فارسی",
@@ -51,6 +55,7 @@ def test_note_model_init_with_farsi_tags() -> None:
 def test_note_model_from_dict() -> None:
     note = n.Note.from_dict(
         {
+            "creator_id": "a@a.com",
             "creator": "default",
             "url": "http://example.com",
             "text": "some text",
@@ -72,6 +77,7 @@ def test_note_model_to_dict() -> None:
     created = datetime.now()
     note = n.Note(
         created=created,
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="some text",
@@ -82,6 +88,7 @@ def test_note_model_to_dict() -> None:
     assert note.to_dict() == {
         "created": created.isoformat(),
         "code": str(note.code),
+        "creator_id": "a@a.com",
         "creator": "default",
         "url": "http://example.com",
         "text": "some text",
@@ -96,6 +103,7 @@ def test_note_model_to_dict_with_tags() -> None:
     created = datetime.now()
     note = n.Note(
         created=created,
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="some #text",
@@ -106,6 +114,7 @@ def test_note_model_to_dict_with_tags() -> None:
     assert note.to_dict() == {
         "created": created.isoformat(),
         "code": str(note.code),
+        "creator_id": "a@a.com",
         "creator": "default",
         "url": "http://example.com",
         "text": "some #text",
@@ -137,6 +146,7 @@ def test_note_model_init_with_created() -> None:
     created = datetime.now()
     note = n.Note(
         created=created,
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="",
@@ -146,6 +156,7 @@ def test_note_model_init_with_created() -> None:
 
     assert str(note.code)
     assert note.created == created
+    assert note.creator_id == "a@a.com"
     assert note.creator == "default"
     assert note.url == "http://example.com"
     assert note.text == ""

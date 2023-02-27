@@ -4,7 +4,7 @@ from dataclasses import asdict, field
 from datetime import datetime
 from typing import Any, Optional
 
-from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses
+from pydantic import UUID4, AnyHttpUrl, BaseModel, dataclasses, validator
 from pytz import timezone
 
 from jaanevis.config import settings
@@ -28,6 +28,7 @@ class Note:
     text: str = ""
     tags: list[str] = field(default_factory=list)
     code: str | UUID4 = field(default_factory=uuid.uuid4)
+    creator_id: Optional[str] = None
     creator: Optional[str] = None
     created: datetime = field(default_factory=datetime_with_tz)
 
@@ -48,6 +49,24 @@ class Note:
         if not self.tags and "#" in self.text:
             r = "#(\\w+)"
             self.tags = re.findall(r, self.text)
+
+
+class NoteRead(BaseModel):
+    """schema for reading note without private fields"""
+
+    url: str | None = None
+    lat: float | None = None
+    long: float | None = None
+    country: str | None = ""
+    text: str | None = ""
+    tags: list[str] | None = None
+    code: str | None = None
+    creator: str | None = None
+    created: datetime | None = None
+
+    @validator("created")
+    def created_str(cls, value):
+        return value.isoformat()
 
 
 class NoteCreateApi(BaseModel):

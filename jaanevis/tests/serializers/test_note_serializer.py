@@ -15,6 +15,7 @@ def test_serialize_domain_note() -> None:
 
     note = n.Note(
         code=code,
+        creator_id="a@a.com",
         creator="default",
         url="http://example.com",
         text="some text",
@@ -46,6 +47,7 @@ def test_serialize_domain_note_to_geojson() -> None:
 
     note = n.Note(
         code=code,
+        creator_id="a@a.com",
         creator="default",
         text="some text",
         country=COUNTRY,
@@ -85,6 +87,7 @@ def test_serialize_notes_to_geojson() -> None:
     notes = [
         n.Note(
             code=code_1,
+            creator_id="a@a.com",
             creator="default",
             text="some text",
             url="http://example.com/1",
@@ -93,6 +96,7 @@ def test_serialize_notes_to_geojson() -> None:
         ),
         n.Note(
             code=code_2,
+            creator_id="a@a.com",
             creator="default",
             text="some text",
             url="http://example.com/2",
@@ -141,6 +145,7 @@ def test_serialize_notes_to_geojson_features() -> None:
     notes = [
         n.Note(
             code=code_1,
+            creator_id="a@a.com",
             creator="default",
             text="some text",
             url="http://example.com/1",

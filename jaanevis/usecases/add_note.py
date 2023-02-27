@@ -12,6 +12,7 @@ class AddNoteUseCase:
         if not request:
             return ResponseFailure.build_from_invalid_request_object(request)
         try:
+            request.note.creator_id = request.user.email
             request.note.creator = request.user.username
             self.repo.add(request.note)
             event.post_event("note_added", request.note)
