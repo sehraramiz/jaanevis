@@ -1,4 +1,5 @@
 from jaanevis.domain import user as u
+from jaanevis.i18n import gettext as _
 from jaanevis.requests import (
     InvalidRequestObject,
     RequestObject,

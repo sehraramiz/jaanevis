@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from jaanevis.domain import note as n
 from jaanevis.domain import session as s
 from jaanevis.domain import user as u
+from jaanevis.i18n import gettext as _
 from jaanevis.repository import Repository, repository
 from jaanevis.requests import (
     activate_user_request,

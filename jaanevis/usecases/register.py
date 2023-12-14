@@ -2,6 +2,7 @@ import secrets
 from datetime import datetime, timedelta
 
 from jaanevis.domain import user as u
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.register_request import RegisterRequest
 from jaanevis.responses import (

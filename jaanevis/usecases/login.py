@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.login_request import LoginRequest
 from jaanevis.responses import (

@@ -1,4 +1,5 @@
 from jaanevis.config import settings
+from jaanevis.i18n import gettext as _
 from jaanevis.tasks.core import q
 
 from .event import subscribe

@@ -1,3 +1,4 @@
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.update_note_request import UpdateNoteRequest
 from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess

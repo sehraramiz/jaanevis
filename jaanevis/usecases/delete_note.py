@@ -1,3 +1,4 @@
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
 from jaanevis.responses.response import (

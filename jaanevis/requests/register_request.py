@@ -1,5 +1,6 @@
 import re
 
+from jaanevis.i18n import gettext as _
 from jaanevis.requests import InvalidRequestObject, RequestObject
 from jaanevis.responses import response as res
 

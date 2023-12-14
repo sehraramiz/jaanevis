@@ -1,4 +1,5 @@
 from jaanevis.domain import user as u
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.activate_user_request import ActivateUserRequest
 from jaanevis.responses import (
