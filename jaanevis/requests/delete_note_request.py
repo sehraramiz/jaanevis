@@ -1,5 +1,9 @@
 from jaanevis.domain import user as u
-from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestObject
+from jaanevis.requests import (
+    InvalidRequestObject,
+    RequestObject,
+    ValidRequestObject,
+)
 
 
 class DeleteNoteRequest(ValidRequestObject):

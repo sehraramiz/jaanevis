@@ -45,7 +45,6 @@ class AuthenticateUseCase:
                 return ResponseFailure.build_parameters_error(
                     _("Session expired"), code=StatusCode.expired_session
                 )
-
             return ResponseSuccess(user)
         except Exception as exc:
             return ResponseFailure.build_system_error(

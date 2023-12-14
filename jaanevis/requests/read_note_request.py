@@ -1,4 +1,8 @@
-from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestObject
+from jaanevis.requests import (
+    InvalidRequestObject,
+    RequestObject,
+    ValidRequestObject,
+)
 
 
 class ReadNoteRequest(ValidRequestObject):

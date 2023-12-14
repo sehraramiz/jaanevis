@@ -1,6 +1,10 @@
 from typing import Any, Mapping, Optional
 
-from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestObject
+from jaanevis.requests import (
+    InvalidRequestObject,
+    RequestObject,
+    ValidRequestObject,
+)
 
 
 class NoteListRequest(ValidRequestObject):

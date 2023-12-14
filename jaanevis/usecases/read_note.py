@@ -1,6 +1,10 @@
 from jaanevis.repository.base import Repository
 from jaanevis.requests.read_note_request import ReadNoteRequest
-from jaanevis.responses.response import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses.response import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+)
 
 
 class ReadNoteUseCase:

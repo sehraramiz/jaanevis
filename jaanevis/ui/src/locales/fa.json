@@ -29,6 +29,7 @@
     "invalidLong": "مقدار طول جغرافیایی نامعتبر است",
     "invalidEmail": "ایمیل نامعتبر است",
     "requiredUsername": "نام کاربری ضروری است",
+    "requiredEmail": "ایمیل ضروری است",
     "requiredPassword": "کلمه عبور ضروری است",
     "requiredConfirmPassword": "تکرار کلمه عبور ضروری است",
     "passwordsNotMatch": "کلمه عبور با تایید کلمه عبور برابر نیست",

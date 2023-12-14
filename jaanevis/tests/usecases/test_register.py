@@ -165,7 +165,10 @@ def test_register_creates_user_activation_session(mock_secrets) -> None:
 
     assert bool(response) is True
     repo.create_session.assert_called_with(
-        session_id=secret_session, username=email, expire_time=expire_time
+        session_id=secret_session,
+        email=email,
+        username=username,
+        expire_time=expire_time,
     )
 
 
@@ -191,7 +194,11 @@ def test_register_send_user_registered_event(mock_secrets, event_mock) -> None:
     assert bool(response) is True
     event_mock.assert_called_with(
         "user_registered",
-        {"activation_token": activation_token, "email": email},
+        {
+            "activation_token": activation_token,
+            "email": email,
+            "username": username,
+        },
     )
 
 

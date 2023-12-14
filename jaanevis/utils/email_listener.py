@@ -7,9 +7,10 @@ from .mail import send_email
 
 def handle_user_registered_event(data):
     email = data["email"]
+    username = data["username"]
     token = data["activation_token"]
 
-    activation_params = f"username={email}&token={token}"
+    activation_params = f"username={username}&token={token}"
     activation_url = "{}{}/user/activate?{}".format(
         settings.PROJECT_URL, settings.API_V1_STR, activation_params
     )

@@ -49,6 +49,11 @@ class Repository(Protocol):
     ) -> s.Session:
         ...
 
+    def get_session_by_session_id_and_username(
+        self, session_id: str, username: str
+    ) -> s.Session:
+        ...
+
     def delete_session_by_session_id(self, session_id: str) -> bool:
         ...
 

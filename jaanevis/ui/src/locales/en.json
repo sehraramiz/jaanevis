@@ -29,6 +29,7 @@
   "invalidLong": "Invalid Longitude",
   "invalidEmail": "Invalid Email",
   "requiredUsername": "Username field required",
+  "requiredEmail": "Email field required",
   "requiredPassword": "Password field required",
   "requiredConfirmPassword": "Confirm password field is required",
   "passwordsNotMatch": "Passwords do not match",

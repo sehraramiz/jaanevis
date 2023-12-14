@@ -1,6 +1,10 @@
 from jaanevis.repository.base import Repository
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
-from jaanevis.responses.response import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses.response import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+)
 
 
 class DeleteNoteUseCase:

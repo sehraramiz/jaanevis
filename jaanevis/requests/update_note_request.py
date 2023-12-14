@@ -1,6 +1,10 @@
 from jaanevis.domain.note import NoteUpdateApi
 from jaanevis.domain.user import User
-from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestObject
+from jaanevis.requests import (
+    InvalidRequestObject,
+    RequestObject,
+    ValidRequestObject,
+)
 
 
 class UpdateNoteRequest(ValidRequestObject):

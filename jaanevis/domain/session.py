@@ -15,6 +15,7 @@ class Session:
     """Model for session."""
 
     email: str
+    username: str
     expire_time: float = field(default_factory=default_expire_time)
     session_id: str | UUID4 = field(default_factory=uuid.uuid4)
 
