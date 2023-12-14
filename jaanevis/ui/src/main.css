@@ -1,0 +1,134 @@
+body {
+  font-size: medium;
+  padding: 0;
+  margin: 0;
+}
+
+html, body{
+  height: 100%;
+  width: 100vw;
+  overflow-y: clip;
+}
+
+#main {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+#map {
+  height: 100%;
+  width: 100vw;
+  position: absolute;
+  z-index: 1;
+}
+
+.panel {
+  position: relative;
+  padding: 15px;
+  background: #ddd;
+  height: 100%;
+  width: 30%;
+  z-index: 5;
+  transition: 0.5s ease;
+}
+
+.panel-content {
+  overflow: scroll;
+  height: 100%
+}
+
+.panel_small {
+  width: 5px;
+}
+
+.panel_small .panel-content {
+  display: none;
+}
+
+.panel_small .panel-header {
+  display: none;
+}
+
+#toggle {
+  font-size: 16px;
+  color: black;
+  background-color: #ddd;
+  border-color: #34495e;
+  border-radius: 0px 50px 50px 0;
+  width: 44px;
+  height: 44px;
+  position: absolute;
+  top: 15%;
+  right: -44px;
+  z-index: 3;
+  cursor: pointer;
+}
+
+.note-form {
+  margin: 0 5px 0 5px;
+}
+
+.note-form input, textarea {
+  width: 100%;
+  padding: 5px 5px;
+  box-sizing:border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  resize: vertical;
+}
+
+.btn-group {
+  display: flex;
+}
+
+.note-form button {
+  width: 100%;
+  padding: 5px 5px;
+  background-color: #04AA6D;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  margin: 2px 2px;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  #main {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  #map {
+    position: relative;
+  }
+
+  .panel {
+    position: absolute;
+    bottom: 0;
+    top: unset;
+    height: 100%;
+    max-height: 60%;
+    width: auto;
+  }
+
+  .panel-content {
+    overflow-y: scroll;
+    height: 100%;
+  }
+
+  #toggle {
+    border-radius: 50px 50px 0px 0px;
+    position: absolute;
+    top: -44px;
+    right: 15%;
+  }
+
+  .panel_small {
+    height: 5px;
+    width: 100%;
+  }
+}

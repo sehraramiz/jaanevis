@@ -1,0 +1,106 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Jaanevis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://unpkg.com/vue-i18n@9"></script>
+</head>
+<body>
+
+    <div id="app">
+        <div id="main">
+            <div id="map"></div>
+            <div id="panel" class="panel" :dir="direction">
+                <router-view></router-view>
+                <button id="toggle" @click="togglePanel">X</button>
+                <div class="panel-header">
+                    <select v-model="$i18n.locale">
+                        <option v-for="(lang, i) in supportedLocales" :key="`Lang${i}`" :value="lang">
+                        {{ lang }}
+                      </option>
+                    </select>
+                    &nbsp;<a @click="panelView='auth'" href="#"
+                        v-if="!authenticated && !(panelView.match('auth'))">{{ $t("login") }}</a>
+                    <div v-else-if="authenticated">
+                        <a href="#" @click="panelView='account'">{{ $t("account") }}</a>
+                        &nbsp;<a href="#" @click="logout">{{ $t("logout") }}</a>
+                    </div>
+                    &nbsp;<a @click="panelView='register'" v-else href="#">{{ $t("register") }}</a>
+                    <hr>
+                </div>
+                <div class="panel-content">
+                    <div>
+                        <p v-if="Object.keys(filters).length !== 0">{{ $t("filters") }}:</p>
+                        <div v-for="(value, filter) in filters">
+                            <span>{{ $t(filter) }}[{{ value }}]</span>
+                            <button class="destroy" @click="removeFilter(filter)">X</button>
+                        </div>
+                    </div>
+                    <div class="note-form" v-if="panelView == 'create'" id="create-note">
+                        <label for="url">{{ $t("url") }}:</label>
+                        <input type="text" id="url" name="url" v-model="note.url">
+                        <label for="text">{{ $t("text") }}:</label>
+                        <textarea rows="2" cols="50" name="text" v-model="note.text"></textarea>
+                        <label for="lat">{{ $t("latitude") }}:</label>
+                        <input type="number" step="any" id="lat" name="lat" v-model="note.lat">
+                        <label for="long">{{ $t("longitude") }}:</label>
+                        <input type="number" step="any" id="long" name="long" v-model="note.long">
+                        <button @click="createNewNote" v-if="authenticated">{{ $t("create") }}</button>
+                    </div>
+                    <div class="note-form" v-if="panelView == 'details'" id="note-detail">
+                        <note-item :note=note :user=authUser @update="updateNote" @delete="deleteNote"></note-item>
+                    </div>
+                    <div id="auth" v-if="panelView == 'auth'" >
+                        <div id="profile" v-if="authenticated == true">
+                            <p>{{ $t("username") }}: {{ this.authUser.username }}</p>
+                        </div>
+                        <div class="note-form" v-else id="login">
+                            <label for="username">{{ $t("username") }}:</label>
+                            <input type="text" id="username" name="username" v-model="username">
+                            <label for="password">{{ $t("password") }}:</label>
+                            <input type="password" id="password" name="password" v-model="password">
+                            <button @click="login">{{ $t("login") }}</button>
+                        </div>
+                    </div>
+                    <div id="register" v-if="panelView == 'register'" >
+                        <div class="note-form" id="register">
+                            <label for="email">{{ $t("email") }}:</label>
+                            <input type="email" id="email" name="email" v-model="username">
+                            <label for="password">{{ $t("password") }}:</label>
+                            <input type="password" id="password" name="password" v-model="password">
+                            <label for="password2">{{ $t("confirmPassword") }}:</label>
+                            <input type="password" id="password2" name="password2" v-model="password2">
+                            <button @click="register">{{ $t("register") }}</button>
+                        </div>
+                    </div>
+                    <div id="account" v-if="panelView == 'account'" >
+                        <div class="note-form" v-else id="profile">
+                            <div id="profile" v-if="authenticated == true">
+                                <input dir="ltr" type="text" id="username" name="username" v-model="authUser.username" value="ssss">
+                                <button @click="updateAccount">{{ $t("updateAccount") }}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <p v-if="errors.length">
+                        <ul>
+                        <li v-for="error in errors" style="color: red">{{ error }}</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js" type="module"></script>
+</body>
+</html>

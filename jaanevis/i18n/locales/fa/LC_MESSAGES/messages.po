@@ -1,0 +1,129 @@
+# Persian translations for PACKAGE package.
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#  <mohsenbarzegar@disroot.org>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-26 14:34+0330\n"
+"PO-Revision-Date: 2023-02-04 19:28+0330\n"
+"Last-Translator:  <mohsenbarzegar@disroot.org>\n"
+"Language-Team: Persian <translation-team-fa@lists.sourceforge.net>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: jaanevis/i18n/__init__.py:44
+msgid "test"
+msgstr "تست"
+
+#: jaanevis/api/fastapi/endpoints.py:278
+msgid "user successfuly activated"
+msgstr "کاربر با موفقیت فعال شد"
+
+#: jaanevis/api/fastapi/endpoints.py:290
+msgid "activation failure"
+msgstr "فعال‌سازی ناموفق"
+
+#: jaanevis/utils/email_listener.py:17
+msgid "Jaanevis Account Activation"
+msgstr "فعال‌سازی اکانت جانویس"
+
+#: jaanevis/requests/delete_note_request.py:17
+#: jaanevis/requests/read_note_request.py:15
+msgid "Invalid code value"
+msgstr "code نامعتبر"
+
+#: jaanevis/requests/delete_note_request.py:21
+#: jaanevis/requests/update_note_request.py:27
+#: jaanevis/requests/update_own_user_request.py:20
+#: jaanevis/requests/add_note_request.py:23
+msgid "Invalid user"
+msgstr "کاربر نامعتبر"
+
+#: jaanevis/requests/update_note_request.py:21
+#: jaanevis/requests/add_note_request.py:19
+msgid "Invalid note type"
+msgstr "نوع نوشته نامعتبر"
+
+#: jaanevis/requests/update_note_request.py:24
+msgid "Invalid code"
+msgstr "کد نامعتبر"
+
+#: jaanevis/requests/activate_user_request.py:16
+msgid "Username can not be empty"
+msgstr "نام کاربری نباید خالی باشد"
+
+#: jaanevis/requests/activate_user_request.py:19
+msgid "Token can not be empty"
+msgstr "توکن نباید خالی باشد"
+
+#: jaanevis/requests/update_own_user_request.py:17
+#, fuzzy
+msgid "Invalid user type"
+msgstr "کاربر نامعتبر"
+
+#: jaanevis/requests/auth_request.py:19
+msgid "Invalid session"
+msgstr "سشن نامعتبر"
+
+#: jaanevis/requests/register_request.py:22
+msgid "Invalid email"
+msgstr "ایمیل نامعتبر"
+
+#: jaanevis/requests/register_request.py:29
+msgid "Invalid username, only use letters, numbers, underscores and periods."
+msgstr "نام کاربری غیر معتبر، فقط از حروف، اعداد، آندرلاین و نقطه استفاده کنید."
+
+#: jaanevis/requests/register_request.py:39
+msgid "Password can not be empty"
+msgstr "پسورد نباید خالی باشد"
+
+#: jaanevis/requests/register_request.py:44
+msgid "minimum password length must be 8 characters"
+msgstr "حداقل طول رمز عبور باید ۸ کاراکتر باشد"
+
+#: jaanevis/requests/note_list_request.py:35
+msgid "Invalid filters type"
+msgstr "فیلتر نامعتبر"
+
+#: jaanevis/usecases/activate_user.py:28
+msgid "Invalid activation token"
+msgstr "کد فعال‌سازی نامعتبر"
+
+#: jaanevis/usecases/activate_user.py:37
+msgid "User is already activated"
+msgstr "کاربر فعال است"
+
+#: jaanevis/usecases/authenticate.py:29
+msgid "Session not found"
+msgstr "سشن پیدا نشد"
+
+#: jaanevis/usecases/authenticate.py:38 jaanevis/usecases/login.py:32
+msgid "User is not active"
+msgstr "کاربر فعال نیست"
+
+#: jaanevis/usecases/authenticate.py:46
+msgid "Session expired"
+msgstr "سشن منقضی شده"
+
+#: jaanevis/usecases/login.py:27 jaanevis/usecases/login.py:40
+msgid "Wrong username or password"
+msgstr "نام کاربری یا رمز عبور اشتباه است"
+
+#: jaanevis/usecases/update_note.py:24 jaanevis/usecases/delete_note.py:23
+msgid "permission denied"
+msgstr "دسترسی غیر مجاز"
+
+#: jaanevis/usecases/register.py:30
+#, fuzzy
+msgid "User with this username already exists"
+msgstr "کاربر با این نام کاربری در سیستم موجود است"
+
+#: jaanevis/usecases/register.py:36
+#, fuzzy
+msgid "User with this email already exists"
+msgstr "کاربر با این نام کاربری در سیستم موجود است"
