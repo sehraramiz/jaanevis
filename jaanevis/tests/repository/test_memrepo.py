@@ -58,6 +58,7 @@ def note_dicts() -> dict[str, list[Any]]:
             {
                 "session_id": uuid_session,
                 "email": "test@test.com",
+                "username": "username",
                 "expire_time": (
                     datetime.now() + timedelta(days=1)
                 ).timestamp(),
@@ -356,6 +357,20 @@ def test_get_session_by_session_id_and_email(note_dicts) -> None:
     )
 
 
+def test_get_session_by_session_id_and_username(note_dicts) -> None:
+    repo = memrepo.MemRepo(note_dicts)
+
+    sessions = [s.Session.from_dict(data) for data in note_dicts["sessions"]]
+
+    assert (
+        repo.get_session_by_session_id_and_username(
+            session_id=str(sessions[0].session_id),
+            username=sessions[0].username,
+        )
+        == sessions[0]
+    )
+
+
 @mock.patch("jaanevis.repository.memrepo.open")
 def test_delete_session_by_session_id(mock_open, note_dicts) -> None:
     repo = memrepo.MemRepo(note_dicts)
@@ -377,6 +392,7 @@ def test_create_or_update_creates_new_session(mock_open, note_dicts) -> None:
     expire_time = 0.0
     new_session = s.Session(
         email="b@b.com",
+        username="user1",
         session_id=new_session_id,
         expire_time=expire_time,
     )
@@ -384,6 +400,7 @@ def test_create_or_update_creates_new_session(mock_open, note_dicts) -> None:
     assert (
         repo.create_or_update_session(
             email="b@b.com",
+            username="user1",
             session_id=str(new_session_id),
             expire_time=expire_time,
         )
@@ -398,6 +415,7 @@ def test_create_new_session(mock_open, note_dicts) -> None:
     expire_time = 0.0
     new_session = s.Session(
         email="b@b.com",
+        username="user1",
         session_id=new_session_id,
         expire_time=expire_time,
     )
@@ -405,6 +423,7 @@ def test_create_new_session(mock_open, note_dicts) -> None:
     assert (
         repo.create_session(
             email="b@b.com",
+            username="user1",
             session_id=str(new_session_id),
             expire_time=expire_time,
         )
@@ -423,6 +442,7 @@ def test_create_or_update_updates_existing_session(
     assert (
         repo.create_or_update_session(
             email=sessions[0].email,
+            username=sessions[0].username,
             session_id=str(sessions[0].session_id),
             expire_time=sessions[0].expire_time,
         )
@@ -440,10 +460,16 @@ def test_write_db_to_file_after_session_create(path, note_dicts) -> None:
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
         repo.create_or_update_session(
-            email="a@a.com", session_id=session_id, expire_time=0
+            email="a@a.com",
+            username="user1",
+            session_id=session_id,
+            expire_time=0,
         )
         repo.create_session(
-            email="a@a.com", session_id=session_id, expire_time=0
+            email="a@a.com",
+            username="user1",
+            session_id=session_id,
+            expire_time=0,
         )
 
     mock_open.assert_called_with(DB_PATH, "w")
@@ -460,7 +486,10 @@ def test_write_db_to_file_after_session_update(path, note_dicts) -> None:
     with mock.patch("jaanevis.repository.memrepo.open", mock_open):
         repo = memrepo.MemRepo()
         repo.create_or_update_session(
-            email="a@a.com", session_id=session_id, expire_time=0
+            email="a@a.com",
+            username="user1",
+            session_id=session_id,
+            expire_time=0,
         )
 
     mock_open.assert_called_with(DB_PATH, "w")

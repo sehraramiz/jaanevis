@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from jaanevis.config import settings
-from jaanevis.i18n import translate
+from jaanevis.i18n import set_lang_code
 from jaanevis.utils import email_listener, telegram_listener
 
 from .endpoints import router
@@ -22,11 +22,10 @@ app.add_middleware(
 @app.middleware("http")
 async def set_locale(request: Request, call_next):
     lang = request.headers.get("accept-language", "en")
-
-    with translate(lang):
-        response = await call_next(request)
-        response.headers["Content-Language"] = lang
-        return response
+    set_lang_code(lang)
+    response = await call_next(request)
+    response.headers["Content-Language"] = lang
+    return response
 
 
 @app.on_event("startup")

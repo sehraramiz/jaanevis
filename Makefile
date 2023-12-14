@@ -26,3 +26,6 @@ makemessages:
 
 compilemessages:
 	msgfmt -o $(MSGDIR)/messages.mo $(MSGFILE)
+
+format:
+	sh script/format.sh

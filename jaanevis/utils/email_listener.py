@@ -1,4 +1,5 @@
 from jaanevis.config import settings
+from jaanevis.i18n import gettext as _
 from jaanevis.tasks.core import q
 
 from .event import subscribe
@@ -7,9 +8,10 @@ from .mail import send_email
 
 def handle_user_registered_event(data):
     email = data["email"]
+    username = data["username"]
     token = data["activation_token"]
 
-    activation_params = f"username={email}&token={token}"
+    activation_params = f"username={username}&token={token}"
     activation_url = "{}{}/user/activate?{}".format(
         settings.PROJECT_URL, settings.API_V1_STR, activation_params
     )

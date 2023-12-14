@@ -333,6 +333,9 @@ createApp({
       if (!this.username)
         this.errors.push(this.$t('requiredUsername'));
 
+      if (!this.email)
+        this.errors.push(this.$t('requiredEmail'));
+
       if (!this.password)
         this.errors.push(this.$t('requiredPassword'));
 
@@ -343,7 +346,7 @@ createApp({
         this.errors.push(this.$t('passwordsNotMatch'));
 
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      var emailValid = re.test(this.username);
+      var emailValid = re.test(this.email);
       if (!emailValid)
         this.errors.push(this.$t('invalidEmail'));
 
@@ -419,7 +422,8 @@ createApp({
         return;
 
       let registerData = {
-        email: this.username,
+        email: this.email,
+        username: this.username,
         password: this.password,
       };
       const response = await fetch(this.baseUrl + "/user/register", {

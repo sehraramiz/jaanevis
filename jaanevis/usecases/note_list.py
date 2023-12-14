@@ -1,6 +1,10 @@
 from jaanevis.repository.base import Repository
 from jaanevis.requests.note_list_request import NoteListRequest
-from jaanevis.responses.response import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses.response import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+)
 from jaanevis.serializers import note_geojson_serializer as geo_serializer
 
 

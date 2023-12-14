@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.login_request import LoginRequest
 from jaanevis.responses import (
@@ -46,6 +47,7 @@ class LoginUseCase:
             expire_tomorrow = tomorrow.strftime("%a, %d %b %Y %H:%M:%S GMT")
             self.repo.create_or_update_session(
                 email=user.email,
+                username=user.username,
                 session_id=new_session_id,
                 expire_time=tomorrow.timestamp(),
             )

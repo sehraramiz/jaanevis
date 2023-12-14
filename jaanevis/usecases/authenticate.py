@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.auth_request import AuthenticateRequest
 from jaanevis.responses import (
@@ -45,7 +46,6 @@ class AuthenticateUseCase:
                 return ResponseFailure.build_parameters_error(
                     _("Session expired"), code=StatusCode.expired_session
                 )
-
             return ResponseSuccess(user)
         except Exception as exc:
             return ResponseFailure.build_system_error(

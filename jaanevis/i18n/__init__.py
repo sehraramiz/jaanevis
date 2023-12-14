@@ -1,51 +1,42 @@
 """configs and tools for multilingual support"""
 
-import builtins
-import gettext
-from contextlib import contextmanager
-from functools import partial
+import gettext as gettext_module
+from contextvars import ContextVar
 
 from jaanevis.config import settings
 
-__all__ = ["t_", "translate"]
-
+__all__ = ["set_lang_code", "get_text"]
 
 localedir = settings.BASE_DIR / "i18n/locales"
-translate_en = gettext.translation(
-    "messages", localedir, fallback=False, languages=["en"]
-)
-translate_fa = gettext.translation(
-    "messages", localedir, fallback=False, languages=["fa"]
-)
-translations = {
-    "en": translate_en,
-    "fa": translate_fa,
-}
-translate_en.install()
+_lang_ctx_var: ContextVar[str] = ContextVar("lang_code", default="en")
 
 
-def t_(msg: str, lang: str = settings.LANGUAGE_CODE) -> str:
-    return translations.get(lang, translations["en"]).gettext(msg)
+def set_lang_code(lang_code: str) -> None:
+    return _lang_ctx_var.set(lang_code)
 
 
-@contextmanager
-def translate(lang: str = "en"):
-    """temporarily replace global gettext (_) function to custom t_ function with language choice"""
-    org_func = builtins.__dict__["_"]
-    new_func = partial(t_, lang=lang)
-    builtins.__dict__["_"] = new_func
-    yield
-    builtins.__dict__["_"] = org_func
+def get_lang_code() -> str:
+    return _lang_ctx_var.get()
+
+
+def gettext(msg: str) -> str:
+    lang_code = get_lang_code()
+    translation = gettext_module.translation(
+        "messages", localedir, languages=[lang_code]
+    )
+    return translation.gettext(msg)
 
 
 if __name__ == "__main__":
 
     def test_me():
-        print(_("test"))
+        print(gettext("test"))
         return
 
-    with translate("fa"):
-        # this should print text in farsi
-        test_me()
+    set_lang_code("fa")
+    # this should print text in farsi
+    test_me()
+
+    set_lang_code("en")
     # this should be print text in english
     test_me()

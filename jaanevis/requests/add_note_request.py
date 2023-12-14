@@ -1,6 +1,11 @@
 from jaanevis.domain.note import Note
 from jaanevis.domain.user import User
-from jaanevis.requests import InvalidRequestObject, RequestObject, ValidRequestObject
+from jaanevis.i18n import gettext as _
+from jaanevis.requests import (
+    InvalidRequestObject,
+    RequestObject,
+    ValidRequestObject,
+)
 
 
 class AddNoteRequest(ValidRequestObject):

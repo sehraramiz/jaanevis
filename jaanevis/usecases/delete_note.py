@@ -1,6 +1,11 @@
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.delete_note_request import DeleteNoteRequest
-from jaanevis.responses.response import ResponseFailure, ResponseObject, ResponseSuccess
+from jaanevis.responses.response import (
+    ResponseFailure,
+    ResponseObject,
+    ResponseSuccess,
+)
 
 
 class DeleteNoteUseCase:
@@ -18,7 +23,7 @@ class DeleteNoteUseCase:
                 return ResponseFailure.build_resource_error(
                     f"note with code '{request.code}' not found"
                 )
-            if note.creator_id != request.user.email:
+            if note.creator != request.user.username:
                 return ResponseFailure.build_parameters_error(
                     _("permission denied")
                 )

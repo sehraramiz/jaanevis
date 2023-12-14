@@ -1,3 +1,4 @@
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.update_note_request import UpdateNoteRequest
 from jaanevis.responses import ResponseFailure, ResponseObject, ResponseSuccess
@@ -19,7 +20,7 @@ class UpdateNoteUseCase:
                 return ResponseFailure.build_resource_error(
                     f"note with code '{request.code}' not found"
                 )
-            if note.creator_id != request.user.email:
+            if note.creator != request.user.username:
                 return ResponseFailure.build_parameters_error(
                     _("permission denied")
                 )

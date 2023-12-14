@@ -163,6 +163,17 @@ class MemRepo:
                 return s.Session.from_dict(session)
         return None
 
+    def get_session_by_session_id_and_username(
+        self, session_id: str, username: str
+    ) -> s.Session:
+        for session in self.data["sessions"]:
+            if (
+                session["session_id"] == session_id
+                and session["username"] == username
+            ):
+                return s.Session.from_dict(session)
+        return None
+
     def delete_session_by_session_id(self, session_id: str) -> bool:
         for index, session in enumerate(self.data["sessions"]):
             if session["session_id"] == session_id:
@@ -172,13 +183,16 @@ class MemRepo:
         return True
 
     def create_or_update_session(
-        self, email: str, session_id: str, expire_time: float
+        self, email: str, username: str, session_id: str, expire_time: float
     ) -> s.Session:
         new_session = s.Session(
-            email=email, session_id=session_id, expire_time=expire_time
+            email=email,
+            username=username,
+            session_id=session_id,
+            expire_time=expire_time,
         )
         for session in self.data["sessions"]:
-            if session["email"] == email:
+            if session["email"] == email or session["username"] == username:
                 session["session_id"] = session_id
                 break
         else:
@@ -187,10 +201,13 @@ class MemRepo:
         return new_session
 
     def create_session(
-        self, email: str, session_id: str, expire_time: float
+        self, email: str, username: str, session_id: str, expire_time: float
     ) -> s.Session:
         new_session = s.Session(
-            email=email, session_id=session_id, expire_time=expire_time
+            email=email,
+            username=username,
+            session_id=session_id,
+            expire_time=expire_time,
         )
         self.data["sessions"].append(new_session.to_dict())
         self._write_data_to_file()

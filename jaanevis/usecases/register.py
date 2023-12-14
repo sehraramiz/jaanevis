@@ -2,6 +2,7 @@ import secrets
 from datetime import datetime, timedelta
 
 from jaanevis.domain import user as u
+from jaanevis.i18n import gettext as _
 from jaanevis.repository.base import Repository
 from jaanevis.requests.register_request import RegisterRequest
 from jaanevis.responses import (
@@ -47,13 +48,18 @@ class RegisterUseCase:
             expire_time = (datetime.now() + timedelta(days=2)).timestamp()
             self.repo.create_session(
                 session_id=activation_token,
-                username=request.email,
+                email=request.email,
+                username=request.username,
                 expire_time=expire_time,
             )
 
             event.post_event(
                 "user_registered",
-                {"email": request.email, "activation_token": activation_token},
+                {
+                    "email": request.email,
+                    "username": request.username,
+                    "activation_token": activation_token,
+                },
             )
             new_user = u.UserRead(
                 username=created_user.username,
